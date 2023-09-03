@@ -1,13 +1,14 @@
-import { Avatar, Col, Drawer, Dropdown, Input, Layout, Menu, Row } from "antd"
+import { Avatar, Col, Drawer, Dropdown, Layout, Menu, Row } from "antd"
 import React, { useContext, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useLocation, useNavigate } from "react-router-dom"
+import { ROLE_ID } from "src/constants/constants"
 import STORAGE, { clearStorage, getStorage, setStorage } from "src/lib/storage"
 import { StoreContext } from "src/lib/store"
 import UseWindowSize from "src/lib/useWindowSize"
 import { hasPermission } from "src/lib/utils"
-import ModalChangeInfo from "src/pages/USER/MyAccount/components/ModalChangeInfo"
 import { setUserInfo } from "src/redux/appGlobal"
+import { setOpenLoginModal } from "src/redux/loginModal"
 import ROUTER from "src/router"
 import AuthService from "src/services/AuthService"
 import LayoutCommon from "../Common/Layout"
@@ -19,11 +20,8 @@ import LayoutUser from "./component/LayoutUser"
 import LoginModal from "./component/LoginModal"
 import Notification from "./component/Notification"
 import RegisterModal from "./component/RegisterModal"
-import { LayoutStyled, MenuSelect, StyleMenuAccount } from "./styled"
+import { LayoutStyled, StyleMenuAccount } from "./styled"
 import "./styles.scss"
-import { routeNav } from "src/pages/USER/Declaration/component/routeNav"
-import { setOpenLoginModal } from "src/redux/loginModal"
-import { ACCOUNT_TYPE_ADMIN } from "src/constants/constants"
 
 const { Header, Content } = Layout
 
@@ -39,16 +37,10 @@ const MainLayout = ({ children, isAdmin }) => {
   const [selectedKey, setSelectedKey] = useState(
     getStorage(STORAGE.KEY_MENU_ACTIVE) || ["/"],
   )
-  const [openUserInfor, setOpenUserInfor] = useState(false)
   const { isNotificationUpdate } = useContext(StoreContext)
   const [isModelNotification, setIsModelNotification] = isNotificationUpdate
   const [menuAdmin, setMenuAdmin] = useState([])
   const [openRegisterModal, setOpenRegisterModal] = useState(false)
-  const { listDossier } = useSelector(state => state.dossier)
-  const [listTypeForm, setListTypeForm] = useState([])
-  useEffect(() => {
-    setListTypeForm(listDossier)
-  }, [listDossier])
 
   const onClickMenu = key => {
     if (isModelNotification) {
@@ -81,19 +73,12 @@ const MainLayout = ({ children, isAdmin }) => {
       <div className="menu-account">
         <Menu className="dropdown-option">
           <div className="account-infor">
-            {!!ACCOUNT_TYPE_ADMIN?.includes(userInfo?.AccountType) ? (
+            {userInfo?.id_phan_quyen === ROLE_ID.ADMIN && (
               <>
                 <Menu.Item
                   key="1"
                   onClick={() => {
-                    let startPage = undefined
-                    if (!!menuAdmin && !!menuAdmin[0]) {
-                      startPage =
-                        menuAdmin[0]?.children?.[0]?.key || menuAdmin[0]?.key
-                    } else if (!!(menuAdmin[0]?.key?.charAt(0) === "/")) {
-                      startPage = menuAdmin[0]?.key
-                    }
-                    navigate(!!menuAdmin?.length ? startPage : ROUTER.HOME)
+                    navigate(ROUTER.QUAN_LY_NHAN_VIEN)
                   }}
                 >
                   <div className="btn-function strok-btn-function">
@@ -101,32 +86,7 @@ const MainLayout = ({ children, isAdmin }) => {
                     <span className="fw-400">Quản trị hệ thống</span>
                   </div>
                 </Menu.Item>
-                {!!(userInfo?.AccountType === 9) && (
-                  <Menu.Item
-                    key="2"
-                    onClick={() => {
-                      navigate(ROUTER.HO_SO_CHO_XU_LY)
-                    }}
-                  >
-                    <div className="btn-function strok-btn-function">
-                      <SvgIcon name="user-setting" />
-                      <span className="fw-400">Dịch vụ</span>
-                    </div>
-                  </Menu.Item>
-                )}
               </>
-            ) : (
-              <Menu.Item
-                key="2"
-                onClick={() => {
-                  navigate(ROUTER.HO_SO_CHO_XU_LY)
-                }}
-              >
-                <div className="btn-function strok-btn-function">
-                  <SvgIcon name="user-setting" />
-                  <span className="fw-400">Dịch vụ</span>
-                </div>
-              </Menu.Item>
             )}
             <Menu.Item
               key="3"
@@ -183,10 +143,12 @@ const MainLayout = ({ children, isAdmin }) => {
 
   useEffect(() => {
     if (!!isLogin) {
-      const menu = setShowListMenu(MenuItemAdmin())
-      setMenuAdmin(menu)
+      // const menu = setShowListMenu(MenuItemAdmin())
+      setMenuAdmin(MenuItemAdmin())
     }
   }, [userInfo, listTabs])
+
+  console.log("selectedKey", selectedKey)
 
   return (
     <LayoutStyled>
@@ -226,7 +188,7 @@ const MainLayout = ({ children, isAdmin }) => {
                       >
                         {/* <img src={Logo} className="logo" alt="logo" /> */}
                         <div className="logo-text text-uppercase pointer">
-                          Cục sở hữu trí tuệ
+                          Tiệm cà phê bất ổn
                         </div>
                       </span>
                     </div>
@@ -242,57 +204,6 @@ const MainLayout = ({ children, isAdmin }) => {
                         }
                       />
                     </CustomMenuStyled> */}
-                    <Dropdown
-                      placement="bottomLeft"
-                      overlay={
-                        <MenuSelect triggerSubMenuAction="click">
-                          <div className="search-input">
-                            <Input
-                              placeholder="Gõ tên thủ tục"
-                              onChange={e => {
-                                if (e.target.value) {
-                                  setListTypeForm(
-                                    listDossier.filter(i =>
-                                      i.name
-                                        .toLowerCase()
-                                        .includes(e.target.value.toLowerCase()),
-                                    ),
-                                  )
-                                } else setListTypeForm(listDossier)
-                              }}
-                            />
-                          </div>
-                          {listTypeForm.map((item, idx) => (
-                            <Menu.Item
-                              key={idx}
-                              onClick={() => {
-                                if (isLogin) {
-                                  navigate(item.Router)
-                                } else {
-                                  dispatch(setOpenLoginModal(true))
-                                }
-                              }}
-                            >
-                              <div
-                                className={`max-line1 `}
-                                style={
-                                  location.pathname === item.Router
-                                    ? { color: "blue" }
-                                    : {}
-                                }
-                                title={`${item.Number}. ${item.name}`}
-                              >
-                                {item.Number}. {item.name}
-                              </div>
-                            </Menu.Item>
-                          ))}
-                        </MenuSelect>
-                      }
-                    >
-                      <div style={{ cursor: "pointer" }}>
-                        <SvgIcon name="plus-circle-white" />
-                      </div>
-                    </Dropdown>
                   </Col>
                   <Col style={{ width: "auto" }}>
                     <Row
@@ -310,7 +221,7 @@ const MainLayout = ({ children, isAdmin }) => {
                               <Col>
                                 <div className="account-infor-avatar">
                                   <Avatar
-                                    src={userInfo?.Avatar}
+                                    src={userInfo?.avatar}
                                     size={32}
                                     className="style-avt mr-8"
                                     icon={
@@ -320,7 +231,7 @@ const MainLayout = ({ children, isAdmin }) => {
                                     }
                                   />
                                   <span className="mr-8 max-line1">
-                                    {userInfo?.FullName}
+                                    {userInfo?.ho_ten}
                                   </span>
                                   <SvgIcon name="arrow-down-primary" />
                                 </div>
@@ -335,10 +246,7 @@ const MainLayout = ({ children, isAdmin }) => {
                             onClick={() => dispatch(setOpenLoginModal(true))}
                             className="align-items-center pointer login-item"
                           >
-                            {/* <SvgIcon
-                                name="user_login"
-                                className="login-icon"
-                              /> */}
+                            <SvgIcon name="user_login" className="login-icon" />
                             <span className="login-item_text">Đăng nhập</span>
                           </Row>
                           <Row
@@ -346,10 +254,10 @@ const MainLayout = ({ children, isAdmin }) => {
                             onClick={() => setOpenRegisterModal(true)}
                             className="align-items-center pointer login-item"
                           >
-                            {/* <SvgIcon
-                                name="register"
-                                className="register-icon"
-                              /> */}
+                            <SvgIcon
+                              name="register"
+                              className="register-icon"
+                            />
                             <span className="login-item_text">Đăng ký</span>
                           </Row>
                         </div>
@@ -401,27 +309,6 @@ const MainLayout = ({ children, isAdmin }) => {
           items={filterMenu(MenuItemBreadcrumb())}
         />
       </Drawer>
-      {/* {!!openForgetPassModal && (
-        <ForgetModal
-          openForgetPassModal={openForgetPassModal}
-          handleOk={() => {}}
-          handleCancel={() => setOpenForgetPassModal(false)}
-          handleLogin={() => navigate(ROUTER.DANG_NHAP)}
-          setOpenVerifyModal={() => setOpenVerifyModal(true)}
-          setEmail={setEmail}
-        />
-      )}
-      {!!openVerifyModal && (
-        <VerifyForgetModal
-          openVerifyModal={openVerifyModal}
-          handleOk={() => {}}
-          handleCancel={() => setOpenVerifyModal(false)}
-          handleLogin={() => navigate(ROUTER.DANG_NHAP)}
-          setRePasswordModal={() => setRePasswordModal(true)}
-          email={email}
-          setCodeVerify={setCodeVerify}
-        />
-      )} */}
       {!!openLoginModal && (
         <LoginModal
           openLoginModal={openLoginModal}
@@ -436,16 +323,6 @@ const MainLayout = ({ children, isAdmin }) => {
           handleCancel={() => setOpenRegisterModal(false)}
           handleLogin={() => dispatch(setOpenLoginModal(true))}
         />
-      )}
-      {!!openUserInfor && (
-        <>
-          <ModalChangeInfo
-            open={openUserInfor}
-            userInfo={userInfo}
-            onCancel={() => setOpenUserInfor(false)}
-            onOk={() => {}}
-          />
-        </>
       )}
     </LayoutStyled>
   )

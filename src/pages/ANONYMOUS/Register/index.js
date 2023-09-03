@@ -5,8 +5,6 @@ import Button from "src/components/MyButton/Button"
 import Notice from "src/components/Notice"
 import ROUTER from "src/router"
 import AuthService from "src/services/AuthService"
-import OrganizationRegister from "./components/OrganizationRegister"
-import PersonRegister from "./components/PersonalRegister"
 import { RegisterStyle } from "./styled"
 import ReCAPTCHA from "react-google-recaptcha"
 import { useRef } from "react"
@@ -77,21 +75,6 @@ const RegisterPage = () => {
                   </Radio.Group>
                 </Form.Item>
               </Col> */}
-              {Type === 1 ? (
-                <OrganizationRegister
-                  form={form}
-                  setLoading={setLoading}
-                  setAcceptRules={setAcceptRules}
-                  acceptRules={acceptRules}
-                />
-              ) : (
-                <PersonRegister
-                  form={form}
-                  setLoading={setLoading}
-                  setAcceptRules={setAcceptRules}
-                  acceptRules={acceptRules}
-                />
-              )}
               <Col span={12} className="d-flex justify-content-flex-end">
                 <ReCAPTCHA
                   sitekey={process.env.REACT_APP_SITE_KEY}

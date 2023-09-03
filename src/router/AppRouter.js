@@ -12,10 +12,21 @@ const RegisterPage = React.lazy(() => import("src/pages/ANONYMOUS/Register"))
 
 // USER
 const PrivateRoutes = React.lazy(() => import("src/pages/PrivateRoutes"))
-const ChangePassword = React.lazy(() => import("src/pages/USER/ChangePassword"))
 
 // ADMIN
 const AminRoutes = React.lazy(() => import("src/pages/ADMIN/AminRoutes"))
+const EmployeeManager = React.lazy(() =>
+  import("src/pages/ADMIN/EmployeeManager"),
+)
+const CustomerManager = React.lazy(() =>
+  import("src/pages/ADMIN/CustomerManager"),
+)
+const ProductManager = React.lazy(() =>
+  import("src/pages/ADMIN/ProductManager"),
+)
+const CategoryManager = React.lazy(() =>
+  import("src/pages/ADMIN/CategoryManager"),
+)
 
 function LazyLoadingComponent({ children }) {
   return (
@@ -48,7 +59,38 @@ const routes = [
       </LazyLoadingComponent>
     ),
     children: [
-     
+      {
+        path: ROUTER.QUAN_LY_NHAN_VIEN,
+        element: (
+          <LazyLoadingComponent>
+            <EmployeeManager />
+          </LazyLoadingComponent>
+        ),
+      },
+      {
+        path: ROUTER.QUAN_LY_KHACH_HANG,
+        element: (
+          <LazyLoadingComponent>
+            <CustomerManager />
+          </LazyLoadingComponent>
+        ),
+      },
+      {
+        path: ROUTER.QUAN_LY_DANH_MUC,
+        element: (
+          <LazyLoadingComponent>
+            <CategoryManager />
+          </LazyLoadingComponent>
+        ),
+      },
+      {
+        path: ROUTER.QUAN_LY_SAN_PHAM,
+        element: (
+          <LazyLoadingComponent>
+            <ProductManager />
+          </LazyLoadingComponent>
+        ),
+      },
     ],
   },
 
@@ -62,11 +104,7 @@ const routes = [
     children: [
       {
         path: ROUTER.DOI_MAT_KHAU,
-        element: (
-          <LazyLoadingComponent>
-            <ChangePassword />
-          </LazyLoadingComponent>
-        ),
+        element: <LazyLoadingComponent></LazyLoadingComponent>,
       },
     ],
   },

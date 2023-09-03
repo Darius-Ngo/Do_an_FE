@@ -11,7 +11,7 @@ function AdminRoutes() {
   const location = useLocation()
 
   return !!isLogin ? (
-    user?.AccountType === ROLE_ID.ADMIN ? (
+    user?.id_phan_quyen === ROLE_ID.ADMIN ? (
       <MainLayout isAdmin={true}>
         <Outlet />
       </MainLayout>

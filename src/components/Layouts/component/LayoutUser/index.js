@@ -1,13 +1,11 @@
-import { DoubleLeftOutlined, UserOutlined } from "@ant-design/icons"
-import { Avatar, Col, Menu, Row, Tooltip } from "antd"
-import { useState } from "react"
+import { DoubleLeftOutlined } from "@ant-design/icons"
+import { Col, Menu, Row } from "antd"
+import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { useLocation, useNavigate } from "react-router-dom"
-import { hasPermission } from "src/lib/utils"
-import { MenuItemUser } from "../../MenuItems"
+import { MenuItemAdmin } from "../../MenuItems"
 import { UserMenuStyled } from "./styled"
 import "./styled.scss"
-import { useEffect } from "react"
 const LayoutUser = ({ children, selectedKey, userInfo }) => {
   const navigate = useNavigate()
   const [collapseMenu, setCollapseMenu] = useState(false)
@@ -72,7 +70,7 @@ const LayoutUser = ({ children, selectedKey, userInfo }) => {
                 mode="inline"
                 defaultOpenKeys={["subkey1", "subkey2"]}
                 items={
-                  MenuItemUser()
+                  MenuItemAdmin()
                   // ?.filter(x => hasPermission(x?.TabID, [...listTabs]))
                   // ?.map(i => ({
                   //   ...i,

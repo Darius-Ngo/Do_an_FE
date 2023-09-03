@@ -10,3 +10,39 @@ export const ROLE_ID = {
   NHAN_VIEN: 2,
   KHACH_HANG: 3,
 }
+
+export const STATUS_ACTIVE = [
+  {
+    value: 1,
+    label: "Đang hoạt động",
+  },
+  {
+    value: 0,
+    label: "Không hoạt động",
+  },
+]
+export const COLOR_STATUS = ["#ff4d4f", "#389e0d"]
+export const GENDER_LIST = [
+  {
+    value: 1,
+    label: "Nam",
+  },
+  {
+    value: 2,
+    label: "Nữ",
+  },
+]
+export const ROLE_LIST = [
+  {
+    value: 1,
+    label: "Quản trị",
+  },
+  {
+    value: 2,
+    label: "Nhân viên",
+  },
+  {
+    value: 3,
+    label: "Khách hàng",
+  },
+]

@@ -38,6 +38,7 @@
     "react-draft-wysiwyg": "^1.15.0",
     "react-facebook-login": "^4.1.1",
     "react-fade-in": "^2.0.1",
+    "react-google-recaptcha": "^3.1.0",
     "react-icons": "^4.9.0",
     "react-in-viewport": "^1.0.0-alpha.28",
     "react-pdf": "^7.3.3",

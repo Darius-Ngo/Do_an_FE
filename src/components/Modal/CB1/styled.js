@@ -5,7 +5,6 @@ export const ModalWrapper = styled.div`
   .textTitle {
     margin-bottom: 3px;
     text-align: center;
-    font-weight: 600;
   }
 
   .textValue {
@@ -30,7 +29,6 @@ export const ModalWrapper = styled.div`
   .ant-modal-body {
     background-color: red;
   }
- 
 `
 
 export const ModalStyled = styled(Modal)`

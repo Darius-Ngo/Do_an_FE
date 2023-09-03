@@ -2,7 +2,6 @@ import { Col, Form, Row, Select } from "antd"
 import { useEffect, useState, forwardRef, useImperativeHandle } from "react"
 import FlSelect from "src/components/FloatingLabel/Select"
 import RegionService from "src/services/RegionService"
-import GuestServices from "src/services/GuestService"
 import styled from "styled-components"
 
 const { Option } = Select
@@ -63,14 +62,14 @@ const SelectAddress = forwardRef(
         !selected?.province?.key
       ) {
         const province = listProvince?.find(
-          i => i?.RegionID === initValue?.[provinceId],
+          i => i?.id === initValue?.[provinceId],
         )
         setSelected(pre => ({
           ...pre,
           province: {
-            key: province?.ParentID,
-            value: province?.ParentID,
-            children: province?.RegionName,
+            key: province?.parentID,
+            value: province?.parentID,
+            children: province?.name,
           },
         }))
       }
@@ -80,26 +79,26 @@ const SelectAddress = forwardRef(
         !selected?.district?.key
       ) {
         const district = listDistrict?.find(
-          i => i?.RegionID === initValue?.[districtId],
+          i => i?.id === initValue?.[districtId],
         )
         setSelected(pre => ({
           ...pre,
           district: {
-            key: district?.ParentID,
-            value: district?.ParentID,
-            children: district?.RegionName,
+            key: district?.parentID,
+            value: district?.parentID,
+            children: district?.name,
           },
         }))
       }
 
       if (initValue?.[provinceId] && listWard?.length && !selected?.ward?.key) {
-        const ward = listWard?.find(i => i?.RegionID === initValue?.[wardId])
+        const ward = listWard?.find(i => i?.id === initValue?.[wardId])
         setSelected(pre => ({
           ...pre,
           ward: {
-            key: ward?.ParentID,
-            value: ward?.ParentID,
-            children: ward?.RegionName,
+            key: ward?.parentID,
+            value: ward?.parentID,
+            children: ward?.name,
           },
         }))
       }
@@ -122,8 +121,7 @@ const SelectAddress = forwardRef(
 
     const getListProvinceVN = () => {
       onBeforeLoading()
-      let Apis = isGuest ? GuestServices : RegionService
-      Apis.getByRegionId({ regionId: 234 })
+      RegionService.getListProvince()
         .then(res => {
           if (res?.isError) return
           setListProvince(res?.Object)
@@ -136,11 +134,10 @@ const SelectAddress = forwardRef(
       if (!e) return setListDistrict([])
       setSelected(pre => ({ ...pre, province }))
       onBeforeLoading()
-      let Apis = isGuest ? GuestServices : RegionService
-      Apis.getByRegionId({ regionId: e })
+      RegionService.getListDistrict(e)
         .then(res => {
           if (res?.isError) return
-          const lstDistrict = res?.Object?.filter(i => i.ParentID === e)
+          const lstDistrict = res?.Object?.filter(i => i.parentID === e)
           setListDistrict(lstDistrict)
         })
         .finally(onLoadingSuccuss)
@@ -152,11 +149,10 @@ const SelectAddress = forwardRef(
       setSelected(pre => ({ ...pre, district }))
 
       onBeforeLoading()
-      let Apis = isGuest ? GuestServices : RegionService
-      Apis.getByRegionId({ regionId: e })
+      RegionService.getListWard(e)
         .then(res => {
           if (res?.isError) return
-          const lstWard = res?.Object?.filter(i => i.ParentID === e)
+          const lstWard = res?.Object?.filter(i => i.parentID === e)
           setlistWard(lstWard)
         })
         .finally(onLoadingSuccuss)
@@ -175,7 +171,7 @@ const SelectAddress = forwardRef(
                 ]
               }
               required={required}
-              label={!floating && " Chọn Tỉnh/Thành phố "}
+              label={!floating && "Tỉnh/Thành phố "}
             >
               <FlSelect
                 getPopupContainer={() =>
@@ -185,16 +181,16 @@ const SelectAddress = forwardRef(
                 showSearch
                 allowClear={!required}
                 isRequired={required}
-                placeholder={!floating && " Chọn Tỉnh/Thành phố "}
+                placeholder={!floating && "Tỉnh/Thành phố "}
                 onChange={onChangeProvince}
                 style={{ width: "100%" }}
-                label={!!floating && " Chọn Tỉnh/Thành phố "}
+                label={!!floating && "Tỉnh/Thành phố "}
                 readOnly={readOnly}
               >
                 {listProvince?.length &&
                   listProvince?.map(i => (
-                    <Option key={i.RegionID} value={i.RegionID}>
-                      {i.RegionName}
+                    <Option key={i.id} value={i.id}>
+                      {i.name}
                     </Option>
                   ))}
               </FlSelect>
@@ -209,7 +205,7 @@ const SelectAddress = forwardRef(
                   { required: true, message: "Thông tin không được để trống" },
                 ]
               }
-              label={!floating && " Chọn Quận/Huyện "}
+              label={!floating && "Quận/Huyện "}
               required={required}
             >
               <FlSelect
@@ -220,16 +216,16 @@ const SelectAddress = forwardRef(
                 showSearch
                 allowClear={!required}
                 isRequired={required}
-                placeholder={!floating && " Chọn Quận/Huyện "}
+                placeholder={!floating && "Quận/Huyện "}
                 onChange={onChangeDistrict}
                 style={{ width: "100%" }}
-                label={!!floating && " Chọn Quận/Huyện "}
+                label={!!floating && "Quận/Huyện "}
                 readOnly={readOnly}
               >
                 {listDistrict?.length &&
                   listDistrict?.map(i => (
-                    <Option key={i.RegionID} value={i.RegionID}>
-                      {i.RegionName}
+                    <Option key={i.id} value={i.id}>
+                      {i.name}
                     </Option>
                   ))}
               </FlSelect>
@@ -247,7 +243,7 @@ const SelectAddress = forwardRef(
                   },
                 ]
               }
-              label={!floating && " Chọn Phường/Xã "}
+              label={!floating && "Phường/Xã "}
               required={required}
             >
               <FlSelect
@@ -257,17 +253,17 @@ const SelectAddress = forwardRef(
                 maxTagCount="responsive"
                 showSearch
                 allowClear={!required}
-                placeholder={!floating && " Chọn Phường/Xã "}
+                placeholder={!floating && "Phường/Xã "}
                 isRequired={required}
                 onChange={onChangeWard}
                 style={{ width: "100%" }}
-                label={!!floating && " Chọn Phường/Xã "}
+                label={!!floating && "Phường/Xã "}
                 readOnly={readOnly}
               >
                 {listWard?.length &&
                   listWard?.map(i => (
-                    <Option key={i.RegionID} value={i.RegionID}>
-                      {i.RegionName}
+                    <Option key={i.id} value={i.id}>
+                      {i.name}
                     </Option>
                   ))}
               </FlSelect>

@@ -43,18 +43,17 @@ export function parseBody(response) {
       deleteStorage(STORAGE.TOKEN)
       return window.location.replace(ROUTER.HOME)
     }
-    if (resData.Status === -2) return resData // ma sp, ten sp ton tai
-    if (resData.Status === 0) return resData // API tra ve success
-
-    if (resData.Status !== -1 && resData.Status !== 69 && resData.Object) {
+    // if (resData.status === -2) return resData // ma sp, ten sp ton tai
+    // if (resData.status === 0) return resData // API tra ve success
+    if (resData.status !== 200 && resData.Object) {
       notice({ msg: getMsgClient(resData.Object), isSuccess: false })
     }
-    if (resData.Status !== 1 && resData.Object) {
-      return {
-        ...resData,
-        object: getMsgClient(resData.Object),
-      }
-    }
+    // if (resData.status !== 1 && resData.Object) {
+    //   return {
+    //     ...resData,
+    //     object: getMsgClient(resData.Object),
+    //   }
+    // }
     return resData
   }
   return parseError(resData?.messages)

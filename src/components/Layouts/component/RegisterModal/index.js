@@ -48,7 +48,7 @@ const RegisterModal = ({ open, handleCancel, handleLogin, handleOk }) => {
       ]({
         ...values,
         Birthday: values.Birthday ? values.Birthday.format() : undefined,
-        AccountType: registerToOther ? typeActive.value2 : typeActive.value,
+        id_phan_quyen: registerToOther ? typeActive.value2 : typeActive.value,
       })
       if (res?.isError) return
       Notice({

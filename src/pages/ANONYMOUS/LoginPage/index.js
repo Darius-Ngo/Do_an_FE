@@ -5,18 +5,10 @@ import { useNavigate } from "react-router-dom"
 import Button from "src/components/MyButton/Button"
 import STORAGE, { getStorage, setStorage } from "src/lib/storage"
 import { StoreContext } from "src/lib/store"
-import {
-  getListSystemCate,
-  getListSystemKey,
-  setListTabs,
-  setUserInfo,
-} from "src/redux/appGlobal"
+import { setUserInfo } from "src/redux/appGlobal"
 import ROUTER from "src/router"
 import AuthService from "src/services/AuthService"
-import CommonService from "src/services/CommonService"
-import RoleService from "src/services/RoleService"
 import { StyleLoginPage } from "./styled"
-import SystemCateService from "src/services/SystemCateService"
 
 const LoginPage = () => {
   const [loading, setLoading] = useState(false)
@@ -25,27 +17,6 @@ const LoginPage = () => {
   const dispatch = useDispatch()
   const { routerStore } = useContext(StoreContext)
   const [routerBeforeLogin, setRouterBeforeLogin] = routerStore
-
-  const getListTab = async () => {
-    try {
-      setLoading(true)
-      const resp = await RoleService.getListTab()
-      if (resp.isError) return
-      dispatch(setListTabs(resp.Object))
-    } finally {
-      setLoading(false)
-    }
-  }
-  const getSystemKey = async () => {
-    const res = await CommonService.getSystemKey("All")
-    if (res.IsError) return
-    dispatch(getListSystemKey(res.Object))
-  }
-  const getSystemCate = async () => {
-    const resSystem = await SystemCateService.getForCombobox()
-    if (resSystem?.isError) return
-    dispatch(getListSystemCate(resSystem.Object))
-  }
   const onLogin = async () => {
     try {
       setLoading(true)
@@ -58,9 +29,6 @@ const LoginPage = () => {
       dispatch(setUserInfo(res?.Object))
       setRouterBeforeLogin(undefined)
       navigate(routerBeforeLogin ? routerBeforeLogin : ROUTER.HOME)
-      getListTab()
-      getSystemKey()
-      getSystemCate()
     } finally {
       setLoading(false)
     }
@@ -74,7 +42,7 @@ const LoginPage = () => {
             <div className="d-flex flex-column align-items-center justify-content-center">
               {/* <img src={logo} alt="" width={90} /> */}
               <div className="fs-26 fw-600 title-form mt-16">
-                Cục sở hữu trí tuệ
+                Tiệm cà phê bất ổn
               </div>
               {/* <img src={pana} alt="" width={"60%"} /> */}
             </div>
