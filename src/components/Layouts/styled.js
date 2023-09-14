@@ -101,51 +101,37 @@ export const StyleMenuAccount = styled.div`
 `
 export const LayoutStyled = styled.div`
   .logo {
-    height: 110%;
-    padding-right: 10px;
+    height: 45px;
   }
   .logo-text {
-    font-size: 80%;
+    font-size: 22px;
     color: #fff;
   }
-  .shrink-avatar {
-    width: 68px;
-    height: 100%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
-
-    img {
-      width: 68px;
-      height: 68px;
-    }
-  }
-  .shrink-avatar-transition {
-    transition: 0.8s all ease;
-    img {
-      transition: 0.8s all ease;
-    }
-  }
-  .no-shrink-avatar {
-    width: 135px;
-    height: 135px;
-    img {
-      width: 135px;
-      height: 135px;
-    }
-  }
   .header-background {
-    background: ${({ theme }) => theme["primary-color"]};
-    /* background: #fff; */
+    background: var(--color-header);
+    box-shadow: 1px 1px 2px #ddd;
+
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 1px 1px 2px #ddd;
     height: auto;
     padding: 0;
     .content {
       height: 100% !important;
     }
+    &.isAdmin {
+      background: ${({ theme }) => theme["primary-color"]};
+    }
+    &.transparent {
+      /* background: #ba936c; */
+      background-color: transparent;
+      box-shadow: unset;
+    }
+  }
+  .body-app {
+    position: relative;
+    top: -53px;
+    background-color: var(--color-bgr);
   }
   .fl-input-radius {
     .ant-input-group > .ant-input:first-child,
@@ -172,11 +158,6 @@ export const LayoutStyled = styled.div`
       }
     }
   }
-  .div-center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
   .account-infor-avatar {
     display: flex;
     justify-content: center;
@@ -191,63 +172,7 @@ export const LayoutStyled = styled.div`
       fill: #fff;
     }
   }
-  .account-infor-sumary-border {
-    border-radius: 20px;
-    border: 1px solid #a3a3a3;
-    gap: 2px;
-    padding: 2.5px 2.5px;
-  }
-  .account-info-sumary-border-admin {
-    border-radius: 20px;
-    border: 1px solid #a3a3a3;
-    gap: 2px;
-    padding: 2.5px 2.5px;
-  }
-  .account-infor-sumary {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 2px;
-    span {
-      svg path {
-        fill: #000;
-      }
-      .fullname {
-        font-size: 12px !important;
-        color: #a3a3a3;
-        font-weight: 600;
-        max-width: 160px;
-
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 1; /* number of lines to show */
-        line-clamp: 1;
-        -webkit-box-orient: vertical;
-      }
-      .account {
-        font-size: 12px !important;
-        color: #a3a3a3;
-        font-style: italic;
-      }
-    }
-  }
-  .spacement_pp {
-    /* height: 17px; */
-    height: 15px;
-    margin-bottom: 10px;
-    position: sticky;
-    top: 60px;
-    background: #fff;
-    z-index: 10;
-  }
   position: relative;
-  .admin-header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    filter: drop-shadow(0px 1px 10px rgba(0, 0, 0, 0.1));
-  }
   .breadcrumb-header {
     box-shadow: inset 0 5px 10px #ebebeb;
     padding: 15px 0;
@@ -256,39 +181,6 @@ export const LayoutStyled = styled.div`
   .box-breadcrumb-header {
     background-color: #fff;
     /* padding-bottom: 20px; */
-  }
-  .background-animation {
-    position: fixed;
-    bottom: 40px;
-    left: 40px;
-    background-color: #c7dcff;
-    width: 100px;
-    height: 100px;
-    border-radius: 50px;
-    animation: Background-zoom 2.3s ease-in-out infinite;
-  }
-  .chatbot {
-    position: fixed;
-    bottom: 40px;
-    right: 40px;
-  }
-  .phone-animate {
-    position: fixed;
-    bottom: 62px;
-    left: 62px;
-    animation: App-logo-spin 1s ease-in-out infinite;
-  }
-  @keyframes Background-zoom {
-    0%,
-    100% {
-      transform: rotate(0) scale(0.7) skew(1deg);
-      opacity: 0.2;
-    }
-
-    50% {
-      transform: rotate(0) scale(1) skew(1deg);
-      opacity: 0.2;
-    }
   }
   @keyframes App-logo-spin {
     0%,
@@ -341,27 +233,6 @@ export const LayoutStyled = styled.div`
     padding: 4px 10px;
     border-radius: 50%;
   }
-  .change-rule {
-    height: 100%;
-    .change-rule_item {
-      height: 100%;
-      padding: 12px 20px;
-      color: #fff;
-      font-size: 16px;
-      margin-right: -20px;
-      cursor: pointer;
-      margin-left: 24px;
-      span.anticon.anticon-export {
-        font-size: 18px;
-      }
-    }
-    .candidate {
-      background-color: #00b2a3;
-    }
-    .business {
-      background-color: rgb(24 38 66);
-    }
-  }
   .ant-layout {
     background-color: #fff;
   }
@@ -383,12 +254,11 @@ export const LayoutStyled = styled.div`
 `
 
 export const CustomMenuStyled = styled.div`
-  width: 100%;
   .ant-menu {
     background-color: unset;
-    width: calc(100vw - 650px);
+    /* width: calc(100vw - 650px); */
   }
-  .ant-menu-submenu-selected::after {
+  /* .ant-menu-submenu-selected::after {
     border-bottom: unset !important;
     content: "";
     width: 10px;
@@ -398,10 +268,7 @@ export const CustomMenuStyled = styled.div`
     position: absolute;
     left: 0;
     margin: auto;
-  }
-  .ant-menu-item {
-    height: 60px;
-  }
+  } */
   .ant-menu-item,
   .ant-menu-submenu {
     padding: 0px !important;
@@ -441,8 +308,8 @@ export const CustomMenuStyled = styled.div`
   }
   .ant-menu-title-content {
     color: #fff;
-    padding: 12px;
-    border-radius: 12px;
+    padding: 14px;
+    font-weight: 600;
   }
 
   .ant-menu-item:hover::after {
@@ -460,9 +327,18 @@ export const CustomMenuStyled = styled.div`
   .ant-menu-overflow-item:hover
     .ant-menu-submenu-title
     .ant-menu-title-content {
-    color: ${({ theme }) => theme["primary-color"]} !important;
-    background-color: #fff;
+    /* color: ${({ theme }) => theme["primary-color"]} !important;
+    background-color: #fff; */
     transition: all linear 0.3s;
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: #fff;
+    }
   }
   .ant-menu-overflow-item.ant-menu-overflow-item-rest.ant-menu-submenu-selected,
   .ant-menu-overflow-item.ant-menu-submenu-selected[aria-hidden="true"] {

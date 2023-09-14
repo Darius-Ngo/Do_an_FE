@@ -7,21 +7,22 @@ import STORAGE, { clearStorage, getStorage, setStorage } from "src/lib/storage"
 import { StoreContext } from "src/lib/store"
 import UseWindowSize from "src/lib/useWindowSize"
 import { hasPermission } from "src/lib/utils"
-import { setUserInfo } from "src/redux/appGlobal"
+import { resetState, setUserInfo } from "src/redux/appGlobal"
 import { setOpenLoginModal } from "src/redux/loginModal"
 import ROUTER from "src/router"
 import AuthService from "src/services/AuthService"
 import LayoutCommon from "../Common/Layout"
 import LayoutAdminCommon from "../Common/LayoutAdmin"
 import SvgIcon from "../SvgIcon"
-import MenuItemBreadcrumb, { MenuItemAdmin } from "./MenuItems"
+import MenuItemBreadcrumb, { MenuHeader, MenuItemAdmin } from "./MenuItems"
 import LayoutAdmin from "./component/LayoutAdmin"
 import LayoutUser from "./component/LayoutUser"
 import LoginModal from "./component/LoginModal"
-import Notification from "./component/Notification"
+import Logo from "src/assets/images/logo/logo-wellcome.png"
 import RegisterModal from "./component/RegisterModal"
-import { LayoutStyled, StyleMenuAccount } from "./styled"
+import { CustomMenuStyled, LayoutStyled, StyleMenuAccount } from "./styled"
 import "./styles.scss"
+import BreadcrumbHome from "./BreadcrumbHome/BreadcrumbHome"
 
 const { Header, Content } = Layout
 
@@ -41,6 +42,7 @@ const MainLayout = ({ children, isAdmin }) => {
   const [isModelNotification, setIsModelNotification] = isNotificationUpdate
   const [menuAdmin, setMenuAdmin] = useState([])
   const [openRegisterModal, setOpenRegisterModal] = useState(false)
+  const [isTransparent, setIsTransparent] = useState(false)
 
   const onClickMenu = key => {
     if (isModelNotification) {
@@ -54,7 +56,7 @@ const MainLayout = ({ children, isAdmin }) => {
     if (isLogin) {
       await AuthService.logout()
       clearStorage()
-      dispatch(setUserInfo({}))
+      dispatch(resetState())
       return navigate(ROUTER?.HOME)
     }
   }
@@ -129,30 +131,64 @@ const MainLayout = ({ children, isAdmin }) => {
   const setShowListMenu = list =>
     !!list?.length
       ? list
-          ?.filter(x => hasPermission(x?.TabID, [...listTabs]))
+          ?.filter(x =>
+            hasPermission(
+              x?.TabID,
+              [...listTabs].concat([
+                {
+                  CategoryID: 1,
+                  IsVistTab: true,
+                },
+              ]),
+            ),
+          )
           .map(i => ({
             ...i,
             children: setShowListMenu(i?.children),
           }))
       : undefined
 
+  const handleScroll = event => {
+    if (event.target.scrollTop >= 40) {
+      setIsTransparent(false)
+    } else {
+      setIsTransparent(true)
+    }
+  }
+  useEffect(() => {
+    const element = document.getElementById("root")
+    element.addEventListener("scroll", handleScroll)
+    return () => {
+      element.removeEventListener("scroll", handleScroll)
+    }
+  }, [])
+
   useEffect(() => {
     let key = location?.pathname
     setSelectedKey([key])
+    if (key === ROUTER.HOME) {
+      setIsTransparent(true)
+    } else {
+      setIsTransparent(false)
+    }
   }, [location])
 
   useEffect(() => {
     if (!!isLogin) {
-      // const menu = setShowListMenu(MenuItemAdmin())
-      setMenuAdmin(MenuItemAdmin())
+      const menu = setShowListMenu(MenuItemAdmin())
+      setMenuAdmin(menu)
     }
   }, [userInfo, listTabs])
 
-  console.log("selectedKey", selectedKey)
-
   return (
     <LayoutStyled>
-      <Header className={`header-background`}>
+      <Header
+        className={`header-background ${isAdmin ? "isAdmin" : ""} ${
+          location?.pathname === ROUTER.HOME && isTransparent && !isAdmin
+            ? "transparent"
+            : ""
+        }`}
+      >
         <div className="d-flex-start">
           <div className="w-100">
             {React.createElement(isAdmin ? LayoutAdminCommon : LayoutCommon, {
@@ -170,10 +206,8 @@ const MainLayout = ({ children, isAdmin }) => {
                       whiteSpace: "nowrap",
                       height: "40px",
                       paddingLeft: 0,
-                      flex: 1,
-                      width: 0,
+                      width: "fit-content",
                     }}
-                    flex={"auto"}
                   >
                     <div
                       className={"mr-40"}
@@ -186,33 +220,33 @@ const MainLayout = ({ children, isAdmin }) => {
                           UseWindowSize.isMobile() ? "fs-12" : "fs-20"
                         }`}
                       >
-                        {/* <img src={Logo} className="logo" alt="logo" /> */}
-                        <div className="logo-text text-uppercase pointer">
+                        <img src={Logo} className="logo" alt="logo" />
+                        <div className="logo-text pointer">
                           Tiệm cà phê bất ổn
                         </div>
                       </span>
                     </div>
-                    {/* <CustomMenuStyled>
+                  </Col>
+                  <Col
+                    style={{ width: 0 }}
+                    className="d-flex algin-items-center justify-content-flex-end"
+                    flex={"auto"}
+                  >
+                    <CustomMenuStyled className="mr-40">
                       <Menu
                         onClick={key => onClickMenu(key)}
                         selectedKeys={selectedKey}
                         mode="horizontal"
-                        items={
-                          isLogin
-                            ? setShowListMenu(MenuItem())
-                            : MenuItem().filter(i => i.publishRouter)
-                        }
+                        items={MenuHeader()}
                       />
-                    </CustomMenuStyled> */}
-                  </Col>
-                  <Col style={{ width: "auto" }}>
+                    </CustomMenuStyled>
                     <Row
                       gutter={30}
                       className="align-items-center layout-action"
                     >
                       {!!isLogin ? (
                         <div className="d-flex justify-content-flex-end align-items-center">
-                          <Notification />
+                          {/* <Notification /> */}
                           <Dropdown
                             overlay={menuAccount}
                             overlayStyle={{ minWidth: "200px" }}
@@ -270,7 +304,7 @@ const MainLayout = ({ children, isAdmin }) => {
           </div>
         </div>
       </Header>
-      {/* <BreadcrumbHome /> */}
+      <BreadcrumbHome />
       <Layout>
         <Content className="site-layout-background">
           {isAdmin ? (
@@ -289,10 +323,14 @@ const MainLayout = ({ children, isAdmin }) => {
             />
           ) : (
             <>
-              <div className="w-100 body-cl">{children}</div>
+              <div
+                className="w-100 body-app"
+                style={location.pathname === ROUTER.HOME ? {} : { top: 0 }}
+              >
+                {children}
+              </div>
             </>
           )}
-          {/* {!isAdmin && !isUser && <Footer />} */}
         </Content>
       </Layout>
       <Drawer

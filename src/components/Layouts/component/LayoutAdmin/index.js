@@ -20,6 +20,7 @@ const LayoutAdmin = ({ children, selectedKey, menuAdmin }) => {
       .getElementById("body-admin-scroll")
       .scrollTo({ top: 0, left: 0, behavior: "smooth" })
   }, [location?.pathname])
+  console.log("menuAdmin", menuAdmin)
 
   return (
     <Row gutter={20} style={{ flexWrap: "nowrap" }}>
@@ -36,13 +37,7 @@ const LayoutAdmin = ({ children, selectedKey, menuAdmin }) => {
               onClick={onChange}
               selectedKeys={selectedKey}
               mode="inline"
-              defaultOpenKeys={[
-                "subkey1",
-                "subkey2",
-                "subkey3",
-                "subkey4",
-                "subkey5",
-              ]}
+              defaultOpenKeys={[]}
               items={menuAdmin}
               // className="menu-antd-admin"
               className="menu-antd-user pt-5"

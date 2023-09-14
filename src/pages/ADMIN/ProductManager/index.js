@@ -13,6 +13,7 @@ import ModalInsertUpdate from "./components/ModalInsertUpdate"
 import { ProductManagerStyle } from "./styled"
 import ListCategory from "./components/ListCategory"
 import { formatMoney } from "src/lib/utils"
+import CategoryService from "src/services/CategoryService"
 const ProductManager = () => {
   const [pagination, setPagination] = useState({
     pageSize: 20,
@@ -20,6 +21,7 @@ const ProductManager = () => {
     textSearch: "",
   })
   const [loading, setLoading] = useState(false)
+  const [listCategory, setListCategory] = useState([])
   const [data, setData] = useState([])
   const [total, setTotal] = useState(0)
   const [openModalDetail, setOpenModalDetail] = useState(false)
@@ -120,6 +122,7 @@ const ProductManager = () => {
             setOpenInsert({
               ...record,
               isUpdate: true,
+              id_loai_san_pham: categorySelected.id,
             })
           }
         />
@@ -208,6 +211,22 @@ const ProductManager = () => {
       setLoading(false)
     }
   }
+  const getListCategory = async () => {
+    try {
+      setLoading(true)
+      const res = await CategoryService.getListCategory({
+        status: 1,
+      })
+      if (res.isError) return
+      setListCategory(res.Object?.data)
+      setCategorySelected(res.Object?.data[0])
+    } finally {
+      setLoading(false)
+    }
+  }
+  useEffect(() => {
+    getListCategory()
+  }, [])
   useEffect(() => {
     if (categorySelected)
       setPagination({
@@ -259,6 +278,7 @@ const ProductManager = () => {
       <Row gutter={16}>
         <Col style={{ width: 300 }}>
           <ListCategory
+            listCategory={listCategory}
             categorySelected={categorySelected}
             setCategorySelected={setCategorySelected}
           />
@@ -269,12 +289,15 @@ const ProductManager = () => {
             <Button
               btnType="primary"
               className="btn-hover-shadow"
-              onClick={() => setOpenInsert(true)}
+              onClick={() =>
+                setOpenInsert({
+                  id_loai_san_pham: categorySelected.id,
+                })
+              }
             >
               Thêm sản phẩm
             </Button>
           </div>
-
           <TableCustom
             isPrimary
             dataSource={data}
@@ -316,6 +339,7 @@ const ProductManager = () => {
       </Row>
       {openInsert && (
         <ModalInsertUpdate
+          listCategory={listCategory}
           open={openInsert}
           onCancel={() => setOpenInsert(false)}
           onOk={getList}

@@ -68,9 +68,7 @@ const BreadcrumbHome = () => {
         <div className="box-breadcrumb-header">
           <div className="breadcrumb-header">
             <LayoutCommon>
-              <Breadcrumb>
-                {/* 
-                separator=">"
+              <Breadcrumb separator=">">
                 <BreadcrumbItem
                   style={{
                     cursor: "pointer",
@@ -78,7 +76,7 @@ const BreadcrumbHome = () => {
                   href={ROUTER?.HOME}
                 >
                   Trang chủ
-                </BreadcrumbItem> */}
+                </BreadcrumbItem>
                 {listParent?.map((i, idx) => (
                   <BreadcrumbItem
                     style={{

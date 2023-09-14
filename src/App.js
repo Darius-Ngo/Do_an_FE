@@ -5,6 +5,7 @@ import "./App.scss"
 import ModalLoading from "./components/Modal/Loading"
 import AppRouter from "./router/AppRouter"
 import SpinCustom from "./components/Spin"
+import { setUserInfo } from "./redux/appGlobal"
 
 function App() {
   const isLogin = getStorage(STORAGE.TOKEN)
@@ -13,6 +14,7 @@ function App() {
 
   useEffect(() => {
     if (!!isLogin) {
+      dispatch(setUserInfo(getStorage(STORAGE.USER_INFO)))
     }
   }, [isLogin])
 

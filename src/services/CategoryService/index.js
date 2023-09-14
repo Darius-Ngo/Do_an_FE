@@ -6,6 +6,7 @@ import {
   apiUpdateCategory,
   apiDeleteCategory,
   apiChangeStatus,
+  apiGetListCategoryInHome,
 } from "./urls"
 
 const getListCategory = body => http.post(apiGetListCategory, body)
@@ -14,6 +15,7 @@ const addCategory = body => http.post(apiAddCategory, body)
 const changeStatus = body => http.post(apiChangeStatus, body)
 const updateCategory = body => http.put(apiUpdateCategory, body)
 const deleteCategory = id => http.delete(apiDeleteCategory + `/${id}`)
+const getListCategoryInHome = () => http.get(apiGetListCategoryInHome)
 
 const CategoryService = {
   getListCategory,
@@ -22,5 +24,6 @@ const CategoryService = {
   updateCategory,
   deleteCategory,
   changeStatus,
+  getListCategoryInHome,
 }
 export default CategoryService

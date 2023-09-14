@@ -9,6 +9,10 @@ const NotFound = React.lazy(() => import("src/pages/NotFound"))
 const Home = React.lazy(() => import("src/pages/ANONYMOUS/Home"))
 const LoginPage = React.lazy(() => import("src/pages/ANONYMOUS/LoginPage"))
 const RegisterPage = React.lazy(() => import("src/pages/ANONYMOUS/Register"))
+const MenuPage = React.lazy(() => import("src/pages/ANONYMOUS/MenuPage"))
+const ProductDetail = React.lazy(() =>
+  import("src/pages/ANONYMOUS/ProductDetail"),
+)
 
 // USER
 const PrivateRoutes = React.lazy(() => import("src/pages/PrivateRoutes"))
@@ -138,6 +142,22 @@ const routes = [
         element: (
           <LazyLoadingComponent>
             <RegisterPage />
+          </LazyLoadingComponent>
+        ),
+      },
+      {
+        path: ROUTER.THUC_DON,
+        element: (
+          <LazyLoadingComponent>
+            <MenuPage />
+          </LazyLoadingComponent>
+        ),
+      },
+      {
+        path: ROUTER.CHI_TIET_SAN_PHAM,
+        element: (
+          <LazyLoadingComponent>
+            <ProductDetail />
           </LazyLoadingComponent>
         ),
       },

@@ -16,17 +16,16 @@ export const appGlobalSlice = createSlice({
     changeAuthorization: (state, action) => {
       state.isAuthenticated = action.payload
     },
-  
     setUserInfo: (state, action) => {
       state.userInfo = action.payload
+    },
+    resetState: state => {
+      return initialState
     },
   },
 })
 
-export const {
-  changeAuthorization,
-  setListTabs,
-  setUserInfo,
-} = appGlobalSlice.actions
+export const { changeAuthorization, setListTabs, setUserInfo, resetState } =
+  appGlobalSlice.actions
 
 export default appGlobalSlice.reducer
