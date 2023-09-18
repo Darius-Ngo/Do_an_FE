@@ -10,12 +10,14 @@ const Home = React.lazy(() => import("src/pages/ANONYMOUS/Home"))
 const LoginPage = React.lazy(() => import("src/pages/ANONYMOUS/LoginPage"))
 const RegisterPage = React.lazy(() => import("src/pages/ANONYMOUS/Register"))
 const MenuPage = React.lazy(() => import("src/pages/ANONYMOUS/MenuPage"))
+const ProductPage = React.lazy(() => import("src/pages/ANONYMOUS/ProductPage"))
 const ProductDetail = React.lazy(() =>
   import("src/pages/ANONYMOUS/ProductDetail"),
 )
 
 // USER
 const PrivateRoutes = React.lazy(() => import("src/pages/PrivateRoutes"))
+const CartPage = React.lazy(() => import("src/pages/USER/CartPage"))
 
 // ADMIN
 const AminRoutes = React.lazy(() => import("src/pages/ADMIN/AminRoutes"))
@@ -110,6 +112,14 @@ const routes = [
         path: ROUTER.DOI_MAT_KHAU,
         element: <LazyLoadingComponent></LazyLoadingComponent>,
       },
+      {
+        path: ROUTER.CHI_TIET_GIO_HANG,
+        element: (
+          <LazyLoadingComponent>
+            <CartPage />
+          </LazyLoadingComponent>
+        ),
+      },
     ],
   },
 
@@ -150,6 +160,14 @@ const routes = [
         element: (
           <LazyLoadingComponent>
             <MenuPage />
+          </LazyLoadingComponent>
+        ),
+      },
+      {
+        path: ROUTER.DANH_SACH_SAN_PHAM,
+        element: (
+          <LazyLoadingComponent>
+            <ProductPage />
           </LazyLoadingComponent>
         ),
       },

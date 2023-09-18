@@ -11,7 +11,7 @@ export const ProductDetailStyle = styled.div`
   .product-detail-title {
     font-size: 24px;
     font-weight: bold;
-    color: #612500;
+    color: var(--color-brown-dark);
   }
   .product-description {
     font-size: 16px;
@@ -41,15 +41,28 @@ export const ProductDetailStyle = styled.div`
     .btn-order {
       background-color: #cf1322;
       color: #fff;
+      border: 2px solid #cf1322;
+      width: 300px;
       text-align: center;
       font-size: 1rem;
       font-weight: bold;
       border-radius: 8px;
       padding: 13px 70px;
       margin-top: 24px;
-      width: fit-content;
-      box-shadow: 6px 10px 16px 6px rgb(0 0 0 / 20%);
+      /* box-shadow: 6px 10px 16px 6px rgb(0 0 0 / 20%); */
       cursor: pointer;
+    }
+    .btn-ordered {
+      color: #cf1322;
+      background-color: #fff;
+      border: 2px solid #cf1322;
+      width: 300px;
+      text-align: center;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 8px;
+      padding: 13px 70px;
+      margin-top: 24px;
     }
 
     .product-option {
@@ -97,36 +110,7 @@ export const ProductDetailStyle = styled.div`
         align-items: center;
         margin: 1rem 0;
         font-size: 22px;
-        color: #e4b95b;
-      }
-      .change-quality {
-        display: flex;
-        align-items: center;
-        border: 1px solid #ddd;
-        .input-change {
-          border-radius: 0;
-          border: 0;
-          box-shadow: none;
-          width: 45px !important;
-          .ant-input-number-handler-wrap {
-            display: none;
-          }
-        }
-        .btn-change {
-          height: 38px;
-          width: 28px;
-          font-size: 20px;
-          border: 0;
-          cursor: pointer;
-          &:hover {
-            background-color: #d9d9d9;
-          }
-        }
-        .btn-change:disabled {
-          cursor: not-allowed;
-          background-color: #f5f5f5;
-          color: #999;
-        }
+        color: var(--color-yellow);
       }
     }
   }
@@ -190,7 +174,7 @@ export const ProductDetailStyle = styled.div`
     .product-name {
       font-size: 1.2rem;
       font-weight: bold;
-      color: #612500;
+      color: var(--color-brown-dark);
       margin: 1rem 0 0.5rem;
       cursor: pointer;
       transition: all linear 0.3s;
@@ -203,13 +187,44 @@ export const ProductDetailStyle = styled.div`
       align-items: center;
       justify-content: center;
       font-size: 14px;
-      color: #612500;
+      color: var(--color-brown-dark);
       span {
         font-weight: bold;
       }
     }
   }
 `
+export const InputChangeQuantity = styled.div`
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  width: fit-content;
+  .input-change {
+    border-radius: 0;
+    border: 0;
+    box-shadow: none;
+    width: 45px !important;
+    .ant-input-number-handler-wrap {
+      display: none;
+    }
+  }
+  .btn-change {
+    height: 38px;
+    width: 28px;
+    font-size: 20px;
+    border: 0;
+    cursor: pointer;
+    &:hover {
+      background-color: #d9d9d9;
+    }
+  }
+  .btn-change:disabled {
+    cursor: not-allowed;
+    background-color: #f5f5f5;
+    color: #999;
+  }
+`
+
 export const TabsStyled = styled.div`
   @media (max-width: 450px) {
     .ant-tabs.ant-tabs-top.ant-tabs-mobile.rating-row {

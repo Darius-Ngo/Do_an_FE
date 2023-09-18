@@ -36,36 +36,52 @@ const CategoryManager = () => {
         </div>
       ),
     },
-    {
-      title: "Ảnh",
-      dataIndex: "anh",
-      key: "anh",
-      width: 120,
-      align: "center",
-      render: value => <Image src={value} width={"100%"} fallback={FAILBACK} />,
-    },
+    // {
+    //   title: "Ảnh",
+    //   dataIndex: "anh",
+    //   key: "anh",
+    //   width: 120,
+    //   align: "center",
+    //   render: value => <Image src={value} width={"100%"} fallback={FAILBACK} />,
+    // },
     {
       title: "Tên danh mục",
       dataIndex: "ten_loai_san_pham",
       key: "ten_loai_san_pham",
       align: "left",
+      width: 250,
       render: (text, record) => (
-        <div className="max-line1" title={text}>
+        <div className="max-line2" title={text}>
           {text}
         </div>
       ),
     },
     {
-      title: "Ghi chú",
-      dataIndex: "ghi_chu",
-      key: "ghi_chu",
+      title: "Mô tả",
+      dataIndex: "mo_ta",
+      key: "mo_ta",
       align: "left",
       render: (text, record) => (
-        <div className="max-line1" title={text}>
-          {text}
-        </div>
+        <div
+          className="max-line2"
+          title={text}
+          dangerouslySetInnerHTML={{
+            __html: text,
+          }}
+        />
       ),
     },
+    // {
+    //   title: "Ghi chú",
+    //   dataIndex: "ghi_chu",
+    //   key: "ghi_chu",
+    //   align: "left",
+    //   render: (text, record) => (
+    //     <div className="max-line2" title={text}>
+    //       {text}
+    //     </div>
+    //   ),
+    // },
     {
       title: "Trạng thái",
       dataIndex: "trang_thai",

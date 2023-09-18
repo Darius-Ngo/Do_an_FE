@@ -41,6 +41,7 @@ const ModalInsertUpdate = ({ onOk, open, onCancel, listCategory }) => {
 
   useEffect(() => {
     if (isUpdate) {
+      console.log("open", open)
       form.setFieldsValue({
         ...open,
         anh: open.anh
@@ -82,8 +83,8 @@ const ModalInsertUpdate = ({ onOk, open, onCancel, listCategory }) => {
         anh: urlAvatar,
         id: open.id,
         // id_loai_san_pham: open.id_loai_san_pham,
-        ngay_bd: values?.ngay_bd ? values?.ngay_bd.format() : null,
-        ngay_kt: values?.ngay_kt ? values?.ngay_kt.format() : null,
+        ngay_bd: values?.ngay_bd ? values?.ngay_bd.format() : "",
+        ngay_kt: values?.ngay_kt ? values?.ngay_kt.format() : "",
       })
       if (res?.isError) return
       onOk && onOk()

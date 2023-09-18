@@ -1,16 +1,13 @@
 import React from "react"
 import { Link } from "react-router-dom"
-import { BASE_URL } from "../../../../../core/constant"
-import "./styles.scss"
+import { ProductCardStyle } from "./styled.js"
 
-const ProductCard = props => {
-  const { product } = props
-
+const ProductCard = ({ product }) => {
   return (
-    <div className="product-item">
+    <ProductCardStyle>
       <div className="wrap-img">
         <Link to={`/product/${product.id}`}>
-          <img src={`${BASE_URL}${product.anh}`} alt={product.ten_san_pham} />
+          <img src={product.anh} alt={product.ten_san_pham} />
         </Link>
       </div>
       <Link to={`/product/${product.id}`}>
@@ -26,7 +23,7 @@ const ProductCard = props => {
           })}
         </span>
       </div>
-    </div>
+    </ProductCardStyle>
   )
 }
 

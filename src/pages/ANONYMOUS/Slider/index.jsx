@@ -6,7 +6,8 @@ import icon_1 from "src/assets/images/slider/icon-slide-1.png"
 import icon_2 from "src/assets/images/slider/icon-slide-2.png"
 import icon_3 from "src/assets/images/slider/icon-slide-3.png"
 import icon_4 from "src/assets/images/slider/icon-slide-4.png"
-import SwiperCore, { Autoplay, Navigation, Pagination } from "swiper"
+import { Autoplay, Pagination, Navigation } from "swiper/modules"
+
 import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
@@ -48,7 +49,7 @@ const list = [
 ]
 
 const Slider = () => {
-  SwiperCore.use([Autoplay, Pagination, Navigation])
+  // SwiperCore.use([Autoplay, Pagination, Navigation])
 
   return (
     <div className="wrap-slider">

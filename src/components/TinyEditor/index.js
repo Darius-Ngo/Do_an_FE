@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import { Editor } from "@tinymce/tinymce-react"
 import styled from "styled-components"
-import { changeModalLoading } from "src/redux/common"
 import { useDispatch } from "react-redux"
 import FileService from "src/services/FileService"
 
@@ -138,12 +137,12 @@ export default function TinyEditor(props) {
             try {
               const formData = new FormData()
               formData.append("file", blobInfo?.blob())
-              dispatch(changeModalLoading(true))
+              // dispatch(changeModalLoading(true))
               const res = await FileService.uploadFile(formData)
               if (res?.isError) return
               return res?.Object
             } finally {
-              dispatch(changeModalLoading(false))
+              // dispatch(changeModalLoading(false))
             }
           },
           templates: [
@@ -193,11 +192,11 @@ export default function TinyEditor(props) {
                   try {
                     const formData = new FormData()
                     formData.append("file", file)
-                    dispatch(changeModalLoading(true))
+                    // dispatch(changeModalLoading(true))
                     const res = await FileService.uploadFile(formData)
                     return cb(res?.Object)
                   } finally {
-                    dispatch(changeModalLoading(false))
+                    // dispatch(changeModalLoading(false))
                   }
                 }
 

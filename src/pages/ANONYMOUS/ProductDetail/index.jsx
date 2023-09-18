@@ -7,11 +7,14 @@ import LayoutCommon from "src/components/Common/Layout"
 import { setOpenLoginModal } from "src/redux/loginModal"
 import ROUTER from "src/router"
 import ProductService from "src/services/ProductService"
-import SwiperCore, { Autoplay } from "swiper"
-import { ProductDetailStyle, TabsStyled } from "./styled"
+// import SwiperCore, { Autoplay } from "swiper"
+import Notice from "src/components/Notice"
+import { setListCart } from "src/redux/appGlobal"
+import CartService from "src/services/CartService"
+import { InputChangeQuantity, ProductDetailStyle, TabsStyled } from "./styled"
 
 const ProductDetail = () => {
-  SwiperCore.use([Autoplay])
+  // SwiperCore.use([Autoplay])
   const { userInfo } = useSelector(state => state?.appGlobal)
   const { product } = useLocation().state
   const navigate = useNavigate()
@@ -23,6 +26,8 @@ const ProductDetail = () => {
   const [sizeSelect, setSizeSelect] = useState(1)
   const [quantity, setQuantity] = useState(1)
   const [price, setPrice] = useState()
+  const [addAble, setAddAble] = useState(true)
+
   const onSelectSize = size => {
     setSizeSelect(size.target.value)
   }
@@ -49,14 +54,49 @@ const ProductDetail = () => {
       setLoading(false)
     }
   }
-
+  const getListCart = async id_nguoi_dung => {
+    try {
+      setLoading(true)
+      const res = await CartService.getListCart({ id_nguoi_dung })
+      if (res.isError) return
+      dispatch(setListCart(res.Object))
+    } finally {
+      setLoading(false)
+    }
+  }
+  const checkProduct = async () => {
+    try {
+      setLoading(true)
+      const res = await CartService.checkProductCart({
+        id_san_pham: product?.id,
+        kich_co: sizeSelect,
+        id_nguoi_dung: userInfo.id,
+      })
+      if (res.isError) return
+      setAddAble(res.Object)
+    } finally {
+      setLoading(false)
+    }
+  }
   const handleOrder = () => {
     if (userInfo.id && productDetail) {
-      const body = {
-        id_san_pham: productDetail?.id,
-        kich_co: sizeSelect,
-        so_luong: quantity,
-        id_nguoi_dung: userInfo.id,
+      try {
+        setLoading(true)
+        const body = {
+          id_san_pham: productDetail?.id,
+          kich_co: sizeSelect,
+          so_luong: quantity,
+          id_nguoi_dung: userInfo.id,
+        }
+        const res = CartService.addToCart(body)
+        if (res.isError) return
+        Notice({
+          msg: "Thêm sản phẩm vào giỏ hàng thành công.",
+        })
+        setAddAble(false)
+        getListCart(userInfo.id)
+      } finally {
+        setLoading(false)
       }
     } else {
       dispatch(setOpenLoginModal(true))
@@ -73,9 +113,13 @@ const ProductDetail = () => {
       top: 0,
       behavior: "smooth", // Thêm behavior này để tạo hiệu ứng cuộn mượt
     })
+    setSizeSelect(1)
     getDetail()
     getListProduct()
   }, [product])
+  useEffect(() => {
+    if (userInfo.id) checkProduct()
+  }, [product, sizeSelect, userInfo.id])
 
   useEffect(() => {
     switch (sizeSelect) {
@@ -184,7 +228,7 @@ const ProductDetail = () => {
                         <div className="fs-16 fw-600 mr-6 title-item">
                           Số lượng:{" "}
                         </div>
-                        <div className="change-quality">
+                        <InputChangeQuantity>
                           <button
                             className="btn-change"
                             disabled={quantity === 1}
@@ -192,11 +236,6 @@ const ProductDetail = () => {
                           >
                             -
                           </button>
-                          {/* <Input
-                          className="input-change"
-                          value={quantity}
-                          onChange={text => setQuantity(text.target.value)}
-                        /> */}
                           <InputNumber
                             className="input-change"
                             value={quantity}
@@ -215,12 +254,16 @@ const ProductDetail = () => {
                           >
                             +
                           </button>
-                        </div>
+                        </InputChangeQuantity>
                       </div>
                     </div>
-                    <div className="btn-order" onClick={handleOrder}>
-                      THÊM VÀO GIỎ
-                    </div>
+                    {addAble ? (
+                      <div className="btn-order" onClick={handleOrder}>
+                        THÊM VÀO GIỎ
+                      </div>
+                    ) : (
+                      <div className="btn-ordered">ĐÃ CÓ TRONG GIỎ</div>
+                    )}
                   </div>
                 </div>
               </Col>
@@ -253,7 +296,6 @@ const ProductDetail = () => {
                             <div
                               className="product-name"
                               onClick={() => {
-                                window.scrollTo(0, 0)
                                 navigate(ROUTER.CHI_TIET_SAN_PHAM, {
                                   state: {
                                     product,

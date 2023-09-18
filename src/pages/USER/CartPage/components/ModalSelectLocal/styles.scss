@@ -1,0 +1,46 @@
+.wrap-modal-user {
+  .ant-modal-close-x {
+      width: 50px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .anticon {
+          font-size: 16px;
+
+          &:hover {
+              padding: 8px;
+              border-radius: 50%;
+          }
+      }
+  }
+  .ant-modal-content {
+      border-radius: 15px;
+  }
+
+  .ant-modal-header {
+      padding: 10px 20px;
+      border-radius: 15px 15px 0 0;
+  }
+
+  .ant-modal-title {
+      font-size: 20px;
+      text-align: center;
+      font-weight: 700;
+      color: orangered;
+  }
+
+  .modal-btn {
+    border-radius: 6px;
+    &.btn-cancel:hover {
+      color: orangered;
+      border: 1px solid orangered;
+    }
+    &.btn-submit {
+      background-color: orangered;
+      color: #fff;
+      border: 1px solid orangered;
+    }
+  }
+}

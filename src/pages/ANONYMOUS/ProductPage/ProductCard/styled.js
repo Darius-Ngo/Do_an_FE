@@ -1,6 +1,6 @@
-@use '../../../../../scss/' as *;
+import styled from "styled-components"
 
-.product-item {
+export const ProductCardStyle = styled.div`
   text-align: center;
 
   .wrap-img {
@@ -13,14 +13,14 @@
     }
     &:hover {
       img {
-        transform: scale(1.1)
+        transform: scale(1.1);
       }
     }
   }
   .product-name {
     font-size: 1.2rem;
     font-weight: bold;
-    color: #612500;
+    color: var(--color-brown-dark);
     margin: 1rem 0 0.5rem;
     cursor: pointer;
     transition: all linear 0.3s;
@@ -33,9 +33,9 @@
     align-items: center;
     justify-content: center;
     font-size: 14px;
-    color: #612500;
+    color: var(--color-brown-dark);
     span {
       font-weight: bold;
     }
   }
-}
+`

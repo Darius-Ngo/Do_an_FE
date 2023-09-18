@@ -1,14 +1,21 @@
-import { Col, Row, Spin } from "antd"
-import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Col, Divider, Row, Spin } from "antd"
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import LayoutCommon from "src/components/Common/Layout/index.js"
+import ROUTER from "src/router/index.js"
 import CategoryService from "src/services/CategoryService"
 import "./styled.js"
-import { useEffect } from "react"
 import { MenuPageStyle } from "./styled.js"
-import ROUTER from "src/router/index.js"
-import LayoutCommon from "src/components/Common/Layout/index.js"
+// import SwiperCore, { Autoplay, Navigation } from "swiper"
+import { Autoplay, Navigation } from "swiper/modules"
 
+import "swiper/css/navigation"
+import "swiper/css/pagination"
+import { Swiper, SwiperSlide } from "swiper/react"
+import ProductCard from "./ProductCard/index.jsx"
 const MenuPage = () => {
+  // SwiperCore.use([Autoplay])
+
   const [loading, setLoading] = useState(false)
   const [listCategory, setListCategory] = useState([])
   const getList = async () => {
@@ -28,7 +35,11 @@ const MenuPage = () => {
     <MenuPageStyle>
       <Spin spinning={loading}>
         {listCategory?.map((category, i) => (
-          <CategoryItem key={i} category={category} />
+          <CategoryItem
+            key={i}
+            category={category}
+            lastChild={i === listCategory?.length - 1}
+          />
         ))}
       </Spin>
     </MenuPageStyle>
@@ -37,39 +48,25 @@ const MenuPage = () => {
 
 export default MenuPage
 
-const CategoryItem = props => {
-  const { category } = props
+const CategoryItem = ({ category, lastChild }) => {
   const navigate = useNavigate()
 
   return (
     <LayoutCommon>
       <div className="category-row">
         <Row gutter={[16, 8]}>
-          <Col span={24}>
-            <div className="category-title">{category.ten_loai_san_pham}</div>
-          </Col>
-          <Col
-            span={16}
-            className="mb-3 category-info"
-            // onClick={() =>
-            //   navigate(ROUTER.DANH_SACH_sAN_PHAM, {
-            //     state: category,
-            //   })
-            // }
-          >
-            <div className="category-img">
-              <img
-                src={category.anh}
-                alt=""
-                width={"100%"}
-                onClick={() =>
-                  navigate(ROUTER.DANH_SACH_sAN_PHAM, {
-                    state: {
-                      category,
-                    },
-                  })
-                }
-              />
+          <Col span={16}>
+            <div
+              className="category-title"
+              onClick={() =>
+                navigate(ROUTER.DANH_SACH_SAN_PHAM, {
+                  state: {
+                    category,
+                  },
+                })
+              }
+            >
+              {category.ten_loai_san_pham}
             </div>
             <div
               className="category-description"
@@ -77,50 +74,25 @@ const CategoryItem = props => {
                 __html: category.mo_ta,
               }}
             />
-            <button
-              className="btn-show-product"
-              onClick={() =>
-                navigate(ROUTER.DANH_SACH_sAN_PHAM, {
-                  state: {
-                    category,
-                  },
-                })
-              }
-            >
-              XEM SẢN PHẨM
-            </button>
           </Col>
-          <Col span={8}>
-            {category?.ds_san_pham?.slice(0, 3)?.map((product, i) => (
-              <div
-                className="box-product"
-                key={product.id}
-                onClick={() =>
-                  navigate(ROUTER.CHI_TIET_SAN_PHAM, {
-                    state: {
-                      product,
-                    },
-                  })
-                }
+          <Col span={16}>
+            <div className="product-list ">
+              <Swiper
+                grabCursor={true}
+                spaceBetween={30}
+                slidesPerView={4}
+                autoplay={{ delay: 2000 }}
+                // navigation={true}
+                modules={[Navigation, Autoplay]}
               >
-                <img
-                  src={product.anh}
-                  alt={product.ten_san_pham}
-                  className="wrap-img"
-                />
-                <div className="product-info">
-                  <div className="product-info_name">
-                    {product.ten_san_pham}
-                  </div>
-                  <div
-                    className="product-info_description"
-                    dangerouslySetInnerHTML={{
-                      __html: product.mo_ta,
-                    }}
-                  />
-                </div>
-              </div>
-            ))}
+                {category?.ds_san_pham?.map((product, i) => (
+                  <SwiperSlide key={i}>
+                    <ProductCard product={product} />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
+            {!lastChild && <Divider />}
           </Col>
         </Row>
       </div>

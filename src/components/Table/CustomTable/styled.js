@@ -49,7 +49,8 @@ export const CellListContent = styled.div`
 
 export const TableCustomStyled = styled.div`
   .ant-table-thead th.ant-table-column-has-sorters:hover {
-    background: ${props => (props.isPrimary ? "#01638D" : "#E4EFFE")};
+    background: ${props =>
+      props.isPrimary ? "var(--color-primary)" : "#F0F0F0"};
   }
   .ant-table-column-sorter-inner {
     svg path {
@@ -78,16 +79,21 @@ export const TableCustomStyled = styled.div`
   }
   .ant-table-thead {
     .ant-table-cell {
-      /* background: ${props => (props.isPrimary ? "#154398" : "#154398")}; */
-      background: ${props => (props.isPrimary ? "#01638D" : "#E4EFFE")};
+      background: ${props =>
+        props.isPrimary ? "var(--color-primary)" : "#FFF"};
       color: ${props => (props.isPrimary ? "#fff" : "#212529")};
-      font-size: 13px;
-      /* min-height: 48px; */
+      font-size: 14px;
+      border-bottom: 2px solid #ddd;
     }
   }
-  .ant-table-tbody > tr {
-    /* height: 48px; */
+  .ant-table-tbody > tr.ant-table-row-selected > td,
+  .ant-table-tbody > tr.ant-table-row:hover > td {
+    background: ${props =>
+      props.isPrimary
+        ? "rgb(227, 243, 254)"
+        : "rgb(251 249 239 / 50%)"} !important;
   }
+
   .ant-table.ant-table-bordered
     > .ant-table-container
     > .ant-table-header
@@ -207,4 +213,30 @@ export const TableCustomStyled = styled.div`
   /* .ant-table-pagination {
     display: ${props => (props.showPagination ? "flex" : "none")};
   } */
+  .ant-checkbox:not(.ant-checkbox-disabled):hover .ant-checkbox-inner,
+  .ant-checkbox .ant-checkbox-inner {
+    border: 1px solid
+      ${props =>
+        props.isPrimary ? "var(--color-primary)" : "var(--color-brown-dark)"};
+  }
+  .ant-checkbox-wrapper:not(.ant-checkbox-wrapper-disabled):hover
+    .ant-checkbox-checked:not(.ant-checkbox-disabled)
+    .ant-checkbox-inner,
+  .ant-checkbox-checked:not(.ant-checkbox-disabled) .ant-checkbox-inner,
+  .ant-checkbox-checked:not(.ant-checkbox-disabled):hover .ant-checkbox-inner {
+    background-color: ${props =>
+      props.isPrimary ? "var(--color-primary)" : "var(--color-brown-dark)"};
+    border-color: ${props =>
+      props.isPrimary ? "var(--color-primary)" : "var(--color-brown-dark)"};
+  }
+  .ant-checkbox-indeterminate .ant-checkbox-inner:after {
+    background-color: ${props =>
+      props.isPrimary ? "var(--color-primary)" : "var(--color-brown-dark)"};
+  }
+  .ant-checkbox-checked:after {
+    border-color: ${props =>
+      props.isPrimary
+        ? "var(--color-primary)"
+        : "var(--color-brown-dark)"} !important;
+  }
 `

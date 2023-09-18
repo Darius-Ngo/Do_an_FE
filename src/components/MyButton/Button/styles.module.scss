@@ -148,8 +148,11 @@
     }
 }
 
-.yellow {
-  @include btnType(#ffd800, #ffd800, #172b4d, #ffd800, #ffd800, #172b4d);
+.orange {
+  @include btnType(var(--color-orange), var(--color-orange), #FFF, #FFF, var(--color-orange), var(--color-orange));
+  & {
+    border: 2px solid;
+  }
 }
 
 .secondary {
@@ -210,9 +213,9 @@
   @include btnType(#ffffff, #8b8a92, #8b8a92, #ffffff, #8b8a92, #8b8a92);
 }
 
-.orange {
-  @include btnType(#f7941e, #f7941e, #ffffff, #f7941e, #f7941e, #ffffff);
-}
+// .orange {
+//   @include btnType(#f7941e, #f7941e, #ffffff, #f7941e, #f7941e, #ffffff);
+// }
 
 .back {
   @include btnType(#f0f0f0, #505050, #505050, #f0f0f0, #505050, #505050);

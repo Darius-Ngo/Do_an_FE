@@ -4,6 +4,7 @@ const initialState = {
   listTabs: [],
   isAuthenticated: false,
   userInfo: {},
+  listCart: [],
 }
 
 export const appGlobalSlice = createSlice({
@@ -12,6 +13,9 @@ export const appGlobalSlice = createSlice({
   reducers: {
     setListTabs: (state, action) => {
       state.listTabs = action.payload
+    },
+    setListCart: (state, action) => {
+      state.listCart = action.payload
     },
     changeAuthorization: (state, action) => {
       state.isAuthenticated = action.payload
@@ -25,7 +29,12 @@ export const appGlobalSlice = createSlice({
   },
 })
 
-export const { changeAuthorization, setListTabs, setUserInfo, resetState } =
-  appGlobalSlice.actions
+export const {
+  changeAuthorization,
+  setListTabs,
+  setUserInfo,
+  setListCart,
+  resetState,
+} = appGlobalSlice.actions
 
 export default appGlobalSlice.reducer

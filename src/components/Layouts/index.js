@@ -1,4 +1,4 @@
-import { Avatar, Col, Drawer, Dropdown, Layout, Menu, Row } from "antd"
+import { Avatar, Badge, Col, Drawer, Dropdown, Layout, Menu, Row } from "antd"
 import React, { useContext, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useLocation, useNavigate } from "react-router-dom"
@@ -23,6 +23,8 @@ import RegisterModal from "./component/RegisterModal"
 import { CustomMenuStyled, LayoutStyled, StyleMenuAccount } from "./styled"
 import "./styles.scss"
 import BreadcrumbHome from "./BreadcrumbHome/BreadcrumbHome"
+import { ShoppingCartOutlined } from "@ant-design/icons"
+import CartSmall from "./component/CartSmall"
 
 const { Header, Content } = Layout
 
@@ -31,7 +33,9 @@ const MainLayout = ({ children, isAdmin }) => {
   const location = useLocation()
   const dispatch = useDispatch()
   const { openLoginModal } = useSelector(state => state.loginModal)
-  const { listTabs, userInfo } = useSelector(state => state?.appGlobal)
+  const { listTabs, userInfo, listCart } = useSelector(
+    state => state?.appGlobal,
+  )
   const isLogin = getStorage(STORAGE.TOKEN)
   let isUser = location.pathname.includes(ROUTER.DICH_VU)
   const [open, setOpen] = useState(false)
@@ -246,6 +250,24 @@ const MainLayout = ({ children, isAdmin }) => {
                     >
                       {!!isLogin ? (
                         <div className="d-flex justify-content-flex-end align-items-center">
+                          {!isAdmin && (
+                            <Badge
+                              count={listCart?.length}
+                              overflowCount={99}
+                              size="middle"
+                              className="badge-count mr-12 pointer"
+                            >
+                              <Dropdown
+                                overlay={<CartSmall />}
+                                placement="bottomRight"
+                                arrow={{ pointAtCenter: true }}
+                              >
+                                <div className="wrap-icon-cart">
+                                  <ShoppingCartOutlined className="fs-18" />
+                                </div>
+                              </Dropdown>
+                            </Badge>
+                          )}
                           {/* <Notification /> */}
                           <Dropdown
                             overlay={menuAccount}
@@ -258,11 +280,7 @@ const MainLayout = ({ children, isAdmin }) => {
                                     src={userInfo?.avatar}
                                     size={32}
                                     className="style-avt mr-8"
-                                    icon={
-                                      <div>
-                                        <SvgIcon name="user-header" />
-                                      </div>
-                                    }
+                                    icon={<SvgIcon name="user-header" />}
                                   />
                                   <span className="mr-8 max-line1">
                                     {userInfo?.ho_ten}
@@ -325,6 +343,7 @@ const MainLayout = ({ children, isAdmin }) => {
             <>
               <div
                 className="w-100 body-app"
+                // body-app
                 style={location.pathname === ROUTER.HOME ? {} : { top: 0 }}
               >
                 {children}

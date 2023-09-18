@@ -7,11 +7,12 @@ import Button from "src/components/MyButton/Button"
 import STORAGE, { getStorage, setStorage } from "src/lib/storage"
 import { StoreContext } from "src/lib/store"
 import { hasPermission } from "src/lib/utils"
-import { setListTabs, setUserInfo } from "src/redux/appGlobal"
+import { setListCart, setListTabs, setUserInfo } from "src/redux/appGlobal"
 import ROUTER from "src/router"
 import AuthService from "src/services/AuthService"
 import { MenuItemAdmin } from "../../MenuItems"
 import { ModalLoginStyle, StyleLoginModal } from "./styled"
+import CartService from "src/services/CartService"
 
 const LoginModal = ({
   openLoginModal,
@@ -47,17 +48,26 @@ const LoginModal = ({
   //   }
   //   navigate(startPage)
   // }
-
+  const getListCart = async id_nguoi_dung => {
+    try {
+      setLoading(true)
+      const res = await CartService.getListCart({ id_nguoi_dung })
+      if (res.isError) return
+      dispatch(setListCart(res.Object))
+    } finally {
+      setLoading(false)
+    }
+  }
   const onLogin = async () => {
     try {
       setLoading(true)
       const values = await form.validateFields()
       const res = await AuthService.login({ ...values })
-      console.log("res", res)
       if (res?.isOk) {
         setStorage(STORAGE.TOKEN, res?.Object?.token)
         setStorage(STORAGE.USER_INFO, res?.Object)
         dispatch(setUserInfo(res?.Object))
+        getListCart(res?.Object.id)
         setRouterBeforeLogin(undefined)
         handleCancel()
         if (stopNavigate) return

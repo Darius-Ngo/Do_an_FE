@@ -1,7 +1,7 @@
-@use '../../../../scss/' as *;
+import styled from "styled-components"
 
-.container-product-page { 
-  background-color: #fbedd7;
+export const ProductPageStyle = styled.div`
+  /* background-color: #fbedd7; */
 
   &_content {
     padding: 9rem 3rem 2rem;
@@ -11,7 +11,7 @@
   .category-title {
     font-size: 3rem;
     font-weight: bold;
-    color: #612500;
+    color: var(--color-brown-dark);
   }
 
   .category-description {
@@ -24,7 +24,7 @@
   .title {
     font-size: 1.4rem;
     font-weight: bold;
-    color: #612500;
+    color: var(--color-brown-dark);
     margin-top: 1rem;
   }
 
@@ -34,11 +34,15 @@
 
     .swiper-slide {
       width: 30%;
-  }
+    }
+    .swiper-button-prev:after,
+    .swiper-button-next:after {
+      color: #fff;
+    }
   }
 
   .category-list {
-    padding: 3rem 3rem 5rem ;
+    padding: 3rem 3rem 5rem;
     .category-item {
       .wrap-img {
         overflow: hidden;
@@ -48,14 +52,14 @@
         }
         &:hover {
           img {
-            transform: scale(1.1)
+            transform: scale(1.1);
           }
         }
       }
       .product-name {
         font-size: 1.4rem;
         font-weight: bold;
-        color: #612500;
+        color: var(--color-brown-dark);
         margin-top: 1rem;
         transition: all linear 0.3s;
         &:hover {
@@ -64,5 +68,4 @@
       }
     }
   }
-
-}
+`

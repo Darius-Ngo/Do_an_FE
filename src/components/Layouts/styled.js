@@ -131,7 +131,7 @@ export const LayoutStyled = styled.div`
   .body-app {
     position: relative;
     top: -53px;
-    background-color: var(--color-bgr);
+    /* background-color: var(--color-bgr); */
   }
   .fl-input-radius {
     .ant-input-group > .ant-input:first-child,
@@ -228,10 +228,14 @@ export const LayoutStyled = styled.div`
       }
     }
   }
-  .wrap-icon {
+  .wrap-icon-cart {
     background: #fff;
-    padding: 4px 10px;
     border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .ant-layout {
     background-color: #fff;
@@ -250,6 +254,12 @@ export const LayoutStyled = styled.div`
   }
   .ant-badge-count {
     font-size: 10px;
+    min-width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translate(30%, -30%);
   }
 `
 
