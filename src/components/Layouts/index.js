@@ -108,6 +108,17 @@ const MainLayout = ({ children, isAdmin }) => {
             <Menu.Item
               key="4"
               onClick={() => {
+                navigate(ROUTER.DS_DON_DAT_HANG)
+              }}
+            >
+              <div className="btn-function strok-btn-function">
+                <SvgIcon name="user-info" />
+                <span className="fw-400">Danh sách đơn hàng</span>
+              </div>
+            </Menu.Item>
+            <Menu.Item
+              key="5"
+              onClick={() => {
                 navigate(ROUTER.DOI_MAT_KHAU)
               }}
             >
@@ -117,7 +128,7 @@ const MainLayout = ({ children, isAdmin }) => {
               </div>
             </Menu.Item>
             <Menu.Item
-              key="5"
+              key="6"
               style={{ color: "#ED1117" }}
               onClick={handleLogout}
             >
@@ -250,24 +261,25 @@ const MainLayout = ({ children, isAdmin }) => {
                     >
                       {!!isLogin ? (
                         <div className="d-flex justify-content-flex-end align-items-center">
-                          {!isAdmin && (
-                            <Badge
-                              count={listCart?.length}
-                              overflowCount={99}
-                              size="middle"
-                              className="badge-count mr-12 pointer"
-                            >
-                              <Dropdown
-                                overlay={<CartSmall />}
-                                placement="bottomRight"
-                                arrow={{ pointAtCenter: true }}
+                          {!isAdmin &&
+                            location.pathname !== ROUTER.CHI_TIET_GIO_HANG && (
+                              <Badge
+                                count={listCart?.length}
+                                overflowCount={99}
+                                size="middle"
+                                className="badge-count mr-12 pointer"
                               >
-                                <div className="wrap-icon-cart">
-                                  <ShoppingCartOutlined className="fs-18" />
-                                </div>
-                              </Dropdown>
-                            </Badge>
-                          )}
+                                <Dropdown
+                                  overlay={<CartSmall />}
+                                  placement="bottomRight"
+                                  arrow={{ pointAtCenter: true }}
+                                >
+                                  <div className="wrap-icon-cart">
+                                    <ShoppingCartOutlined className="fs-18" />
+                                  </div>
+                                </Dropdown>
+                              </Badge>
+                            )}
                           {/* <Notification /> */}
                           <Dropdown
                             overlay={menuAccount}

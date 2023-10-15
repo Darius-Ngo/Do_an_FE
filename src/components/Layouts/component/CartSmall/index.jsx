@@ -9,6 +9,7 @@ import { setListCart } from "src/redux/appGlobal"
 import ROUTER from "src/router"
 import { useNavigate } from "react-router-dom"
 import Button from "src/components/MyButton/Button"
+import { formatMoneyVND } from "src/lib/utils"
 
 const CartSmall = () => {
   const navigate = useNavigate()
@@ -58,10 +59,7 @@ const CartSmall = () => {
                   </div>
                 </div>
                 <div className="cart-item__price">
-                  {(item?.gia_ban * item?.so_luong)?.toLocaleString("vi", {
-                    style: "currency",
-                    currency: "VND",
-                  })}
+                  {formatMoneyVND(item?.gia_ban * item?.so_luong)}
                 </div>
                 <Tooltip placement="right" title="Xóa sản phẩm" color="#f5222d">
                   <div
@@ -75,7 +73,12 @@ const CartSmall = () => {
             ))}
           {!listCart.length && (
             <Empty
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              image={
+                <img
+                  src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/9bdd8040b334d31946f49e36beaf32db.png"
+                  alt=""
+                />
+              }
               description={"Chưa có sản phẩm nào!"}
             />
           )}

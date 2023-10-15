@@ -22,5 +22,6 @@ const ROUTER = {
 
   //USER
   CHI_TIET_GIO_HANG: "/chi-tiet-gio-hang",
+  DS_DON_DAT_HANG: "/ds-don-hang",
 }
 export default ROUTER

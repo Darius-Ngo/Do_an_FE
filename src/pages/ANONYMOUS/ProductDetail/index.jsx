@@ -12,6 +12,7 @@ import Notice from "src/components/Notice"
 import { setListCart } from "src/redux/appGlobal"
 import CartService from "src/services/CartService"
 import { InputChangeQuantity, ProductDetailStyle, TabsStyled } from "./styled"
+import { formatMoneyVND } from "src/lib/utils"
 
 const ProductDetail = () => {
   // SwiperCore.use([Autoplay])
@@ -216,12 +217,7 @@ const ProductDetail = () => {
                           Giá:{" "}
                         </div>
                         <div className="product-price">
-                          <strong>
-                            {price?.toLocaleString("vi", {
-                              style: "currency",
-                              currency: "VND",
-                            })}
-                          </strong>
+                          <strong>{formatMoneyVND(price)}</strong>
                         </div>
                       </div>
                       <div className="d-flex align-items-center">
@@ -307,10 +303,7 @@ const ProductDetail = () => {
                             </div>
                             <div className="line"></div>
                             <div className="product-price">
-                              {product.gia_ban_sizes?.toLocaleString("vi", {
-                                style: "currency",
-                                currency: "VND",
-                              })}
+                              {formatMoneyVND(product.gia_ban_sizes)}
                             </div>
                           </div>
                           <div className="product-description max-line1">

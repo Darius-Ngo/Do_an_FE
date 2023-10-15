@@ -22,6 +22,16 @@ export const STATUS_ACTIVE = [
   },
 ]
 export const COLOR_STATUS = ["#ff4d4f", "#389e0d"]
+export const COLOR_STATUS_ORDER = [
+  "",
+  "#fa541c",
+  "#7cb305",
+  "#0D99FF",
+  "#00C590",
+  "#389e0d",
+  "#ED1117",
+]
+export const SIZE_PRODUCT = ["", "Size S", "Size M", "Size L"]
 export const GENDER_LIST = [
   {
     value: 1,

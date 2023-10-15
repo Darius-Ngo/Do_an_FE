@@ -2,8 +2,11 @@ import styled from "styled-components"
 import { Modal } from "antd"
 
 export const ModalWrapper = styled(Modal)`
-  .ant-modal .ant-modal-header {
-    background-color: ${props => (props.isError ? "red" : "#d3f7ff")};
+  .ant-modal-header,
+  .ant-modal-title {
+    /* background-color: ${props => (props.isError ? "red" : "#d3f7ff")}; */
+    background-color: ${props =>
+      props.isUser ? "var(--color-orange)" : "var(--color-primary)"} !important;
   }
 
   .ant-modal-body {

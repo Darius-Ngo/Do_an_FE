@@ -16,6 +16,7 @@ export default function ButtonCircle(props) {
     btnType = "btn-circle",
     fill,
     style,
+    colorTooltip = "",
   } = props
 
   return (
@@ -24,6 +25,7 @@ export default function ButtonCircle(props) {
       mouseLeaveDelay={0}
       title={title}
       overlayStyle={{ maxWidth: 500 }}
+      color={colorTooltip}
     >
       <Button
         style={style}

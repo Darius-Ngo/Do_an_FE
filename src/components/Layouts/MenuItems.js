@@ -22,6 +22,10 @@ const MenuItemBreadcrumb = () => {
       label: "Chi tiết giỏ hàng",
       key: ROUTER.CHI_TIET_GIO_HANG,
     },
+    {
+      label: "Danh sách đơn hàng",
+      key: ROUTER.DS_DON_DAT_HANG,
+    },
   ]
 }
 

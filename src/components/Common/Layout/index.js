@@ -3,7 +3,7 @@ import styled from "styled-components"
 const LayoutStyled = styled.div`
   display: flex;
   justify-content: center;
-  width: 1300px;
+  width: 1200px;
   /* width: auto; */
   margin: auto;
   height: 100%;

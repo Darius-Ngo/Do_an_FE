@@ -1,6 +1,7 @@
 import React from "react"
 import { Link } from "react-router-dom"
 import { ProductCardStyle } from "./styled.js"
+import { formatMoneyVND } from "src/lib/utils.js"
 
 const ProductCard = ({ product }) => {
   return (
@@ -14,14 +15,7 @@ const ProductCard = ({ product }) => {
         <div className="product-name">{product.ten_san_pham}</div>
       </Link>
       <div className="product-price">
-        Giá{" "}
-        <span>
-          :{" "}
-          {product.giaBanSizeS?.toLocaleString("vi", {
-            style: "currency",
-            currency: "VND",
-          })}
-        </span>
+        Giá <span>: {formatMoneyVND(product.giaBanSizeS)}</span>
       </div>
     </ProductCardStyle>
   )

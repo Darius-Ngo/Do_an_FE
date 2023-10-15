@@ -18,6 +18,7 @@ const ProductDetail = React.lazy(() =>
 // USER
 const PrivateRoutes = React.lazy(() => import("src/pages/PrivateRoutes"))
 const CartPage = React.lazy(() => import("src/pages/USER/CartPage"))
+const ListOrdered = React.lazy(() => import("src/pages/USER/ListOrdered"))
 
 // ADMIN
 const AminRoutes = React.lazy(() => import("src/pages/ADMIN/AminRoutes"))
@@ -117,6 +118,14 @@ const routes = [
         element: (
           <LazyLoadingComponent>
             <CartPage />
+          </LazyLoadingComponent>
+        ),
+      },
+      {
+        path: ROUTER.DS_DON_DAT_HANG,
+        element: (
+          <LazyLoadingComponent>
+            <ListOrdered />
           </LazyLoadingComponent>
         ),
       },
