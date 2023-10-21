@@ -1,9 +1,11 @@
-import { apiUploadFileImage } from "./urls"
+import { apiUploadFile, apiUploadListFile } from "./urls"
 import http from "../index"
 
-const uploadFileImage = body => http.post(apiUploadFileImage, body)
+const uploadFile = body => http.post(apiUploadFile, body)
+const uploadListFile = body => http.post(apiUploadListFile, body)
 
 const FileService = {
-  uploadFileImage,
+  uploadFile,
+  uploadListFile,
 }
 export default FileService

@@ -34,6 +34,7 @@ const ProductManager = React.lazy(() =>
 const CategoryManager = React.lazy(() =>
   import("src/pages/ADMIN/CategoryManager"),
 )
+const OrderManager = React.lazy(() => import("src/pages/ADMIN/OrderManager"))
 
 function LazyLoadingComponent({ children }) {
   return (
@@ -95,6 +96,14 @@ const routes = [
         element: (
           <LazyLoadingComponent>
             <ProductManager />
+          </LazyLoadingComponent>
+        ),
+      },
+      {
+        path: ROUTER.QUAN_LY_DON_HANG,
+        element: (
+          <LazyLoadingComponent>
+            <OrderManager />
           </LazyLoadingComponent>
         ),
       },

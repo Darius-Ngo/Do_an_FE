@@ -10,6 +10,7 @@ export const ROLE_ID = {
   NHAN_VIEN: 2,
   KHACH_HANG: 3,
 }
+export const ROLE_ADMIN = [1, 2]
 
 export const STATUS_ACTIVE = [
   {
@@ -32,6 +33,7 @@ export const COLOR_STATUS_ORDER = [
   "#ED1117",
 ]
 export const SIZE_PRODUCT = ["", "Size S", "Size M", "Size L"]
+export const PAYMENT_TYPE = ["Thanh toán khi nhận hàng", "Thanh toán online"]
 export const GENDER_LIST = [
   {
     value: 1,

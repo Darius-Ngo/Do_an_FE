@@ -1,2 +1,3 @@
 // UPLOAD
-export const apiUploadFileImage = "api/upload/uploadFileImage"
+export const apiUploadFile = "api/upload/uploadFile"
+export const apiUploadListFile = "api/upload/uploadListFile"

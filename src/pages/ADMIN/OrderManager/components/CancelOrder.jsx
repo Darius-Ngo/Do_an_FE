@@ -1,6 +1,6 @@
 import { ExclamationCircleOutlined } from "@ant-design/icons"
 import { Col, ConfigProvider, Form, Radio, Row, Space, Spin } from "antd"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useSelector } from "react-redux"
 import FlInput from "src/components/FloatingLabel/Input"
 import CustomModal from "src/components/Modal/CustomModal"
@@ -36,11 +36,10 @@ const CancelOrder = ({ open, onOk, onCancel }) => {
     }
   }
   const listReason = [
-    "Muốn nhập/thay đổi mã Voucher",
-    "Muốn thay đổi sản phẩm trong đơn (size, số lượng,...)",
-    "Thủ tục thanh toán quá rắc rối",
-    "Tìm thấy giá rẻ hơn ở chỗ khác",
-    "Đổi ý, không muốn mua nữa",
+    "Khách hàng đổi ý, không muốn mua nữa.",
+    "Không liên hệ được với người đặt, xác nhận đơn hàng không thành công.",
+    "Giao hàng không thành công.",
+    "Cửa hàng không thể cung cấp đơn hàng.",
   ]
   return (
     <CustomModal
@@ -50,13 +49,13 @@ const CancelOrder = ({ open, onOk, onCancel }) => {
       onCancel={onCancel}
       footer={
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button onClick={onCancel} btnType="orange-third">
+          <Button onClick={onCancel} btnType="third">
             Đóng
           </Button>
           <Button
             disabled={loading}
             onClick={() => handleSubmit()}
-            btnType="orange"
+            btnType="primary"
           >
             Xác nhận
           </Button>
@@ -92,7 +91,7 @@ const CancelOrder = ({ open, onOk, onCancel }) => {
             hoàn tác !
           </div>
         </div>
-        <ConfigProvider
+        {/* <ConfigProvider
           theme={{
             components: {
               Radio: {
@@ -100,53 +99,53 @@ const CancelOrder = ({ open, onOk, onCancel }) => {
               },
             },
           }}
-        >
-          <Form form={form} layout="vertical">
-            <Row gutter={[16]}>
-              <Col span={24}>
-                <Form.Item
-                  name="reasonSelect"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Vui lòng chọn lý do hủy đơn!",
-                    },
-                  ]}
-                >
-                  <Radio.Group>
-                    <Space direction="vertical">
-                      {listReason.map(i => (
-                        <Radio value={i}>{i}</Radio>
-                      ))}
-                      <Radio value={0}>Lý do khác.</Radio>
-                    </Space>
-                  </Radio.Group>
-                </Form.Item>
-              </Col>
-              <Col span={24}>
-                <Form.Item shouldUpdate noStyle>
-                  {({ getFieldValue }) => {
-                    if (getFieldValue("reasonSelect") === 0) {
-                      return (
-                        <Form.Item
-                          name="reasonInput"
-                          rules={[
-                            {
-                              required: true,
-                              message: "Lý do hủy đơn không được để trống!",
-                            },
-                          ]}
-                        >
-                          <FlInput label="Nhập lý do" isRequired />
-                        </Form.Item>
-                      )
-                    }
-                  }}
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
-        </ConfigProvider>
+        > */}
+        <Form form={form} layout="vertical">
+          <Row gutter={[16]}>
+            <Col span={24}>
+              <Form.Item
+                name="reasonSelect"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng chọn lý do hủy đơn!",
+                  },
+                ]}
+              >
+                <Radio.Group>
+                  <Space direction="vertical">
+                    {listReason.map(i => (
+                      <Radio value={i}>{i}</Radio>
+                    ))}
+                    <Radio value={0}>Lý do khác.</Radio>
+                  </Space>
+                </Radio.Group>
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item shouldUpdate noStyle>
+                {({ getFieldValue }) => {
+                  if (getFieldValue("reasonSelect") === 0) {
+                    return (
+                      <Form.Item
+                        name="reasonInput"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Lý do hủy đơn không được để trống!",
+                          },
+                        ]}
+                      >
+                        <FlInput label="Nhập lý do" isRequired />
+                      </Form.Item>
+                    )
+                  }
+                }}
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+        {/* </ConfigProvider> */}
       </Spin>
     </CustomModal>
   )

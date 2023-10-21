@@ -34,6 +34,12 @@ export default MenuItemBreadcrumb
 export const MenuItemAdmin = () => {
   return [
     {
+      key: ROUTER.HOME,
+      label: "Trang chủ",
+      icon: <SvgIcon name="home" />,
+      TabID: [],
+    },
+    {
       label: "Quản lý nhân viên",
       key: ROUTER.QUAN_LY_NHAN_VIEN,
       icon: <SvgIcon name="report" />,
@@ -59,13 +65,19 @@ export const MenuItemAdmin = () => {
     },
     {
       label: "Quản lý đơn hàng",
-      key: ROUTER.QUAN_LY_SAN_PHAM,
+      key: ROUTER.QUAN_LY_DON_HANG,
+      icon: <SvgIcon name="report" />,
+      TabID: [1],
+    },
+    {
+      label: "Quản lý bài viết",
+      key: ROUTER.QUAN_LY_BAI_VIET,
       icon: <SvgIcon name="report" />,
       TabID: [1],
     },
     {
       label: "Thống kê",
-      key: ROUTER.QUAN_LY_SAN_PHAM,
+      key: ROUTER.THONG_KE,
       icon: <SvgIcon name="report" />,
       TabID: [1],
     },

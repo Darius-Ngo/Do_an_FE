@@ -60,7 +60,7 @@ const ModalInsertUpdate = ({ onOk, open, onCancel }) => {
       if (values?.anh?.length && values?.anh[0]?.originFileObj) {
         const formData = new FormData()
         values?.anh?.map(img => formData.append("file", img?.originFileObj))
-        const resUpload = await FileService.uploadFileImage(formData)
+        const resUpload = await FileService.uploadFile(formData)
         urlAvatar = `${process.env.REACT_APP_API_ROOT}${resUpload?.Object}`
       } else {
         if (!!values?.anh) urlAvatar = values?.anh[0]?.url

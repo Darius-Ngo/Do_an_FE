@@ -2,6 +2,7 @@ import http from "../index"
 import {
   apiGetTotalStatus,
   apiGetListOrderUser,
+  apiGetListOrderManager,
   apiAddOrder,
   apiGetDetailOrder,
   apiUpdateStatus,
@@ -14,6 +15,8 @@ import {
 
 const getTotalStatus = params => http.get(apiGetTotalStatus, { params })
 const getListOrderUser = params => http.get(apiGetListOrderUser, { params })
+const getListOrderManager = params =>
+  http.get(apiGetListOrderManager, { params })
 const getDetailOrder = params => http.get(apiGetDetailOrder, { params })
 const addOrder = body => http.post(apiAddOrder, body)
 const updateStatus = body => http.post(apiUpdateStatus, body)
@@ -28,6 +31,7 @@ const deleteAddress = body => http.patch(apiDeleteAddress, body)
 const OrderService = {
   getTotalStatus,
   getListOrderUser,
+  getListOrderManager,
   getDetailOrder,
   addOrder,
   updateStatus,

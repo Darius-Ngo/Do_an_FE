@@ -94,13 +94,13 @@ export const OrderDetailStyled = styled.div`
     margin-left: 11px;
   }
 `
-export const VoteStyled = styled.div`
+export const RateStyled = styled.div`
   .title {
     font-weight: 600;
     font-size: 16px;
   }
   .rate {
-    margin: 30px;
+    margin-bottom: 10px;
     text-align: center;
     .anticon svg {
       font-size: 50px;

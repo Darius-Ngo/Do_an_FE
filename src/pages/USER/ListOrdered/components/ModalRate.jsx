@@ -1,19 +1,36 @@
-import { Col, Divider, Image, Rate, Row, Skeleton, Upload } from "antd"
+import {
+  Affix,
+  Col,
+  Divider,
+  Image,
+  Input,
+  Rate,
+  Row,
+  Skeleton,
+  Tooltip,
+  Upload,
+  message,
+} from "antd"
 import { useEffect, useState } from "react"
 import FlInput from "src/components/FloatingLabel/Input"
 
 import Button from "src/components/MyButton/Button"
 import SpinCustom from "src/components/Spin"
 import SvgIcon from "src/components/SvgIcon"
-import { FAILBACK } from "src/constants/constants"
+import { FAILBACK, SIZE_PRODUCT } from "src/constants/constants"
 import { getBase64 } from "src/lib/utils"
 
 import ReactPlayer from "react-player"
 import CustomModal from "src/components/Modal/CustomModal"
-import { ButtonUploadStyle, RateStyled } from "../styled"
 import FileService from "src/services/FileService"
 import ProductService from "src/services/ProductService"
 import Notice from "src/components/Notice"
+import { ButtonUploadStyle } from "src/pages/ADMIN/EmployeeManager/styled"
+import { RateStyled } from "../styled"
+import { FrownOutlined, MehOutlined, SmileOutlined } from "@ant-design/icons"
+import { useSelector } from "react-redux"
+import _ from "lodash"
+import RateService from "src/services/RateService"
 
 const FileUpload = ({ file, onDelete }) => {
   const [base64, setBase64] = useState()
@@ -45,18 +62,14 @@ const FileUpload = ({ file, onDelete }) => {
           <Image
             width={100}
             src={base64}
-            alt="Giấy phép"
+            alt="Ảnh ="
             fallback={FAILBACK}
             placeholder={<Skeleton.Image width={100} active={true} />}
           />
         )}
       </div>
       <Row className="align-items-center justify-content-space-between mt-8">
-        <span
-          title={file?.name}
-          className="text-ellipsis"
-          style={{ maxWidth: 70 }}
-        >
+        <span title={file?.name} className="max-line1" style={{ maxWidth: 70 }}>
           {file?.name}
         </span>
         <div className="pointer" onClick={onDelete}>
@@ -66,18 +79,54 @@ const FileUpload = ({ file, onDelete }) => {
     </Col>
   )
 }
-const ModalRate = ({ visible, listProduct, onCancel, onOk = () => {} }) => {
+const ModalRate = ({ open, listProduct, onCancel, onOk = () => {} }) => {
   const [loading, setLoading] = useState(false)
   const [listPro, setListPro] = useState([])
+  const { userInfo } = useSelector(state => state.appGlobal)
+
+  const customIcons = {
+    1: (
+      <Tooltip title="Rất tệ" color="yellow" mouseLeaveDelay={0}>
+        <FrownOutlined />
+      </Tooltip>
+    ),
+    2: (
+      <Tooltip title="Tệ" color="yellow" mouseLeaveDelay={0}>
+        <FrownOutlined />
+      </Tooltip>
+    ),
+    3: (
+      <Tooltip title="Bình thường" color="yellow" mouseLeaveDelay={0}>
+        <MehOutlined />
+      </Tooltip>
+    ),
+    4: (
+      <Tooltip title="Tốt" color="yellow" mouseLeaveDelay={0}>
+        <SmileOutlined />
+      </Tooltip>
+    ),
+    5: (
+      <Tooltip title="Tuyệt vời" color="yellow" mouseLeaveDelay={0}>
+        <SmileOutlined />
+      </Tooltip>
+    ),
+  }
 
   useEffect(() => {
-    if (listProduct) setListPro(listProduct)
-  }, [listProduct])
+    if (open)
+      setListPro(
+        open?.list_product.map(i => ({
+          ...i,
+          ListImage: [],
+          ListVideo: [],
+        })),
+      )
+  }, [open])
 
-  const handleChangeReview = (value, ProductID) =>
+  const handleChangeReview = (value, id) =>
     setListPro(
-      listPro.map(i => {
-        if (i.ProductID === ProductID) {
+      listPro?.map(i => {
+        if (i.id === id) {
           return {
             ...i,
             ...value,
@@ -86,54 +135,58 @@ const ModalRate = ({ visible, listProduct, onCancel, onOk = () => {} }) => {
       }),
     )
 
-  const deleteMedia = item =>
-    setListPro(
-      listPro.map(i => {
-        const newList = i?.FileList?.filter(x => x.uid !== item.uid)
-        return {
-          ...i,
-          FileList: newList,
-        }
-      }),
-    )
-
   const onRate = async () => {
     try {
       setLoading(true)
-      const listToApi = await Promise.all(
+      const listProductRate = await Promise.all(
         listPro?.map(async item => {
-          let res
-          if (item?.FileList?.length) {
+          let resImg
+          let resVideo
+          if (item?.ListImage?.length) {
             const formData = new FormData()
-            item?.FileList.map(img => formData.append("InsertFileList", img))
-            res = await FileService.uploadFileList(formData)
+            item?.ListImage?.map(img => formData.append("fileList", img))
+            resImg = await FileService.uploadListFile(formData)
           }
-          if (res?.isError) return
+          if (item?.ListVideo?.length) {
+            const formData = new FormData()
+            item?.ListVideo?.map(video => formData.append("fileList", video))
+            resVideo = await FileService.uploadListFile(formData)
+          }
+          if (resImg?.isError) return
+          if (resVideo?.isError) return
           return {
-            ProductID: item?.ProductID,
-            StarRating: item?.Rating,
-            ContentRating: item?.Comment,
-            ListObjectFileID: res?.Object.map(i => i.ObjectFileID),
+            id_san_pham: item?.id_san_pham,
+            danh_gia: item?.danh_gia,
+            noi_dung: item?.noi_dung,
+            kich_co_sp: item?.kich_co,
+            anh_mo_ta: resImg?.Object || [],
+            video_mo_ta: resVideo?.Object || [],
           }
         }),
       )
-      ProductService.insertReviewPro(listToApi).then(res => {
-        if (res.isOk) {
-          onCancel()
-          onOk()
-          Notice({
-            msg: "Đánh giá thành công",
-            isSuccess: true,
-          })
-        }
+      RateService.rateOrder({
+        id_nguoi_dung: userInfo?.id,
+        id_don_hang: open.id,
+        list_danh_gia: listProductRate,
+      }).then(res => {
+        if (res.isError) return
+        onCancel()
+        onOk()
+        Notice({
+          msg: "Đánh giá thành công.",
+          isSuccess: true,
+        })
       })
     } finally {
       setLoading(false)
     }
   }
+
+  const NoticeMess = _.debounce(Notice => message.warning(Notice), 500)
+
   const renderFooter = () => (
     <div className="d-flex justify-content-flex-end">
-      <Button btnType="linear" className="btn-linear-2" onClick={onRate}>
+      <Button btnType="orange" onClick={onRate}>
         Ghi lại
       </Button>
     </div>
@@ -141,55 +194,72 @@ const ModalRate = ({ visible, listProduct, onCancel, onOk = () => {} }) => {
 
   return (
     <CustomModal
-      title={`Đánh giá`}
-      open={!!visible}
+      title={false}
+      open={!!open}
       onCancel={onCancel}
       footer={renderFooter()}
       width={800}
     >
       <SpinCustom spinning={loading}>
-        {listPro.map((i, idx) => {
+        <Affix offsetTop={0}>
+          <div className="title-type-1 d-flex justify-content-space-between align-items-center pb-8 pt-0 mb-16">
+            <div style={{ fontSize: 24 }}>Đánh giá</div>
+          </div>
+        </Affix>
+        {listPro?.map((i, idx) => {
           return (
-            <RateStyled key={i.ProductID}>
-              <div style={{ display: "flex", alignItems: "center" }}>
+            <RateStyled key={i.id}>
+              <div className="d-flex align-items-center">
+                <img
+                  alt=""
+                  src={i?.anh}
+                  width="60px"
+                  style={{ marginRight: "10px" }}
+                />
                 <div>
-                  <img
-                    alt=""
-                    src={i?.Image}
-                    width="60px"
-                    style={{ marginRight: "10px" }}
-                  />
+                  <div
+                    className="fw-600 max-line1"
+                    style={{ color: "var(--color-brown)" }}
+                    title={i?.ten_san_pham}
+                  >
+                    {i?.ten_san_pham}
+                  </div>
+                  <div className="">{SIZE_PRODUCT[i?.kich_co]}</div>
                 </div>
-                <div className="fw-600">{i?.ProductName}</div>
               </div>
               <div className="rate">
                 <Rate
-                  value={i?.Rating}
-                  onChange={e =>
-                    handleChangeReview({ Rating: e }, i?.ProductID)
-                  }
+                  // allowHalf
+                  onChange={e => handleChangeReview({ danh_gia: e }, i?.id)}
+                  character={({ index }) => customIcons[index + 1]}
                 />
               </div>
-              <FlInput
-                placeholder="Nhập đánh giá"
-                textArea
-                value={i?.Comment}
+              <Input.TextArea
+                placeholder="Hãy chia sẻ cảm nhận của bạn về sản phẩm nhé."
+                value={i?.noi_dung}
                 onChange={e =>
-                  handleChangeReview({ Comment: e?.target.value }, i?.ProductID)
+                  handleChangeReview({ noi_dung: e?.target.value }, i?.id)
                 }
-                style={{ height: 150, maxHeight: 150 }}
+                style={{ height: 150 }}
               />
-
               <Row className="mt-16">
                 <ButtonUploadStyle>
-                  <Button className="account-button-upload ">
+                  <Button className="account-button-upload">
                     <Upload
                       multiple
-                      beforeUpload={(_, list) => {
-                        handleChangeReview(
-                          { FileList: [...list, ...i.FileList] },
-                          i?.ProductID,
+                      beforeUpload={(file, fileList) => {
+                        const listFileFilter = fileList.filter(
+                          file => !(file?.size > 5 * 1024 * 1024),
                         )
+                        handleChangeReview(
+                          {
+                            ListImage: [...listFileFilter, ...i.ListImage],
+                          },
+                          i?.id,
+                        )
+                        if (fileList.length > listFileFilter.length) {
+                          NoticeMess("Dung lượng file ảnh tối đa 5MB!")
+                        }
                         return false
                       }}
                       accept=".png, .jpeg, .jpg, .bmp"
@@ -204,31 +274,35 @@ const ModalRate = ({ visible, listProduct, onCancel, onOk = () => {} }) => {
                     </Upload>
                   </Button>
                 </ButtonUploadStyle>
-                {!i?.FileList?.find(file => file?.type?.includes("video")) && (
-                  <ButtonUploadStyle className="ml-10">
-                    <Button className="account-button-upload ">
-                      <Upload
-                        multiple={false}
-                        beforeUpload={(_, list) => {
+                <ButtonUploadStyle className="ml-10">
+                  <Button className="account-button-upload ">
+                    <Upload
+                      multiple={false}
+                      beforeUpload={(file, fileList) => {
+                        if (file?.size > 10 * 1024 * 1024) {
+                          message.warning("Dung lượng file video tối đa 10MB!")
+                        } else {
                           handleChangeReview(
-                            { FileList: [...list, ...i.FileList] },
-                            i?.ProductID,
+                            {
+                              ListVideo: [file, ...i.ListVideo],
+                            },
+                            i?.id,
                           )
-                          return false
-                        }}
-                        accept="video/mp4,video/x-m4v,video/*"
-                        fileList={[]}
-                      >
-                        <Row className="account-background-upload d-flex align-items-center">
-                          <SvgIcon name="add-media-video" />
-                          <div className="account-text-upload ml-16">
-                            Thêm video
-                          </div>
-                        </Row>
-                      </Upload>
-                    </Button>
-                  </ButtonUploadStyle>
-                )}
+                        }
+                        return false
+                      }}
+                      accept="video/mp4,video/x-m4v,video/*"
+                      fileList={[]}
+                    >
+                      <Row className="account-background-upload d-flex align-items-center">
+                        <SvgIcon name="add-media-video" />
+                        <div className="account-text-upload ml-16">
+                          Thêm video
+                        </div>
+                      </Row>
+                    </Upload>
+                  </Button>
+                </ButtonUploadStyle>
               </Row>
               <Row
                 gutter={24}
@@ -240,14 +314,37 @@ const ModalRate = ({ visible, listProduct, onCancel, onOk = () => {} }) => {
                 }}
               >
                 <Image.PreviewGroup>
-                  {i?.FileList?.map((i, idx) => (
+                  {i?.ListImage?.map((j, idx) => (
                     <FileUpload
-                      key={`${i?.uid}_${idx}`}
-                      file={i}
-                      onDelete={() => deleteMedia(i)}
+                      key={`${j?.uid}_${idx}`}
+                      file={j}
+                      onDelete={() =>
+                        handleChangeReview(
+                          {
+                            ListImage: i.ListImage?.filter(
+                              x => x.uid !== j.uid,
+                            ),
+                          },
+                          i?.id,
+                        )
+                      }
                     />
                   ))}
                 </Image.PreviewGroup>
+                {i?.ListVideo?.map((j, idx) => (
+                  <FileUpload
+                    key={`${j?.uid}_${idx}`}
+                    file={j}
+                    onDelete={() =>
+                      handleChangeReview(
+                        {
+                          ListVideo: i.ListVideo?.filter(x => x.uid !== j.uid),
+                        },
+                        i?.id,
+                      )
+                    }
+                  />
+                ))}
               </Row>
               {idx !== listPro.length - 1 && <Divider />}
             </RateStyled>

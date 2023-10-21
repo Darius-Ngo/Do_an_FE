@@ -1,7 +1,7 @@
 import { Button, Result } from "antd"
 import { NavLink, Navigate, Outlet, useLocation } from "react-router-dom"
 import MainLayout from "src/components/Layouts"
-import { ROLE_ID } from "src/constants/constants"
+import { ROLE_ADMIN, ROLE_ID } from "src/constants/constants"
 import STORAGE, { getStorage } from "src/lib/storage"
 import ROUTER from "src/router"
 
@@ -11,7 +11,7 @@ function AdminRoutes() {
   const location = useLocation()
 
   return !!isLogin ? (
-    user?.id_phan_quyen === ROLE_ID.ADMIN ? (
+    ROLE_ADMIN.includes(user?.id_phan_quyen) ? (
       <MainLayout isAdmin={true}>
         <Outlet />
       </MainLayout>

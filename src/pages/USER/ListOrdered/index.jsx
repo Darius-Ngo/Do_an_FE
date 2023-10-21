@@ -9,6 +9,8 @@ import { formatMoneyVND } from "src/lib/utils"
 import Button from "src/components/MyButton/Button"
 import OrderDetail from "./components/OrderDetail"
 import CancelOrder from "./components/CancelOrder"
+import ModalRate from "./components/ModalRate"
+import ModalViewRate from "./components/ModalViewRate"
 
 const ListOrdered = () => {
   const { userInfo } = useSelector(state => state.appGlobal)
@@ -19,6 +21,7 @@ const ListOrdered = () => {
   const [openDetail, setOpenDetail] = useState(false)
   const [openCancelOrder, setOpenCancelOrder] = useState(false)
   const [openRate, setOpenRate] = useState(false)
+  const [openViewRate, setOpenViewRate] = useState(false)
   const [condition, setCondition] = useState({
     id_nguoi_dat: userInfo.id,
     status: 0,
@@ -71,13 +74,23 @@ const ListOrdered = () => {
           Hủy đơn
         </Button>
       )}
-      {item?.danh_gia && (
-        <Button btnType="orange" onClick={() => setOpenRate(item)}>
+      {item?.danh_gia && !data?.da_danh_gia && (
+        <Button
+          btnType="orange"
+          onClick={() =>
+            setOpenRate({
+              ...data,
+              chuyen_tt: item?.danh_gia?.chuyen_tt,
+            })
+          }
+        >
           Đánh giá
         </Button>
       )}
-      {item?.xem_danh_gia && (
-        <Button btnType="orange-third">Xem đánh giá</Button>
+      {!!data?.da_danh_gia && (
+        <Button btnType="orange-third" onClick={() => setOpenViewRate(data)}>
+          Xem đánh giá
+        </Button>
       )}
       {item?.mua_lai && <Button btnType="orange">Mua lại</Button>}
     </>
@@ -98,7 +111,7 @@ const ListOrdered = () => {
             // type="card"
             // size={size}
             items={listStatus?.map(i => ({
-              label: `${i?.ten_trang_thai}(${i?.so_luong_don_hang})`,
+              label: `${i?.ten_trang_thai} (${i?.so_luong_don_hang})`,
               key: i?.trang_thai,
             }))}
           />
@@ -180,6 +193,26 @@ const ListOrdered = () => {
         <CancelOrder
           open={openCancelOrder}
           onCancel={() => setOpenCancelOrder(false)}
+          onOk={() => {
+            getListOrder()
+            getTotalStatus()
+          }}
+        />
+      )}
+      {!!openRate && (
+        <ModalRate
+          open={openRate}
+          onCancel={() => setOpenRate(false)}
+          onOk={() => {
+            getListOrder()
+            getTotalStatus()
+          }}
+        />
+      )}
+      {!!openViewRate && (
+        <ModalViewRate
+          open={openViewRate}
+          onCancel={() => setOpenViewRate(false)}
           onOk={() => {
             getListOrder()
             getTotalStatus()

@@ -663,12 +663,14 @@ export const checkPermission = (user, menu, action) => {
 }
 
 export const formatMoney = money =>
-  (Math.round(money * 100) / 100).toLocaleString()
+  (Math.round(money * 100) / 100).toLocaleString()?.replace(",", ".")
 export const formatMoneyVND = money =>
-  money?.toLocaleString("vi", {
-    style: "currency",
-    currency: "VND",
-  })
+  money
+    ?.toLocaleString("vi", {
+      style: "currency",
+      currency: "VND",
+    })
+    ?.replace("₫", "VNĐ")
 export const getBase64 = file =>
   new Promise((resolve, reject) => {
     const reader = new FileReader()

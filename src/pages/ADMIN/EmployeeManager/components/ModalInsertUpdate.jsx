@@ -5,12 +5,18 @@ import Button from "src/components/MyButton/Button"
 import Notice from "src/components/Notice"
 import SpinCustom from "src/components/Spin"
 import SvgIcon from "src/components/SvgIcon"
-import { GENDER_LIST, ROLE_ID, STATUS_ACTIVE } from "src/constants/constants"
+import {
+  GENDER_LIST,
+  ROLE_ID,
+  ROLE_LIST,
+  STATUS_ACTIVE,
+} from "src/constants/constants"
 import {
   getRegexEmail,
   getRegexPassword,
   getRegexPhoneNumber,
   getRegexUsername,
+  regexIDCard,
 } from "src/lib/stringsUtils"
 import { normFile } from "src/lib/utils"
 import FileService from "src/services/FileService"
@@ -63,12 +69,11 @@ const ModalInsertUpdate = ({ onOk, open, onCancel }) => {
     try {
       setLoading(true)
       const values = await form.validateFields()
-      console.log("values", values)
       let urlAvatar = ""
       if (values?.avatar?.length && values?.avatar[0]?.originFileObj) {
         const formData = new FormData()
         values?.avatar?.map(img => formData.append("file", img?.originFileObj))
-        const resUpload = await FileService.uploadFileImage(formData)
+        const resUpload = await FileService.uploadFile(formData)
         urlAvatar = `${process.env.REACT_APP_API_ROOT}${resUpload?.Object}`
       } else {
         if (!!values?.avatar) urlAvatar = values?.avatar[0]?.url
@@ -79,7 +84,6 @@ const ModalInsertUpdate = ({ onOk, open, onCancel }) => {
         ngay_sinh: values.ngay_sinh
           ? values.ngay_sinh.format("YYYY-MM-DD")
           : null,
-        id_phan_quyen: ROLE_ID.KHACH_HANG,
         id: open.id,
       })
       if (res?.isError) return
@@ -290,16 +294,50 @@ const ModalInsertUpdate = ({ onOk, open, onCancel }) => {
                   name="email"
                   rules={[
                     {
-                      required: true,
-                      message: "Email không được để trống",
-                    },
-                    {
                       pattern: getRegexEmail(),
                       message: "Email sai định dạng",
                     },
                   ]}
                 >
                   <Input placeholder="Nhập email" />
+                </Form.Item>
+              </Col>
+              <Col md={12} xs={24}>
+                <Form.Item
+                  label="Số CMT/CCCD"
+                  name="cccd"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Số CMT/CCCD không được để trống",
+                    },
+                    {
+                      pattern: regexIDCard(),
+                      message: "CMT/CCCD nhập sai định dạng!",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Nhập" />
+                </Form.Item>
+              </Col>
+              <Col md={12} xs={24}>
+                <Form.Item
+                  label="Phân quyền"
+                  name="id_phan_quyen"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Số điện thoại không được để trống",
+                    },
+                  ]}
+                >
+                  <Select placeholder="Chọn" allowClear>
+                    {ROLE_LIST.filter(i => !(i.value === 3))?.map(i => (
+                      <Option key={+i?.value} value={+i?.value}>
+                        {i?.label}
+                      </Option>
+                    ))}
+                  </Select>
                 </Form.Item>
               </Col>
               <Col span={24}>

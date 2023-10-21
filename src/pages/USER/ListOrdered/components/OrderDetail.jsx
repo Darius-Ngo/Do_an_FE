@@ -6,28 +6,19 @@ import { formatMoney, formatMoneyVND } from "src/lib/utils"
 import OrderServices from "src/services/OrderService"
 import { ModalOrderDetail, OrderDetailStyled, StepsStyled } from "../styled"
 // import Vote from "./Vote"
-import { COLOR_STATUS_ORDER, SIZE_PRODUCT } from "src/constants/constants"
+import {
+  COLOR_STATUS_ORDER,
+  PAYMENT_TYPE,
+  SIZE_PRODUCT,
+} from "src/constants/constants"
 
 const { Step } = Steps
 
 const OrderDetail = ({ detail, open, onCancel, setBtn }) => {
   const [loading, setLoading] = useState(false)
-  const [detailOrder, setDetailOrder] = useState()
   const [detailUpdate, setDetailUpdate] = useState([])
   const [currentStep, setCurrentStep] = useState(0)
 
-  const getDetailOrder = async () => {
-    try {
-      setLoading(true)
-      const res = await OrderServices.getDetailOrder({
-        id_don_hang: detail?.id,
-      })
-      if (res?.isError) return
-      setDetailOrder(res?.Object)
-    } finally {
-      setLoading(false)
-    }
-  }
   const getDetailUpdate = async () => {
     try {
       setLoading(true)
@@ -43,6 +34,7 @@ const OrderDetail = ({ detail, open, onCancel, setBtn }) => {
   useEffect(() => {
     if (detail) {
       getDetailUpdate()
+      if (detail.da_danh_gia) return setCurrentStep(4)
       switch (detail.trang_thai) {
         case 1:
           return setCurrentStep(0)
@@ -109,7 +101,7 @@ const OrderDetail = ({ detail, open, onCancel, setBtn }) => {
           ),
           icon: (
             <SvgIcon
-              name={currentStep === 3 ? "order-step3-active" : "order-step3"}
+              name={currentStep === 2 ? "order-step3-active" : "order-step3"}
             />
           ),
         },
@@ -120,15 +112,18 @@ const OrderDetail = ({ detail, open, onCancel, setBtn }) => {
           ),
           icon: (
             <SvgIcon
-              name={currentStep === 4 ? "order-step4-active" : "order-step4"}
+              name={currentStep === 3 ? "order-step4-active" : "order-step4"}
             />
           ),
         },
         {
           title: "Đánh giá",
+          description: formatTime(
+            detailUpdate?.find(i => i?.trang_thai === 5)?.thoi_gian_cap_nhat,
+          ),
           icon: (
             <SvgIcon
-              name={currentStep > 1 ? "order-step5-active" : "order-step5"}
+              name={currentStep === 4 ? "order-step5-active" : "order-step5"}
             />
           ),
         },
@@ -245,10 +240,10 @@ const OrderDetail = ({ detail, open, onCancel, setBtn }) => {
                         className="fw-600 mr-10"
                         style={{ color: "#ED1117" }}
                       >
-                        {formatMoney(prod?.gia_ban)}₫
+                        {formatMoneyVND(prod?.gia_ban)}
                       </div>
                       <del className="sub-text fs-12">
-                        {formatMoney(prod?.gia_ban)}₫
+                        {formatMoneyVND(prod?.gia_ban)}
                       </del>
                     </div>
                   </Col>
@@ -264,7 +259,7 @@ const OrderDetail = ({ detail, open, onCancel, setBtn }) => {
               </Row>
               <Row className="align-items-center justify-content-space-between mt-16">
                 <div className="sub-color">Phí vận chuyển:</div>
-                <div>0₫</div>
+                <div>0VNĐ</div>
               </Row>
               <Row className="align-items-center justify-content-space-between  mt-10">
                 <div className="sub-color">Tổng cộng:</div>
@@ -274,7 +269,9 @@ const OrderDetail = ({ detail, open, onCancel, setBtn }) => {
               </Row>
               <Row className="align-items-center justify-content-space-between  mt-10">
                 <div className="sub-color">Phương thức thanh toán:</div>
-                <div>{detail?.PaymentTypeName}</div>
+                <div style={{ color: "#237804" }}>
+                  {PAYMENT_TYPE[detail?.kieu_thanh_toan]}
+                </div>
               </Row>
             </Col>
           </Row>

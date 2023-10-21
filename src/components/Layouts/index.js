@@ -2,7 +2,7 @@ import { Avatar, Badge, Col, Drawer, Dropdown, Layout, Menu, Row } from "antd"
 import React, { useContext, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useLocation, useNavigate } from "react-router-dom"
-import { ROLE_ID } from "src/constants/constants"
+import { ROLE_ADMIN, ROLE_ID } from "src/constants/constants"
 import STORAGE, { clearStorage, getStorage, setStorage } from "src/lib/storage"
 import { StoreContext } from "src/lib/store"
 import UseWindowSize from "src/lib/useWindowSize"
@@ -79,7 +79,7 @@ const MainLayout = ({ children, isAdmin }) => {
       <div className="menu-account">
         <Menu className="dropdown-option">
           <div className="account-infor">
-            {userInfo?.id_phan_quyen === ROLE_ID.ADMIN && (
+            {ROLE_ADMIN.includes(userInfo?.id_phan_quyen) && (
               <>
                 <Menu.Item
                   key="1"
