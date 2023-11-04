@@ -8,7 +8,7 @@ const ROUTER = {
   THUC_DON: "/thuc-don",
   DANH_SACH_SAN_PHAM: "/danh-sach-san-pham",
   CHI_TIET_SAN_PHAM: "/chi-tiet-san-pham",
-  BAI_VIET: "/bai-viet",
+  TIN_TUC: "/tin-tuc",
   GIOI_THIEU: "/gioi-thieu",
   HO_TRO: "/ho-tro",
 

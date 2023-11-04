@@ -15,6 +15,10 @@ const MenuItemBreadcrumb = () => {
       key: ROUTER.DOI_MAT_KHAU,
     },
     {
+      label: "Thực đơn",
+      key: ROUTER.THUC_DON,
+    },
+    {
       label: "Chi tiết sản phẩm",
       key: ROUTER.CHI_TIET_SAN_PHAM,
     },
@@ -25,6 +29,10 @@ const MenuItemBreadcrumb = () => {
     {
       label: "Danh sách đơn hàng",
       key: ROUTER.DS_DON_DAT_HANG,
+    },
+    {
+      label: "Tin tức",
+      key: ROUTER.TIN_TUC,
     },
   ]
 }
@@ -97,8 +105,8 @@ export const MenuHeader = () => {
       // icon: <SvgIcon name="home" />,
     },
     {
-      label: "Bài viết",
-      key: ROUTER.BAI_VIET,
+      label: "Tin tức",
+      key: ROUTER.TIN_TUC,
       // icon: <SvgIcon name="home" />,
     },
     {

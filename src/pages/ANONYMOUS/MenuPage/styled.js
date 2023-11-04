@@ -4,7 +4,7 @@ export const MenuPageStyle = styled.div`
   // background-color: #fbedd7;
   width: 100%;
   min-height: 100vh;
-  padding: 3rem 3rem 2rem;
+  padding: 16px 3rem 2rem;
   .category-row {
     margin-bottom: 20px;
     & .category-title {

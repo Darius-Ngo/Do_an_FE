@@ -76,9 +76,16 @@ const CartPage = () => {
       align: "left",
       width: 140,
       render: (value, record, index) => (
-        <strong style={{ color: "var(--color-brown-dark)" }}>
-          {formatMoneyVND(value)}
-        </strong>
+        <div className="d-flex flex-column">
+          <strong style={{ color: "var(--color-brown-dark)" }}>
+            {formatMoneyVND(value)}
+          </strong>
+          {!!record.gia_ban_goc && (
+            <del className="sub-color fs-10">
+              {formatMoneyVND(record.gia_ban_goc)}
+            </del>
+          )}
+        </div>
       ),
     },
     {
@@ -140,9 +147,11 @@ const CartPage = () => {
       width: 140,
       render: (value, record, index) => (
         <div className="d-flex align-items-center justify-content-space-between">
-          <strong style={{ color: "var(--color-brown-dark)" }}>
-            {formatMoneyVND(value)}
-          </strong>
+          <div className="d-flex flex-column">
+            <strong style={{ color: "var(--color-brown-dark)" }}>
+              {formatMoneyVND(value)}
+            </strong>
+          </div>
           <ButtonCircle
             title="Xóa sản phẩm"
             iconName="cancel"

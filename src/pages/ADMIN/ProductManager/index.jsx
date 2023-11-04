@@ -1,4 +1,4 @@
-import { Col, Image, Row, Select, Space } from "antd"
+import { Badge, Col, Image, Row, Select, Space } from "antd"
 import { useEffect, useState } from "react"
 import FlInput from "src/components/FloatingLabel/Input"
 import FlSelect from "src/components/FloatingLabel/Select"
@@ -19,6 +19,7 @@ const ProductManager = () => {
     pageSize: 20,
     currentPage: 1,
     textSearch: "",
+    status: 1,
   })
   const [loading, setLoading] = useState(false)
   const [listCategory, setListCategory] = useState([])
@@ -47,7 +48,15 @@ const ProductManager = () => {
       key: "anh",
       width: 120,
       align: "center",
-      render: value => <Image src={value} width={"100%"} fallback={FAILBACK} />,
+      render: (value, record) => (
+        <Badge.Ribbon
+          text={record.isDiscord ? `-${record.giam_gia}%` : ""}
+          color="volcano"
+          style={!record.isDiscord && { display: "none" }}
+        >
+          <Image src={value} width={"100%"} fallback={FAILBACK} />
+        </Badge.Ribbon>
+      ),
     },
     {
       title: "Tên sản phẩm",
@@ -66,7 +75,17 @@ const ProductManager = () => {
       key: "gia_ban_sizes",
       align: "left",
       width: 120,
-      render: (text, record) => (text ? formatMoney(text) : ""),
+      render: (text, record) =>
+        record.isDiscord ? (
+          <div>
+            <div className="fw-600 mr-10">
+              {formatMoney(text * ((100 - record.giam_gia) / 100))}
+            </div>
+            <del className="sub-text fs-12">{formatMoney(text)}</del>
+          </div>
+        ) : (
+          formatMoney(text)
+        ),
     },
     {
       title: "Giá size M",
@@ -74,7 +93,17 @@ const ProductManager = () => {
       key: "gia_ban_sizem",
       align: "left",
       width: 120,
-      render: (text, record) => (text ? formatMoney(text) : ""),
+      render: (text, record) =>
+        record.isDiscord ? (
+          <div>
+            <div className="fw-600 mr-10">
+              {formatMoney(text * ((100 - record.giam_gia) / 100))}
+            </div>
+            <del className="sub-text fs-12">{formatMoney(text)}</del>
+          </div>
+        ) : (
+          formatMoney(text)
+        ),
     },
     {
       title: "Giá size L",
@@ -82,7 +111,17 @@ const ProductManager = () => {
       key: "gia_ban_sizel",
       align: "left",
       width: 120,
-      render: (text, record) => (text ? formatMoney(text) : ""),
+      render: (text, record) =>
+        record.isDiscord ? (
+          <div>
+            <div className="fw-600 mr-10">
+              {formatMoney(text * ((100 - record.giam_gia) / 100))}
+            </div>
+            <del className="sub-text fs-12">{formatMoney(text)}</del>
+          </div>
+        ) : (
+          formatMoney(text)
+        ),
     },
     // {
     //   title: "Ghi chú",
@@ -144,22 +183,21 @@ const ProductManager = () => {
           }}
         />
         <ButtonCircle
-          title={!!record.trang_thai_sp ? "Khóa sản phẩm" : "Mở khóa"}
-          iconName={!!record.trang_thai_sp ? "lock" : "unlock"}
-          // style={{ background: "#EDF6FC" }}
+          title={record.trang_thai_sp === 1 ? "Khóa sản phẩm" : "Mở khóa"}
+          iconName={record.trang_thai_sp === 1 ? "lock" : "unlock"}
           onClick={() =>
             CB1({
               title: `Bạn có chắc chắn muốn <strong>${
-                !!record.trang_thai_sp ? "Khóa" : "Mở khóa"
+                record.trang_thai_sp === 1 ? "Khóa" : "Mở khóa"
               }</strong> sản phẩm "<strong>${
                 record?.ten_san_pham
               }</strong>" không?`,
-              icon: !!record.trang_thai_sp ? "lock" : "unlock",
+              icon: record.trang_thai_sp === 1 ? "lock" : "unlock",
               okText: "Đồng ý",
               onOk: async close => {
                 changeStatus({
                   id: record.id,
-                  isLock: !!record.trang_thai_sp,
+                  isLock: record.trang_thai_sp === 1,
                 })
                 close()
               },
@@ -258,6 +296,7 @@ const ProductManager = () => {
         <Col span={6}>
           <FlSelect
             label="Trạng thái"
+            value={pagination.status}
             onChange={status => {
               setPagination({
                 ...pagination,
@@ -265,8 +304,10 @@ const ProductManager = () => {
                 currentPage: 1,
               })
             }}
-            allowClear
           >
+            <Select.Option key={0} value={0}>
+              Tất cả
+            </Select.Option>
             {STATUS_ACTIVE.map(i => (
               <Select.Option key={+i.value} value={+i.value}>
                 {i?.label}
@@ -285,7 +326,7 @@ const ProductManager = () => {
         </Col>
         <Col style={{ width: 0 }} flex={"auto"}>
           <div className="title-type-1 d-flex justify-content-space-between align-items-center pb-8 pt-0 mb-16">
-            <div style={{ fontSize: 24 }}>Danh sách sản phẩm</div>
+            <div style={{ fontSize: 24 }}>Danh sách sản phẩm ({total})</div>
             <Button
               btnType="primary"
               className="btn-hover-shadow"

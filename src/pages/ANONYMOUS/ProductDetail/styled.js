@@ -3,7 +3,12 @@ import styled from "styled-components"
 export const ProductDetailStyle = styled.div`
   background-color: #fff;
   padding: 20px 0;
-
+  margin-bottom: 16px;
+  .wrap-info {
+    box-shadow: 0px 0px 30px 0px rgba(21, 66, 151, 0.1);
+    border-radius: 4px;
+    padding: 12px;
+  }
   &_content {
     padding: 9rem 9rem 2rem;
     background-color: #fff;
@@ -29,6 +34,7 @@ export const ProductDetailStyle = styled.div`
   & .wrap-img {
     border: 1px solid #ddd;
     width: 100%;
+    height: 100%;
     img {
       width: 100%;
     }
@@ -115,7 +121,7 @@ export const ProductDetailStyle = styled.div`
     }
   }
 
-  .list-product {
+  /* .list-product {
     margin-top: 40px;
     width: 100%;
     background: #f5f2eb;
@@ -151,10 +157,10 @@ export const ProductDetailStyle = styled.div`
       height: 30px;
       color: #555;
     }
-  }
+  } */
 
   /* } */
-  .product-item {
+  /* .product-item {
     text-align: center;
 
     .wrap-img {
@@ -192,6 +198,11 @@ export const ProductDetailStyle = styled.div`
         font-weight: bold;
       }
     }
+  } */
+
+  .list-product_relative {
+    max-height: 800px;
+    overflow-y: auto;
   }
 `
 export const InputChangeQuantity = styled.div`
@@ -310,5 +321,94 @@ export const TabsStyled = styled.div`
   .ant-tabs-ink-bar {
     height: 3px !important;
     background: linear-gradient(90deg, #bc956c 0%, var(--color-header) 100%);
+  }
+`
+
+export const RatingProductWrapper = styled.div`
+  border: solid #dddddd;
+  border-width: 0 1px 1px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .image-review {
+    overflow: auto;
+    width: 100%;
+  }
+
+  .image-box {
+    width: 100px;
+    min-width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding: 0px;
+    border: 1px solid rgba(131, 131, 131, 0.1);
+  }
+  .ant-pagination {
+    display: flex;
+  }
+  .ant-tabs-nav {
+    margin: 0px;
+  }
+  .ant-tabs-content-holder {
+    display: none;
+  }
+  .ant-spin-nested-loading {
+    width: 100%;
+  }
+  .border-bottom {
+    border: 1px solid #dddddd;
+    border-width: 0 0px 1px;
+    display: flex;
+  }
+
+  .averaging {
+    padding: 10px 0 20px;
+    .anticon {
+      font-size: 26px;
+    }
+    .ant-rate {
+      font-size: 0 !important;
+    }
+  }
+
+  .box-option {
+    display: flex;
+    align-items: center;
+    border: 0 solid #ddd;
+    border-left-width: 1px;
+    padding: 15px 10px;
+  }
+
+  .progress-rating {
+    .ant-rate {
+      min-width: 130px;
+    }
+  }
+
+  .time-comment {
+    font-size: 12px;
+    color: #666666;
+    padding-top: 15px;
+  }
+
+  .content-comment {
+    font-size: 14px;
+    color: #000000;
+    padding: 15px 0;
+  }
+
+  .username {
+    font-size: 12px;
+    color: #000000;
+  }
+
+  .btn-see-more {
+    margin: 20px 0;
+    color: #154398;
+    border: 1px solid #154398;
   }
 `

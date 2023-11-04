@@ -18,11 +18,11 @@ export const STATUS_ACTIVE = [
     label: "Đang hoạt động",
   },
   {
-    value: 0,
+    value: 2,
     label: "Không hoạt động",
   },
 ]
-export const COLOR_STATUS = ["#ff4d4f", "#389e0d"]
+export const COLOR_STATUS = ["", "#389e0d", "#ff4d4f"]
 export const COLOR_STATUS_ORDER = [
   "",
   "#fa541c",
@@ -32,8 +32,23 @@ export const COLOR_STATUS_ORDER = [
   "#389e0d",
   "#ED1117",
 ]
+export const STATUS_POST = [
+  {
+    value: 1,
+    label: "Đang hoạt động",
+  },
+  {
+    value: 2,
+    label: "Không hoạt động",
+  },
+]
+export const STATUS_POST_COLOR = ["", "#1677ff", "#cf1322"]
 export const SIZE_PRODUCT = ["", "Size S", "Size M", "Size L"]
-export const PAYMENT_TYPE = ["Thanh toán khi nhận hàng", "Thanh toán online"]
+export const PAYMENT_TYPE = [
+  "",
+  "Thanh toán khi nhận hàng",
+  "Thanh toán trực tuyến",
+]
 export const GENDER_LIST = [
   {
     value: 1,

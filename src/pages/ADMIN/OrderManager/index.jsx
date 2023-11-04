@@ -15,12 +15,15 @@ import {
   SubTableData,
   SubTableHeader,
 } from "src/components/Table/CustomTable/styled"
-import { COLOR_STATUS_ORDER } from "src/constants/constants"
+import { COLOR_STATUS_ORDER, PAYMENT_TYPE } from "src/constants/constants"
 import ButtonCircle from "src/components/MyButton/ButtonCircle"
 import CB1 from "src/components/Modal/CB1"
 import Notice from "src/components/Notice"
 import CancelOrder from "./components/CancelOrder"
 import ModalViewRate from "src/pages/USER/ListOrdered/components/ModalViewRate"
+import { formatMoneyVND } from "./../../../lib/utils"
+import dayjs from "dayjs"
+import ModalViewImg from "./components/ModalViewImg"
 
 const OrderManager = () => {
   const { userInfo } = useSelector(state => state.appGlobal)
@@ -31,6 +34,8 @@ const OrderManager = () => {
   const [listStatus, setListStatus] = useState([])
   const [openCancelOrder, setOpenCancelOrder] = useState(false)
   const [openViewRate, setOpenViewRate] = useState(false)
+  const [listImg, setListImg] = useState(false)
+
   const [condition, setCondition] = useState({
     pageSize: 20,
     currentPage: 1,
@@ -95,6 +100,7 @@ const OrderManager = () => {
       enable: item?.giao_hang,
       title: "Đang giao",
       icon: "shipping",
+      btnType: "primary",
       onClick: () => {
         CB1({
           data,
@@ -115,6 +121,7 @@ const OrderManager = () => {
     {
       enable: item?.da_giao,
       title: "Đã giao",
+      btnType: "primary",
       icon: "check-box-learn",
       onClick: () => {
         CB1({
@@ -136,6 +143,7 @@ const OrderManager = () => {
     {
       enable: item?.xac_nhan,
       title: "Xác nhận đơn",
+      btnType: "primary",
       icon: "check-circle",
       onClick: () => {
         CB1({
@@ -157,6 +165,7 @@ const OrderManager = () => {
     {
       enable: item?.huy_don,
       title: "Hủy đơn",
+      btnType: "red-style",
       icon: "cancel",
       onClick: () => {
         setOpenCancelOrder({
@@ -169,16 +178,20 @@ const OrderManager = () => {
       enable: !!data?.da_danh_gia,
       title: "Xem đánh giá",
       icon: "star-yellow",
+      btnType: "third",
       onClick: () => setOpenViewRate(data),
     },
-    // {
-    //   enable: item?.xem_ly_do_huy,
-    //   title: "Xem lý do hủy đơn",
-    //   icon: "emptySign",
-    //   onClick: () => {
-    //     setViewReason(data)
-    //   },
-    // },
+    {
+      enable: !!data?.chung_tu_tt,
+      title: "Chứng từ thanh toán",
+      icon: "receipt-icon",
+      btnType: "third",
+      onClick: () =>
+        setListImg({
+          ...data,
+          chung_tu_tt: data.chung_tu_tt.split(","),
+        }),
+    },
   ]
 
   const columns = [
@@ -194,11 +207,24 @@ const OrderManager = () => {
       width: 60,
     },
     {
-      title: "Mã đơn hàng",
+      title: (
+        <>
+          <MainTableHeader>Mã đơn hàng</MainTableHeader>
+          <SubTableHeader>Thời gian đặt</SubTableHeader>
+        </>
+      ),
       dataIndex: "ma_don_hang",
       key: "ma_don_hang",
       align: "left",
-      width: 130,
+      width: 160,
+      render: (val, record) => (
+        <>
+          <MainTableData>{val}</MainTableData>
+          <SubTableData>
+            {dayjs(record?.thoi_gian_dat).format("HH:MM DD/MM/YYYY")}
+          </SubTableData>
+        </>
+      ),
     },
     {
       title: (
@@ -237,23 +263,22 @@ const OrderManager = () => {
       ),
     },
     {
-      title: "Thời gian đặt",
-      dataIndex: "thoi_gian_dat",
-      key: "thoi_gian_dat",
-      align: "left",
-      width: 150,
-      render: record => {
-        const date = moment(new Date(record)).format("HH:MM DD/MM/YYYY")
-        return <div>{date}</div>
-      },
-    },
-    {
-      title: "Đơn giá (VNĐ)",
+      title: (
+        <>
+          <MainTableHeader>Đơn giá (VNĐ)</MainTableHeader>
+          <SubTableHeader>SĐT nhận hàng</SubTableHeader>
+        </>
+      ),
       dataIndex: "tong_tien",
       key: "tong_tien",
       align: "left",
-      width: 150,
-      render: value => <div>{formatMoney(value)}</div>,
+      width: 200,
+      render: (value, record) => (
+        <>
+          <MainTableData>{formatMoneyVND(value)}</MainTableData>
+          <SubTableData>{PAYMENT_TYPE[record?.kieu_thanh_toan]}</SubTableData>
+        </>
+      ),
     },
     {
       title: "Địa chỉ nhận hàng",
@@ -387,6 +412,9 @@ const OrderManager = () => {
             getTotalStatus()
           }}
         />
+      )}
+      {listImg && (
+        <ModalViewImg open={listImg} onCancel={() => setListImg(false)} />
       )}
     </OrderManagerStyle>
   )

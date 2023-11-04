@@ -663,7 +663,9 @@ export const checkPermission = (user, menu, action) => {
 }
 
 export const formatMoney = money =>
-  (Math.round(money * 100) / 100).toLocaleString()?.replace(",", ".")
+  money
+    ? (Math.round(money * 100) / 100).toLocaleString()?.replace(",", ".")
+    : ""
 export const formatMoneyVND = money =>
   money
     ?.toLocaleString("vi", {

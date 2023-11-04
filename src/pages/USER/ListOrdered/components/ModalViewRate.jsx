@@ -57,7 +57,7 @@ const ModalViewRate = ({ open, onCancel }) => {
   const getDetailRate = async () => {
     try {
       setLoading(true)
-      const res = await RateService.getDetailDetail({
+      const res = await RateService.getDetailRate({
         id_don_hang: open.id,
       })
       if (res.isError) return

@@ -14,6 +14,7 @@ const ProductPage = React.lazy(() => import("src/pages/ANONYMOUS/ProductPage"))
 const ProductDetail = React.lazy(() =>
   import("src/pages/ANONYMOUS/ProductDetail"),
 )
+const PostPage = React.lazy(() => import("src/pages/ANONYMOUS/PostPage"))
 
 // USER
 const PrivateRoutes = React.lazy(() => import("src/pages/PrivateRoutes"))
@@ -35,6 +36,7 @@ const CategoryManager = React.lazy(() =>
   import("src/pages/ADMIN/CategoryManager"),
 )
 const OrderManager = React.lazy(() => import("src/pages/ADMIN/OrderManager"))
+const PostManager = React.lazy(() => import("src/pages/ADMIN/PostManager"))
 
 function LazyLoadingComponent({ children }) {
   return (
@@ -104,6 +106,14 @@ const routes = [
         element: (
           <LazyLoadingComponent>
             <OrderManager />
+          </LazyLoadingComponent>
+        ),
+      },
+      {
+        path: ROUTER.QUAN_LY_BAI_VIET,
+        element: (
+          <LazyLoadingComponent>
+            <PostManager />
           </LazyLoadingComponent>
         ),
       },
@@ -194,6 +204,14 @@ const routes = [
         element: (
           <LazyLoadingComponent>
             <ProductDetail />
+          </LazyLoadingComponent>
+        ),
+      },
+      {
+        path: ROUTER.TIN_TUC,
+        element: (
+          <LazyLoadingComponent>
+            <PostPage />
           </LazyLoadingComponent>
         ),
       },

@@ -85,6 +85,7 @@ export const TabsNewsStyled = styled.div`
   .ant-tabs-tab {
     padding: 15px 25px;
     margin: 0px;
+    margin-left: 0px !important;
   }
   .ant-tabs-tab-btn {
     font-weight: 600;

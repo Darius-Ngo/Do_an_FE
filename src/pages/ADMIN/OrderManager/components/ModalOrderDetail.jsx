@@ -85,8 +85,8 @@ const ModalOrderDetail = ({ open, onCancel, setBtns }) => {
     },
     {
       title: "Kích cỡ",
-      dataIndex: "kich_co",
-      key: "kich_co",
+      dataIndex: "ten_kich_co",
+      key: "ten_kich_co",
       align: "center",
       width: 120,
       onCell: sharedOnCell,
@@ -98,7 +98,14 @@ const ModalOrderDetail = ({ open, onCancel, setBtns }) => {
       align: "center",
       width: 200,
       onCell: sharedOnCell,
-      render: record => <div>{formatMoneyVND(record)}</div>,
+      render: (val, record) => (
+        <div className="d-flex align-items-flex-end">
+          <div className="fw-600 mr-10">{formatMoneyVND(val)}</div>
+          <del className="sub-color fs-12 ">
+            {!!record?.gia_ban_goc ? formatMoneyVND(record?.gia_ban_goc) : ""}
+          </del>
+        </div>
+      ),
     },
     {
       title: "Số lượng",
@@ -115,7 +122,7 @@ const ModalOrderDetail = ({ open, onCancel, setBtns }) => {
       align: "center",
       width: 240,
       render: (val, record) => (
-        <div>
+        <div className="fw-600">
           {val ? (
             <span style={{ color: "var(--color-red-500)", fontWeight: 600 }}>
               {val}
@@ -149,7 +156,7 @@ const ModalOrderDetail = ({ open, onCancel, setBtns }) => {
         {setBtns()?.map(
           i =>
             i?.enable && (
-              <Button btnType="primary" onClick={i?.onClick}>
+              <Button btnType={i.btnType} onClick={i?.onClick}>
                 {i?.title}
               </Button>
             ),
@@ -214,6 +221,12 @@ const ModalOrderDetail = ({ open, onCancel, setBtns }) => {
                   <Col span={8} className="info-item">
                     <span className="info-title">SĐT người đặt: </span>
                     <span className="info-content">{open?.sdt_nguoi_dat}</span>
+                  </Col>
+                  <Col span={8} className="info-item">
+                    <span className="info-title">Gmail người đặt: </span>
+                    <span className="info-content">
+                      {open?.email_nguoi_dat}
+                    </span>
                   </Col>
                 </Row>
                 <Row gutter={16} className="info-row">

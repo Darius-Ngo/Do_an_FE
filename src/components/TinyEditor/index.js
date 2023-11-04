@@ -140,7 +140,7 @@ export default function TinyEditor(props) {
               // dispatch(changeModalLoading(true))
               const res = await FileService.uploadFile(formData)
               if (res?.isError) return
-              return res?.Object
+              return `${process.env.REACT_APP_API_ROOT}${res?.Object}`
             } finally {
               // dispatch(changeModalLoading(false))
             }
@@ -194,7 +194,7 @@ export default function TinyEditor(props) {
                     formData.append("file", file)
                     // dispatch(changeModalLoading(true))
                     const res = await FileService.uploadFile(formData)
-                    return cb(res?.Object)
+                    return cb(`${process.env.REACT_APP_API_ROOT}${res?.Object}`)
                   } finally {
                     // dispatch(changeModalLoading(false))
                   }

@@ -91,7 +91,7 @@ const CategoryManager = () => {
       render: (text, record) => (
         <div className="d-flex justify-content-space-between align-items-center mh-36">
           <div className="max-line1" style={{ color: COLOR_STATUS[text] }}>
-            {STATUS_ACTIVE.find(i => i.value === +text).label}
+            {STATUS_ACTIVE.find(i => i.value === +text)?.label}
           </div>
           <div className="list-button-hover">{renderListButton(record)}</div>
         </div>
@@ -130,22 +130,22 @@ const CategoryManager = () => {
           }}
         />
         <ButtonCircle
-          title={!!record.trang_thai ? "Khóa danh mục" : "Mở khóa"}
-          iconName={!!record.trang_thai ? "lock" : "unlock"}
+          title={record.trang_thai === 1 ? "Khóa danh mục" : "Mở khóa"}
+          iconName={record.trang_thai === 1 ? "lock" : "unlock"}
           // style={{ background: "#EDF6FC" }}
           onClick={() =>
             CB1({
               title: `Bạn có chắc chắn muốn <strong>${
-                !!record.trang_thai ? "Khóa" : "Mở khóa"
+                record.trang_thai === 1 ? "Khóa" : "Mở khóa"
               }</strong> danh mục "<strong>${
                 record?.ten_loai_san_pham
               }</strong>" không?`,
-              icon: !!record.trang_thai ? "lock" : "unlock",
+              icon: record.trang_thai === 1 ? "lock" : "unlock",
               okText: "Đồng ý",
               onOk: async close => {
                 changeStatus({
                   id: record.id,
-                  isLock: !!record.trang_thai,
+                  isLock: record.trang_thai === 1,
                 })
                 close()
               },
@@ -218,6 +218,7 @@ const CategoryManager = () => {
         <Col span={6}>
           <FlSelect
             label="Trạng thái"
+            value={pagination?.status}
             onChange={status => {
               setPagination({
                 ...pagination,
@@ -227,6 +228,9 @@ const CategoryManager = () => {
             }}
             allowClear
           >
+            <Select.Option key={0} value={0}>
+              Tất cả
+            </Select.Option>
             {STATUS_ACTIVE.map(i => (
               <Select.Option key={+i.value} value={+i.value}>
                 {i?.label}
@@ -236,7 +240,7 @@ const CategoryManager = () => {
         </Col>
       </Row>
       <div className="title-type-1 d-flex justify-content-space-between align-items-center pb-8 pt-0 mb-16">
-        <div style={{ fontSize: 24 }}>Danh sách danh mục</div>
+        <div style={{ fontSize: 24 }}>Danh sách danh mục ({total})</div>
         <Button
           btnType="primary"
           className="btn-hover-shadow"

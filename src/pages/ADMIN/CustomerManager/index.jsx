@@ -28,6 +28,7 @@ const CustomerManager = () => {
     currentPage: 1,
     textSearch: "",
     isCustomer: true,
+    status: 1,
   })
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState([])
@@ -175,22 +176,22 @@ const CustomerManager = () => {
           }
         />
         <ButtonCircle
-          title={!!record.trang_thai ? "Khóa tài khoản" : "Mở khóa"}
-          iconName={!!record.trang_thai ? "lock" : "unlock"}
+          title={record.trang_thai === 1 ? "Khóa tài khoản" : "Mở khóa"}
+          iconName={record.trang_thai === 1 ? "lock" : "unlock"}
           // style={{ background: "#EDF6FC" }}
           onClick={() =>
             CB1({
               title: `Bạn có chắc chắn muốn <strong>${
-                !!record.trang_thai ? "Khóa" : "Mở khóa"
+                record.trang_thai === 1 ? "Khóa" : "Mở khóa"
               }</strong> tài khoản "<strong>${
                 record?.username
               }</strong>" không?`,
-              icon: !!record.trang_thai ? "lock" : "unlock",
+              icon: record.trang_thai === 1 ? "lock" : "unlock",
               okText: "Đồng ý",
               onOk: async close => {
                 changeStatus({
                   id: record.id,
-                  isLock: !!record.trang_thai,
+                  isLock: record.trang_thai === 1,
                 })
                 close()
               },
@@ -276,6 +277,7 @@ const CustomerManager = () => {
         <Col span={6}>
           <FlSelect
             label="Trạng thái"
+            value={pagination.status}
             onChange={status => {
               setPagination({
                 ...pagination,
@@ -283,8 +285,10 @@ const CustomerManager = () => {
                 currentPage: 1,
               })
             }}
-            allowClear
           >
+            <Select.Option key={0} value={0}>
+              Tất cả
+            </Select.Option>
             {STATUS_ACTIVE.map(i => (
               <Select.Option key={+i.value} value={+i.value}>
                 {i?.label}
@@ -294,7 +298,7 @@ const CustomerManager = () => {
         </Col>
       </Row>
       <div className="title-type-1 d-flex justify-content-space-between align-items-center pb-8 pt-0 mb-16">
-        <div style={{ fontSize: 24 }}>Danh sách người dùng</div>
+        <div style={{ fontSize: 24 }}>Danh sách người dùng ({total})</div>
         <Button
           btnType="primary"
           className="btn-hover-shadow"

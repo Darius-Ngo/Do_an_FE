@@ -14,12 +14,7 @@ import {
   SubTableData,
   SubTableHeader,
 } from "src/components/Table/CustomTable/styled"
-import {
-  COLOR_STATUS,
-  GENDER_LIST,
-  ROLE_LIST,
-  STATUS_ACTIVE,
-} from "src/constants/constants"
+import { COLOR_STATUS, ROLE_LIST, STATUS_ACTIVE } from "src/constants/constants"
 import AccountService from "src/services/AccountService"
 import ModalInsertUpdate from "./components/ModalInsertUpdate"
 import { EmployeeManagerStyle } from "./styled"
@@ -29,6 +24,7 @@ const EmployeeManager = () => {
     currentPage: 1,
     textSearch: "",
     isCustomer: false,
+    status: 1,
   })
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState([])
@@ -188,22 +184,22 @@ const EmployeeManager = () => {
           }
         />
         <ButtonCircle
-          title={!!record.trang_thai ? "Khóa tài khoản" : "Mở khóa"}
-          iconName={!!record.trang_thai ? "lock" : "unlock"}
+          title={record.trang_thai === 1 ? "Khóa tài khoản" : "Mở khóa"}
+          iconName={record.trang_thai === 1 ? "lock" : "unlock"}
           // style={{ background: "#EDF6FC" }}
           onClick={() =>
             CB1({
               title: `Bạn có chắc chắn muốn <strong>${
-                !!record.trang_thai ? "Khóa" : "Mở khóa"
+                record.trang_thai === 1 ? "Khóa" : "Mở khóa"
               }</strong> tài khoản "<strong>${
                 record?.username
               }</strong>" không?`,
-              icon: !!record.trang_thai ? "lock" : "unlock",
+              icon: record.trang_thai === 1 ? "lock" : "unlock",
               okText: "Đồng ý",
               onOk: async close => {
                 changeStatus({
                   id: record.id,
-                  isLock: !!record.trang_thai,
+                  isLock: record.trang_thai === 1,
                 })
                 close()
               },
@@ -289,6 +285,7 @@ const EmployeeManager = () => {
         <Col span={6}>
           <FlSelect
             label="Trạng thái"
+            value={pagination.status}
             onChange={status => {
               setPagination({
                 ...pagination,
@@ -296,8 +293,10 @@ const EmployeeManager = () => {
                 currentPage: 1,
               })
             }}
-            allowClear
           >
+            <Select.Option key={0} value={0}>
+              Tất cả
+            </Select.Option>
             {STATUS_ACTIVE.map(i => (
               <Select.Option key={+i.value} value={+i.value}>
                 {i?.label}
@@ -307,7 +306,7 @@ const EmployeeManager = () => {
         </Col>
       </Row>
       <div className="title-type-1 d-flex justify-content-space-between align-items-center pb-8 pt-0 mb-16">
-        <div style={{ fontSize: 24 }}>Danh sách nhân viên</div>
+        <div style={{ fontSize: 24 }}>Danh sách nhân viên ({total})</div>
         <Button
           btnType="primary"
           className="btn-hover-shadow"

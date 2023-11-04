@@ -11,6 +11,7 @@ import OrderDetail from "./components/OrderDetail"
 import CancelOrder from "./components/CancelOrder"
 import ModalRate from "./components/ModalRate"
 import ModalViewRate from "./components/ModalViewRate"
+import ModalViewImg from "src/pages/ADMIN/OrderManager/components/ModalViewImg"
 
 const ListOrdered = () => {
   const { userInfo } = useSelector(state => state.appGlobal)
@@ -22,6 +23,7 @@ const ListOrdered = () => {
   const [openCancelOrder, setOpenCancelOrder] = useState(false)
   const [openRate, setOpenRate] = useState(false)
   const [openViewRate, setOpenViewRate] = useState(false)
+  const [listImg, setListImg] = useState(false)
   const [condition, setCondition] = useState({
     id_nguoi_dat: userInfo.id,
     status: 0,
@@ -92,6 +94,19 @@ const ListOrdered = () => {
           Xem đánh giá
         </Button>
       )}
+      {!!data?.chung_tu_tt && (
+        <Button
+          btnType="third"
+          onClick={() =>
+            setListImg({
+              ...data,
+              chung_tu_tt: data.chung_tu_tt.split(","),
+            })
+          }
+        >
+          Chứng từ thanh toán
+        </Button>
+      )}
       {item?.mua_lai && <Button btnType="orange">Mua lại</Button>}
     </>
   )
@@ -135,8 +150,15 @@ const ListOrdered = () => {
                             <div className="quantity">
                               x {i?.so_luong} {SIZE_PRODUCT[i?.kich_co]}
                             </div>
-                            <div className="product-price">
-                              {formatMoneyVND(i?.gia_ban)}
+                            <div className="d-flex align-items-flex-end">
+                              <div className="product-price">
+                                {formatMoneyVND(i?.gia_ban)}
+                              </div>
+                              <del className="sub-color fs-12 ml-8">
+                                {!!i?.gia_ban_goc
+                                  ? formatMoneyVND(i?.gia_ban_goc)
+                                  : ""}
+                              </del>
                             </div>
                           </div>
                         </div>
@@ -219,6 +241,7 @@ const ListOrdered = () => {
           }}
         />
       )}
+      <ModalViewImg open={listImg} onCancel={() => setListImg(false)} />
     </LayoutCommon>
   )
 }

@@ -58,8 +58,15 @@ const CartSmall = () => {
                     x{item?.so_luong}, {item?.size}
                   </div>
                 </div>
-                <div className="cart-item__price">
-                  {formatMoneyVND(item?.gia_ban * item?.so_luong)}
+                <div>
+                  <div className="cart-item__price">
+                    {formatMoneyVND(item?.gia_ban * item?.so_luong)}
+                  </div>
+                  {!!item?.gia_ban_goc && (
+                    <del className="fs-10 sub-color">
+                      {formatMoneyVND(item?.gia_ban_goc * item?.so_luong)}
+                    </del>
+                  )}
                 </div>
                 <Tooltip placement="right" title="Xóa sản phẩm" color="#f5222d">
                   <div

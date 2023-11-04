@@ -1,3 +1,4 @@
+import axios from "axios"
 import http from "../index"
 import {
   apiGetTotalStatus,
@@ -28,6 +29,18 @@ const addAddress = body => http.post(apiAddAddress, body)
 const updateAddress = body => http.post(apiUpdateAddress, body)
 const deleteAddress = body => http.patch(apiDeleteAddress, body)
 
+const getQR = body => {
+  return axios({
+    method: "post",
+    url: `https://api.vietqr.io/v2/generate`,
+    data: body,
+    headers: {
+      "x-client-id": process.env.REACT_APP_CLIENT_ID,
+      "x-api-key": process.env.REACT_APP_API_KEY,
+    },
+  })
+}
+
 const OrderService = {
   getTotalStatus,
   getListOrderUser,
@@ -40,5 +53,6 @@ const OrderService = {
   addAddress,
   updateAddress,
   deleteAddress,
+  getQR,
 }
 export default OrderService

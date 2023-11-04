@@ -1,4 +1,13 @@
-import { Col, Form, Image, Radio, Row, Spin } from "antd"
+import {
+  Col,
+  ConfigProvider,
+  Form,
+  Image,
+  Radio,
+  Row,
+  Spin,
+  Upload,
+} from "antd"
 import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
@@ -13,7 +22,10 @@ import { InfoOrderStyle } from "../styled"
 import ROUTER from "src/router"
 import ModalSelectAddress from "./ModalSelectAddress"
 import { getRegexPhoneNumber } from "src/lib/stringsUtils"
-import { formatMoneyVND } from "src/lib/utils"
+import { formatMoneyVND, normFile } from "src/lib/utils"
+import { ButtonUploadStyle } from "src/pages/ADMIN/EmployeeManager/styled"
+import SvgIcon from "src/components/SvgIcon"
+import FileService from "src/services/FileService"
 
 const InfoOrder = ({ listProduct, userInfo, totalMoney }) => {
   const navigate = useNavigate()
@@ -23,7 +35,30 @@ const InfoOrder = ({ listProduct, userInfo, totalMoney }) => {
   const [openModalAddress, setOpenModalAddress] = useState(false)
   const [addressSelect, setAddressSelect] = useState(false)
   const [typePay, setTypePay] = useState(1)
-
+  const [imgQR, setImgQR] = useState("")
+  const [maDon, setMaDonHang] = useState("")
+  const handleLoadQR = async () => {
+    const ma_don = Date.now().toString()
+    setMaDonHang(ma_don)
+    setLoading(true)
+    OrderService.getQR({
+      accountNo: 39393696789,
+      accountName: "Tiem cafe bat on",
+      acqId: 970423,
+      addInfo: `Thanh toan tien don hang ${ma_don}`, // ${open.ProfileType}
+      amount: totalMoney,
+      format: "text",
+      template: "my5OhSW",
+    })
+      .then(async res => {
+        if (res.data.code === "00") {
+          setImgQR(res.data.data.qrDataURL)
+        }
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }
   const getListAddress = async () => {
     try {
       setLoading(true)
@@ -47,15 +82,27 @@ const InfoOrder = ({ listProduct, userInfo, totalMoney }) => {
       setLoading(false)
     }
   }
+
   const handleOrder = async () => {
     try {
       const values = await form.validateFields()
+      let resImg
+      if (typePay === 2) {
+        const formData = new FormData()
+        values?.ImgTransfer?.map(i =>
+          formData.append("fileList", i.originFileObj),
+        )
+        resImg = await FileService.uploadListFile(formData)
+      }
       setLoading(true)
       const res = await OrderService.addOrder({
         ...values,
         id_nguoi_dat: userInfo.id,
-        kieu_thanh_toan: 1,
+        kieu_thanh_toan: typePay,
+        tong_tien: totalMoney,
         ds_san_pham: listProduct,
+        ma_don: typePay === 2 ? maDon : undefined,
+        chung_tu_tt: typePay === 2 ? resImg?.Object?.toString() : "",
       })
       if (res.isError) return
       getListCart()
@@ -83,26 +130,28 @@ const InfoOrder = ({ listProduct, userInfo, totalMoney }) => {
   useEffect(() => {
     form.setFieldsValue(addressSelect)
   }, [addressSelect])
-  console.log("addressSelect", addressSelect)
+  useEffect(() => {
+    if (typePay === 2) handleLoadQR()
+  }, [typePay])
   return (
     <Spin spinning={loading}>
       <InfoOrderStyle>
-        <Row gutter={24}>
-          <Col span={16} className="pb-16">
-            <div
-              className="fs-16 fw-600 mb-16 pb-12 text-uppercase d-flex justify-content-space-between align-items-flex-end"
-              style={{ borderBottom: "2px solid #ddd" }}
-            >
-              Thông tin đặt hàng
-              <Button
-                btnType="orange-third"
-                className="d-flex align-items-center"
-                onClick={() => setOpenModalAddress(true)}
+        <Form layout="vertical" form={form} initialValues={addressSelect}>
+          <Row gutter={24}>
+            <Col span={16} className="pb-16">
+              <div
+                className="fs-16 fw-600 mb-16 pb-12 text-uppercase d-flex justify-content-space-between align-items-flex-end"
+                style={{ borderBottom: "2px solid #ddd" }}
               >
-                Địa chỉ đã lưu
-              </Button>
-            </div>
-            <Form layout="vertical" form={form} initialValues={addressSelect}>
+                Thông tin đặt hàng
+                <Button
+                  btnType="orange-third"
+                  className="d-flex align-items-center"
+                  onClick={() => setOpenModalAddress(true)}
+                >
+                  Địa chỉ đã lưu
+                </Button>
+              </div>
               <Row gutter={24}>
                 <Col span={24}>
                   <div className="fw-600 mb-12">Thông tin người nhận</div>
@@ -179,93 +228,158 @@ const InfoOrder = ({ listProduct, userInfo, totalMoney }) => {
                   </Form.Item>
                 </Col>
               </Row>
-            </Form>
-          </Col>
-          <Col
-            span={8}
-            style={{ borderLeft: "1px solid #ddd", height: "auto" }}
-          >
-            <div className="mb-24">
-              <div
-                className="fs-14 fw-600 pb-12 pr-16 text-uppercase mb-12 d-flex align-items-flex-end justify-content-space-between"
-                style={{ borderBottom: "2px solid #ddd", height: 50 }}
-              >
-                <span>SẢN PHẨM</span>
-                <span>GIÁ</span>
-              </div>
-              {listProduct.map(i => (
+            </Col>
+            <Col
+              span={8}
+              style={{ borderLeft: "1px solid #ddd", height: "auto" }}
+            >
+              <div className="mb-24">
                 <div
-                  className="d-flex align-items-flex-end justify-content-space-between pt-12 pb-6 pr-12"
-                  style={{
-                    borderBottom: "1px solid #ddd",
-                  }}
+                  className="fs-14 fw-600 pb-12 pr-16 text-uppercase mb-12 d-flex align-items-flex-end justify-content-space-between"
+                  style={{ borderBottom: "2px solid #ddd", height: 50 }}
                 >
-                  <div className="d-flex align-items-flex-end">
-                    <Image
-                      src={i?.anh}
-                      width={50}
-                      alt={i.ten_san_pham}
-                      preview={false}
-                    />
-                    <div>
-                      <div
-                        style={{ color: "var(--color-brown-dark)" }}
-                        className="fw-600 fs-13"
-                      >
-                        {i.ten_san_pham}
-                      </div>
-                      <div
-                        className="fs-11 mt-4"
-                        style={{ color: "var(--color-yellow)" }}
-                      >
-                        {i?.size}, <span className="fs-13">x{i.so_luong}</span>
+                  <span>SẢN PHẨM</span>
+                  <span>GIÁ</span>
+                </div>
+                {listProduct.map(i => (
+                  <div
+                    className="d-flex align-items-flex-end justify-content-space-between pt-12 pb-6 pr-12"
+                    style={{
+                      borderBottom: "1px solid #ddd",
+                    }}
+                  >
+                    <div className="d-flex align-items-flex-end">
+                      <Image
+                        src={i?.anh}
+                        width={50}
+                        alt={i.ten_san_pham}
+                        preview={false}
+                      />
+                      <div>
+                        <div
+                          style={{ color: "var(--color-brown-dark)" }}
+                          className="fw-600 fs-13"
+                        >
+                          {i.ten_san_pham}
+                        </div>
+                        <div
+                          className="fs-11 mt-4"
+                          style={{ color: "var(--color-yellow)" }}
+                        >
+                          {i?.size},{" "}
+                          <span className="fs-13">x{i.so_luong}</span>
+                        </div>
                       </div>
                     </div>
+                    <div
+                      className="fw-600"
+                      style={{
+                        color: "var(--color-yellow)",
+                      }}
+                    >
+                      {formatMoneyVND(i.so_luong * i.gia_ban)}
+                    </div>
                   </div>
+                ))}
+                <div
+                  className="d-flex align-items-flex-end justify-content-space-between pt-12 pb-12 pr-12 fs-16"
+                  style={{
+                    borderBottom: "2px solid #ddd",
+                  }}
+                >
+                  <div className="fw-600">Tổng</div>
                   <div
                     className="fw-600"
                     style={{
-                      color: "var(--color-yellow)",
+                      color: "var(--color-orange)",
                     }}
                   >
-                    {formatMoneyVND(i.so_luong * i.gia_ban)}
+                    {formatMoneyVND(totalMoney)}
                   </div>
                 </div>
-              ))}
-              <div
-                className="d-flex align-items-flex-end justify-content-space-between pt-12 pb-12 pr-12 fs-16"
-                style={{
-                  borderBottom: "2px solid #ddd",
+              </div>
+              <ConfigProvider
+                theme={{
+                  components: {
+                    Radio: {
+                      colorPrimary: "var(--color-orange)",
+                    },
+                  },
                 }}
               >
-                <div className="fw-600">Tổng</div>
-                <div
-                  className="fw-600"
-                  style={{
-                    color: "var(--color-orange)",
-                  }}
+                <Radio.Group
+                  onChange={e => setTypePay(e.target.value)}
+                  value={typePay}
+                  className="radio-user mb-12"
                 >
-                  {formatMoneyVND(totalMoney)}
-                </div>
-              </div>
-            </div>
-            <Radio.Group
-              onChange={e => setTypePay(e.target.value)}
-              value={typePay}
-              className="radio-user mb-12"
-            >
-              <Radio value={1}>Thanh toán khi nhận hàng</Radio>
-              <Radio value={2}>Thanh toán trực tuyến</Radio>
-            </Radio.Group>
-            <Button
-              btnType="orange"
-              className="w-100 d-flex align-items-center"
-              onClick={handleOrder}
-            >
-              ĐẶT HÀNG
-            </Button>
-          </Col>
-        </Row>
+                  <Radio value={1}>Thanh toán khi nhận hàng</Radio>
+                  <Radio value={2}>Thanh toán trực tuyến</Radio>
+                </Radio.Group>
+              </ConfigProvider>
+              {typePay === 2 && imgQR && (
+                <>
+                  <Image
+                    src={imgQR}
+                    // width={"auto"}
+                    style={{ width: "100%" }}
+                    preview={false}
+                  />
+                  <Form.Item
+                    label="Chứng từ thanh toán"
+                    name="ImgTransfer"
+                    valuePropName="fileList"
+                    getValueFromEvent={normFile}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Chứng từ thanh toán không được để trống!",
+                      },
+                      // () => ({
+                      //   validator(_, value) {
+                      //     if (!!value?.find(i => i?.size > 5 * 1024 * 1024)) {
+                      //       return Promise.reject(
+                      //         new Error("Dung lượng file tối đa 5MB"),
+                      //       )
+                      //     }
+                      //     return Promise.resolve()
+                      //   },
+                      // }),
+                    ]}
+                  >
+                    <Upload
+                      accept="image/*, .pdf"
+                      multiple={true}
+                      // maxCount={1}
+                      beforeUpload={() => false}
+                      listType="picture-card"
+                    >
+                      <Row className="align-items-center">
+                        <ButtonUploadStyle>
+                          <Button className="account-button-upload ">
+                            <Row className="account-background-upload d-flex align-items-center">
+                              <SvgIcon name="add-media-video" />
+                              <div className="account-text-upload ml-16">
+                                Chọn ảnh
+                              </div>
+                            </Row>
+                          </Button>
+                        </ButtonUploadStyle>
+                      </Row>
+                    </Upload>
+                  </Form.Item>
+                </>
+              )}
+
+              <Button
+                btnType="orange"
+                className="w-100 d-flex align-items-center"
+                onClick={handleOrder}
+              >
+                ĐẶT HÀNG
+              </Button>
+            </Col>
+          </Row>
+        </Form>
       </InfoOrderStyle>
       {openModalAddress && (
         <ModalSelectAddress

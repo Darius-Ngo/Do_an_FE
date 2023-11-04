@@ -12,7 +12,8 @@ import { Autoplay, Navigation } from "swiper/modules"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
 import { Swiper, SwiperSlide } from "swiper/react"
-import ProductCard from "./ProductCard/index.jsx"
+import ProductCard from "../ProductDetail/components/ProductCard/index.jsx"
+// import ProductCard from "./ProductCard/index.jsx"
 const MenuPage = () => {
   // SwiperCore.use([Autoplay])
 
@@ -75,8 +76,8 @@ const CategoryItem = ({ category, lastChild }) => {
               }}
             />
           </Col>
-          <Col span={16}>
-            <div className="product-list ">
+          <Col span={20}>
+            <div className="product-list">
               <Swiper
                 grabCursor={true}
                 spaceBetween={30}

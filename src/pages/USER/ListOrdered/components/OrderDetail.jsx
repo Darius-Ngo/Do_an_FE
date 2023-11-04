@@ -242,8 +242,10 @@ const OrderDetail = ({ detail, open, onCancel, setBtn }) => {
                       >
                         {formatMoneyVND(prod?.gia_ban)}
                       </div>
-                      <del className="sub-text fs-12">
-                        {formatMoneyVND(prod?.gia_ban)}
+                      <del className="sub-color fs-12 ">
+                        {!!prod?.gia_ban_goc
+                          ? formatMoneyVND(prod?.gia_ban_goc)
+                          : ""}
                       </del>
                     </div>
                   </Col>
