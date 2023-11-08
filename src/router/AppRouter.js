@@ -15,6 +15,7 @@ const ProductDetail = React.lazy(() =>
   import("src/pages/ANONYMOUS/ProductDetail"),
 )
 const PostPage = React.lazy(() => import("src/pages/ANONYMOUS/PostPage"))
+const NewsDetail = React.lazy(() => import("src/pages/ANONYMOUS/NewsDetail"))
 
 // USER
 const PrivateRoutes = React.lazy(() => import("src/pages/PrivateRoutes"))
@@ -37,6 +38,7 @@ const CategoryManager = React.lazy(() =>
 )
 const OrderManager = React.lazy(() => import("src/pages/ADMIN/OrderManager"))
 const PostManager = React.lazy(() => import("src/pages/ADMIN/PostManager"))
+const TagsManager = React.lazy(() => import("src/pages/ADMIN/TagsManager"))
 
 function LazyLoadingComponent({ children }) {
   return (
@@ -114,6 +116,14 @@ const routes = [
         element: (
           <LazyLoadingComponent>
             <PostManager />
+          </LazyLoadingComponent>
+        ),
+      },
+      {
+        path: ROUTER.DANH_SACH_THE,
+        element: (
+          <LazyLoadingComponent>
+            <TagsManager />
           </LazyLoadingComponent>
         ),
       },
@@ -212,6 +222,14 @@ const routes = [
         element: (
           <LazyLoadingComponent>
             <PostPage />
+          </LazyLoadingComponent>
+        ),
+      },
+      {
+        path: ROUTER.CHI_TIET_TIN_TUC,
+        element: (
+          <LazyLoadingComponent>
+            <NewsDetail />
           </LazyLoadingComponent>
         ),
       },

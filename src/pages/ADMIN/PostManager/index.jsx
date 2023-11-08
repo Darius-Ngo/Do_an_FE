@@ -83,8 +83,8 @@ const PostManager = () => {
     },
     {
       title: "Tóm tắt",
-      dataIndex: "tom_ta",
-      key: "tom_ta",
+      dataIndex: "tom_tat",
+      key: "tom_tat",
       align: "left",
       render: (val, record, idx) => (
         <Tooltip title={val} mouseLeaveDelay={0}>
@@ -295,7 +295,6 @@ const PostManager = () => {
               <FlSelect
                 value={pagination?.status}
                 label="Trạng thái"
-                allowClear
                 onChange={status =>
                   setPagination(pre => ({ ...pre, currentPage: 1, status }))
                 }

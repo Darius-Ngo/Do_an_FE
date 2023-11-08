@@ -1,10 +1,12 @@
 import {
   Col,
   DatePicker,
+  Dropdown,
   Form,
   Image,
   Input,
   InputNumber,
+  Menu,
   Row,
   Select,
   Tag,
@@ -27,18 +29,95 @@ import PostService from "src/services/PostService"
 import { ButtonUploadStyle, CreatePostStyled } from "../styled"
 import dayjs from "dayjs"
 import { normFile } from "src/lib/utils"
+import TagService from "src/services/TagService"
 
 const { TextArea } = Input
 const InsertUpdatePostModal = ({ open, onCancel, onOk }) => {
   const [loading, setLoading] = useState(true)
+  const [listTag, setListTag] = useState([])
+  const [tag, setTag] = useState("")
+  const [allTags, setAllTags] = useState([])
   const [form] = Form.useForm()
   const isEdit = open.isEdit
 
-  console.log("open", open)
+  console.log("listTag", listTag)
 
+  const menu = (
+    <div
+      style={{
+        maxHeight: "300px",
+        overflow: "hidden auto",
+        border: "1px solid #ccc",
+        borderRadius: "8px",
+        boxShadow: "1px 1px 10px 1px #f0f0f0",
+      }}
+    >
+      <Menu
+        items={allTags?.map(i => ({
+          key: i?.id,
+          label: i?.ten_the,
+          disabled: listTag?.find(j => i?.id === j?.id),
+          onClick: () => setListTag(pre => [...pre, i]),
+        }))}
+      />
+    </div>
+  )
+  const renderTag = () => {
+    return (
+      <Row gutter={[10, 10]} className="align-items-center">
+        {listTag?.map((i, idx) => (
+          <Col key={`create_post_tag${idx}`}>
+            <Tag
+              closable
+              closeIcon={
+                <SvgIcon
+                  onClick={() =>
+                    setListTag(prev =>
+                      prev?.filter((_, index) => index !== idx),
+                    )
+                  }
+                  name="close-tag"
+                />
+              }
+            >
+              {i?.ten_the}
+            </Tag>
+          </Col>
+        ))}
+        <Col flex="auto">
+          <Input
+            placeholder="Thêm thẻ"
+            value={tag}
+            className="input-tag-create-post"
+            onChange={e => setTag(e?.target?.value)}
+            onPressEnter={e => {
+              e?.preventDefault()
+              e?.stopPropagation()
+              if (!e?.target?.value) return
+              setListTag(pre => [...pre, { ten_the: e?.target?.value }])
+              setTag("")
+            }}
+          />
+        </Col>
+      </Row>
+    )
+  }
   useEffect(() => {
     if (isEdit) getDetailPost()
   }, [open, isEdit])
+  useEffect(() => {
+    getListCombobox()
+  }, [])
+
+  const getListCombobox = async () => {
+    try {
+      setLoading(true)
+      const resTags = await TagService.getListCombobox()
+      if (!resTags?.isError) setAllTags(resTags?.Object)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const getDetailPost = async () => {
     try {
@@ -58,6 +137,7 @@ const InsertUpdatePostModal = ({ open, onCancel, onOk }) => {
           ? dayjs(res?.Object?.ngay_dang)
           : null,
       })
+      setListTag(res?.Object?.the_bv || [])
     } finally {
       setLoading(false)
     }
@@ -82,6 +162,7 @@ const InsertUpdatePostModal = ({ open, onCancel, onOk }) => {
         ...values,
         anh_mo_ta: urlImg,
         ngay_dang: !!values?.ngay_dang ? values?.ngay_dang?.format() : null,
+        the_bv: listTag?.map(i => i?.id)?.toString(),
         id: open?.id,
       })
       if (res?.isError) return
@@ -153,7 +234,7 @@ const InsertUpdatePostModal = ({ open, onCancel, onOk }) => {
               <Col span={24}>
                 <Form.Item
                   label="Tóm tắt"
-                  name="tom_ta"
+                  name="tom_tat"
                   required
                   rules={[
                     {
@@ -237,7 +318,21 @@ const InsertUpdatePostModal = ({ open, onCancel, onOk }) => {
                   </Select>
                 </Form.Item>
               </Col>
-              <Col span={24}>
+              <Col span={12} id="tag-drop">
+                <Dropdown
+                  overlay={menu}
+                  trigger={["click"]}
+                  getPopupContainer={() => document.getElementById("tag-drop")}
+                >
+                  <Form.Item
+                    label="Tags phổ biến"
+                    className="create-post-add-tag"
+                  >
+                    <Input prefix={renderTag()} disabled />
+                  </Form.Item>
+                </Dropdown>
+              </Col>
+              <Col span={12}>
                 <Form.Item
                   label="Hình thu nhỏ"
                   name="anh_mo_ta"

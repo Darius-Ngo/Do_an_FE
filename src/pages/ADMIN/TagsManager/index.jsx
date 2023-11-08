@@ -1,4 +1,4 @@
-import { Col, Image, Row, Select, Space } from "antd"
+import { Col, Row, Select, Space } from "antd"
 import { useEffect, useState } from "react"
 import FlInput from "src/components/FloatingLabel/Input"
 import FlSelect from "src/components/FloatingLabel/Select"
@@ -7,21 +7,20 @@ import Button from "src/components/MyButton/Button"
 import ButtonCircle from "src/components/MyButton/ButtonCircle"
 import Notice from "src/components/Notice"
 import TableCustom from "src/components/Table/CustomTable"
-import { COLOR_STATUS, FAILBACK, STATUS_ACTIVE } from "src/constants/constants"
-import CategoryService from "src/services/CategoryService"
+import { COLOR_STATUS, STATUS_ACTIVE } from "src/constants/constants"
+import TagService from "src/services/TagService"
 import ModalInsertUpdate from "./components/ModalInsertUpdate"
-import { CategoryManagerStyle } from "./styled"
-const CategoryManager = () => {
+import { TagsManagerStyle } from "./styled"
+const TagsManager = () => {
   const [pagination, setPagination] = useState({
     pageSize: 20,
     currentPage: 1,
-    status: 1,
     textSearch: "",
+    status: 1,
   })
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState([])
   const [total, setTotal] = useState(0)
-  const [openModalDetail, setOpenModalDetail] = useState(false)
   const [openInsert, setOpenInsert] = useState(false)
 
   const columns = [
@@ -37,20 +36,25 @@ const CategoryManager = () => {
         </div>
       ),
     },
-    // {
-    //   title: "Ảnh",
-    //   dataIndex: "anh",
-    //   key: "anh",
-    //   width: 120,
-    //   align: "center",
-    //   render: value => <Image src={value} width={"100%"} fallback={FAILBACK} />,
-    // },
     {
-      title: "Tên danh mục",
-      dataIndex: "ten_loai_san_pham",
-      key: "ten_loai_san_pham",
+      title: "Mã thẻ",
+      dataIndex: "ma_the",
+      key: "ma_the",
       align: "left",
       width: 250,
+    },
+    {
+      title: "Tên thẻ",
+      dataIndex: "ten_the",
+      key: "ten_the",
+      align: "left",
+      width: 300,
+    },
+    {
+      title: "Ghi chú",
+      dataIndex: "ghi_chu",
+      key: "ghi_chu",
+      align: "left",
       render: (text, record) => (
         <div className="max-line2" title={text}>
           {text}
@@ -58,37 +62,11 @@ const CategoryManager = () => {
       ),
     },
     {
-      title: "Mô tả",
-      dataIndex: "mo_ta",
-      key: "mo_ta",
-      align: "left",
-      render: (text, record) => (
-        <div
-          className="max-line2"
-          title={text}
-          dangerouslySetInnerHTML={{
-            __html: text,
-          }}
-        />
-      ),
-    },
-    // {
-    //   title: "Ghi chú",
-    //   dataIndex: "ghi_chu",
-    //   key: "ghi_chu",
-    //   align: "left",
-    //   render: (text, record) => (
-    //     <div className="max-line2" title={text}>
-    //       {text}
-    //     </div>
-    //   ),
-    // },
-    {
       title: "Trạng thái",
       dataIndex: "trang_thai",
       key: "trang_thai",
       align: "left",
-      width: 160,
+      width: 200,
       render: (text, record) => (
         <div className="d-flex justify-content-space-between align-items-center mh-36">
           <div className="max-line1" style={{ color: COLOR_STATUS[text] }}>
@@ -119,28 +97,26 @@ const CategoryManager = () => {
           onClick={() => {
             CB1({
               record,
-              title: `Bạn có chắc chắn muốn xoá danh mục
-              "<strong> ${record?.ten_loai_san_pham}</strong>" không?`,
+              title: `Bạn có chắc chắn muốn xoá thẻ
+              "<strong> ${record?.ten_the}</strong>" không?`,
               icon: "trashRed",
               okText: "Đồng ý",
               onOk: async close => {
-                deleteCategory(record?.id)
+                deleteTags(record?.id)
                 close()
               },
             })
           }}
         />
         <ButtonCircle
-          title={record.trang_thai === 1 ? "Khóa danh mục" : "Mở khóa"}
+          title={record.trang_thai === 1 ? "Khóa thẻ" : "Mở khóa"}
           iconName={record.trang_thai === 1 ? "lock" : "unlock"}
           // style={{ background: "#EDF6FC" }}
           onClick={() =>
             CB1({
               title: `Bạn có chắc chắn muốn <strong>${
                 record.trang_thai === 1 ? "Khóa" : "Mở khóa"
-              }</strong> danh mục "<strong>${
-                record?.ten_loai_san_pham
-              }</strong>" không?`,
+              }</strong> thẻ "<strong>${record?.ten_the}</strong>" không?`,
               icon: record.trang_thai === 1 ? "lock" : "unlock",
               okText: "Đồng ý",
               onOk: async close => {
@@ -157,13 +133,13 @@ const CategoryManager = () => {
     )
   }
 
-  const deleteCategory = async id => {
+  const deleteTags = async id => {
     try {
       setLoading(true)
-      const res = await CategoryService.deleteCategory(id)
+      const res = await TagService.deleteTags({ id_the: id })
       if (res.isError) return
       Notice({
-        msg: "Xóa danh mục thành công.",
+        msg: "Xóa thẻ thành công.",
       })
       getList()
     } finally {
@@ -173,7 +149,7 @@ const CategoryManager = () => {
   const changeStatus = async body => {
     try {
       setLoading(true)
-      const res = await CategoryService.changeStatus(body)
+      const res = await TagService.changeStatus(body)
       if (res.isError) return
       Notice({
         msg: "Cập nhật trạng thái thành công.",
@@ -187,7 +163,7 @@ const CategoryManager = () => {
   const getList = async () => {
     try {
       setLoading(true)
-      const res = await CategoryService.getListCategory(pagination)
+      const res = await TagService.getListTags(pagination)
       if (res.isError) return
       setData(res.Object.data)
       setTotal(res.Object.total)
@@ -200,7 +176,7 @@ const CategoryManager = () => {
   }, [pagination])
 
   return (
-    <CategoryManagerStyle>
+    <TagsManagerStyle>
       <Row gutter={16} className="mb-8">
         <Col span={18}>
           <FlInput
@@ -213,7 +189,7 @@ const CategoryManager = () => {
             }
             search
             allowClear
-            label="Nhập tên danh mục"
+            label="Nhập tên thẻ"
           />
         </Col>
         <Col span={6}>
@@ -240,13 +216,13 @@ const CategoryManager = () => {
         </Col>
       </Row>
       <div className="title-type-1 d-flex justify-content-space-between align-items-center pb-8 pt-0 mb-16">
-        <div style={{ fontSize: 24 }}>Danh sách danh mục ({total})</div>
+        <div style={{ fontSize: 24 }}>Danh sách thẻ ({total})</div>
         <Button
           btnType="primary"
           className="btn-hover-shadow"
           onClick={() => setOpenInsert(true)}
         >
-          Thêm danh mục
+          Thêm thẻ
         </Button>
       </div>
       <TableCustom
@@ -255,14 +231,12 @@ const CategoryManager = () => {
         columns={columns}
         onRow={record => {
           return {
-            onClick: () => {
-              setOpenModalDetail(record)
-            },
+            onClick: () => {},
           }
         }}
         sticky={{ offsetHeader: -12 }}
         loading={loading}
-        textEmpty="Không có danh mục"
+        textEmpty="Không có dữ liệu"
         pagination={{
           hideOnSinglePage: total <= 10,
           current: pagination?.currentPage,
@@ -293,8 +267,8 @@ const CategoryManager = () => {
           onOk={getList}
         />
       )}
-    </CategoryManagerStyle>
+    </TagsManagerStyle>
   )
 }
 
-export default CategoryManager
+export default TagsManager

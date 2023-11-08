@@ -9,6 +9,7 @@ const ROUTER = {
   DANH_SACH_SAN_PHAM: "/danh-sach-san-pham",
   CHI_TIET_SAN_PHAM: "/chi-tiet-san-pham",
   TIN_TUC: "/tin-tuc",
+  CHI_TIET_TIN_TUC: "/chi-tiet-tin-tuc",
   GIOI_THIEU: "/gioi-thieu",
   HO_TRO: "/ho-tro",
 
@@ -18,6 +19,7 @@ const ROUTER = {
   QUAN_LY_DANH_MUC: "/quan-ly-danh-muc",
   QUAN_LY_SAN_PHAM: "/quan-ly-san-pham",
   QUAN_LY_BAI_VIET: "/quan-ly-bai-viet",
+  DANH_SACH_THE: "/danh-sach-the",
   QUAN_LY_DON_HANG: "/quan-ly-don-hang",
   THONG_KE: "/thong-ke",
 

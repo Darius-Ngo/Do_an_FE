@@ -33,6 +33,12 @@ const MenuItemBreadcrumb = () => {
     {
       label: "Tin tức",
       key: ROUTER.TIN_TUC,
+      children: [
+        {
+          label: "Chi tiết tin tức",
+          key: ROUTER.CHI_TIET_TIN_TUC,
+        },
+      ],
     },
   ]
 }
@@ -48,15 +54,33 @@ export const MenuItemAdmin = () => {
       TabID: [],
     },
     {
+      label: "Quản lý tin tức",
+      key: "subkey1",
+      icon: <SvgIcon name="post-card" />,
+      TabID: [],
+      children: [
+        {
+          key: ROUTER.QUAN_LY_BAI_VIET,
+          label: "Danh sách bài viết",
+          TabID: [],
+        },
+        {
+          key: ROUTER.DANH_SACH_THE,
+          label: "Danh sách thẻ",
+          TabID: [],
+        },
+      ],
+    },
+    {
       label: "Quản lý nhân viên",
       key: ROUTER.QUAN_LY_NHAN_VIEN,
-      icon: <SvgIcon name="report" />,
+      icon: <SvgIcon name="user-representative" />,
       TabID: [1],
     },
     {
       label: "Quản lý người dùng",
       key: ROUTER.QUAN_LY_KHACH_HANG,
-      icon: <SvgIcon name="report" />,
+      icon: <SvgIcon name="user-single" />,
       TabID: [1],
     },
     {
@@ -78,15 +102,9 @@ export const MenuItemAdmin = () => {
       TabID: [1],
     },
     {
-      label: "Quản lý bài viết",
-      key: ROUTER.QUAN_LY_BAI_VIET,
-      icon: <SvgIcon name="report" />,
-      TabID: [1],
-    },
-    {
       label: "Thống kê",
       key: ROUTER.THONG_KE,
-      icon: <SvgIcon name="report" />,
+      icon: <SvgIcon name="chart-line" />,
       TabID: [1],
     },
   ]

@@ -37,7 +37,7 @@ const LayoutAdmin = ({ children, selectedKey, menuAdmin }) => {
               onClick={onChange}
               selectedKeys={selectedKey}
               mode="inline"
-              defaultOpenKeys={[]}
+              defaultOpenKeys={["subkey1", "subkey2", "subkey3"]}
               items={menuAdmin}
               // className="menu-antd-admin"
               className="menu-antd-user pt-5"
