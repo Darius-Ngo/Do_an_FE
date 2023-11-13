@@ -91,6 +91,7 @@ const RelateToNews = ({ list }) => {
                       {i?.tieu_de}
                     </div>
                     <div style={{ display: "flex", alignItems: "center" }}>
+                      <SvgIcon name="calendar" className="mr-5" />
                       <div className="relate-news-box-care-time mr-8">
                         {formatDateAndTime(i?.ngay_dang)}
                       </div>
@@ -99,7 +100,7 @@ const RelateToNews = ({ list }) => {
                           name="mode-comment"
                           style={{ margin: "0 6px 0 0px" }}
                         />
-                        <div className="number-comment">{i?.luot_xem}</div>
+                        <div className="number-comment">{i?.luot_bl}</div>
                         <div className="d-flex">
                           <SvgIcon
                             name="view"

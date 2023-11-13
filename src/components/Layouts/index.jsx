@@ -117,6 +117,17 @@ const MainLayout = ({ children, isAdmin }) => {
               </div>
             </Menu.Item>
             <Menu.Item
+              key="4"
+              onClick={() => {
+                navigate(ROUTER.QL_YCHT)
+              }}
+            >
+              <div className="btn-function strok-btn-function">
+                <SvgIcon name="user-info" />
+                <span className="fw-400">Danh sách yêu cầu</span>
+              </div>
+            </Menu.Item>
+            <Menu.Item
               key="5"
               onClick={() => {
                 navigate(ROUTER.DOI_MAT_KHAU)

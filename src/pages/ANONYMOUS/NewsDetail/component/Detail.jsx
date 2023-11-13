@@ -7,38 +7,29 @@ import {
 import "@react-pdf-viewer/core/lib/styles/index.css"
 import "@react-pdf-viewer/default-layout/lib/styles/index.css"
 import { toolbarPlugin } from "@react-pdf-viewer/toolbar"
-import { Col, Divider, message, Row, Spin } from "antd"
+import { Col, Divider, Row, Space, Spin, Tag } from "antd"
 import moment from "moment"
 import { useEffect, useState } from "react"
-import { useLocation, useNavigate, useParams } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { FacebookShareButton } from "react-share"
-import CB1 from "src/components/Modal/CB1"
-// import { linkYoutube } from "src/components/News/linkYoutube"
-import Notice from "src/components/Notice"
 import SvgIcon from "src/components/SvgIcon"
-import STORAGE, { getStorage } from "src/lib/storage"
 import useWindowSize from "src/lib/useWindowSize"
-// import CommentServices from "src/services/CommentServices"
+import { useDispatch, useSelector } from "react-redux"
+import { setTagID } from "src/redux/post"
+import ROUTER from "src/router"
 import PostService from "src/services/PostService"
 import { NewsDetailStyled, ViewPDFStyle } from "../styled"
 import vi_VN from "../vi_VN.json"
-// import Comments from "./Comments"
+import Comments from "./Comments"
 
 const Detail = () => {
+  const { userInfo } = useSelector(state => state.appGlobal)
+  const dispatch = useDispatch()
   const PostInfo = useLocation()?.state
   const isMobile = !!useWindowSize.isMobile()
   const [loading, setLoading] = useState(false)
-  const [loadingComment, setLoadingComment] = useState(false)
   const [detailNews, setDetailNews] = useState()
   const [listPostRelate, setListPostRelate] = useState()
-  const isLogin = getStorage(STORAGE.TOKEN)
-  const [listComment, setListComment] = useState([])
-  const [expandComment, setExpandComment] = useState([])
-  const [replyComment, setReplyComment] = useState("")
-  const [newComment, setNewComment] = useState("")
-  const [openLoginModal, setOpenLoginModal] = useState(false)
-  const [valueToCorrect, setValueToCorrect] = useState("")
-  const [CommentIDToCorrect, setCommentIDToCorrect] = useState(undefined)
 
   const toolbarPluginInstance = toolbarPlugin()
   const { Toolbar } = toolbarPluginInstance
@@ -46,20 +37,7 @@ const Detail = () => {
   const [l10n, setL10n] = useState(vi_VN)
   const localizationContext = { l10n, setL10n }
   const themeContext = { currentTheme, setCurrentTheme }
-  const items = [
-    {
-      label: `Quan tâm nhất`,
-      key: 1,
-      children: null,
-    },
-    {
-      label: `Mới nhất`,
-      key: 2,
-      children: null,
-    },
-  ]
 
-  const [tabActive, setTabActive] = useState(1)
   const navigate = useNavigate()
   const articleUrl = window.location.href
   const getDetailPost = async () => {
@@ -79,137 +57,6 @@ const Detail = () => {
   useEffect(() => {
     if (PostInfo) getDetailPost()
   }, [PostInfo])
-
-  const getComment = async () => {
-    setLoadingComment(true)
-    try {
-      // let loadCmt = () => {}
-      // //Post
-      // if (!!PostID) {
-      //   if (!!isLogin) loadCmt = await CommentServices.getAllPostCommnetByType
-      //   else loadCmt = await GuestServices.getComment
-      // }
-      // loadCmt({
-      //   Type: tabActive,
-      //   PostID: PostID,
-      // }).then(res => {
-      //   if (res.isError) return
-      //   setListComment(res?.Object)
-      //   res?.Object?.data?.length &&
-      //     res?.Object?.data?.map(i => {
-      //       setExpandComment(pre => [
-      //         ...pre,
-      //         {
-      //           PostCommentID: i?.PostCommentID,
-      //           expand: !!(i?.Content?.length > 390),
-      //           expandContent: i?.Content?.length < 390,
-      //         },
-      //       ])
-      //       i?.lstReplyComments?.length &&
-      //         i?.lstReplyComments?.map(item => {
-      //           setExpandComment(pre => [
-      //             ...pre,
-      //             {
-      //               PostCommentID: item?.PostCommentID,
-      //               expand: !!(item?.Content?.length > 390),
-      //               expandContent: item?.Content?.length < 390,
-      //             },
-      //           ])
-      //         })
-      //     })
-      // })
-    } finally {
-      setLoadingComment(false)
-    }
-  }
-  const handleDeleteComment = item => {
-    CB1({
-      title: `Bạn có chắc chắn muốn xóa bình luận này không?`,
-      icon: "warning-usb",
-      okText: "Đồng ý",
-      onOk: () => {
-        setLoadingComment(true)
-        // CommentServices.deleteComment({
-        //   PostCommentID: item.PostCommentID,
-        //   PostID: PostID,
-        // })
-        //   .then(res => {
-        //     if (res.isOk) {
-        //       Notice({
-        //         msg: "Xóa thành công",
-        //         isSuccess: true,
-        //       })
-        //       getComment()
-        //     }
-        //   })
-        //   .finally(() => {
-        //     setLoadingComment(false)
-        //   })
-      },
-    })
-  }
-
-  const insertComment = (value, commentID = undefined) => {
-    if (!!isLogin) {
-      if (value === "") {
-        message.error("Vui lòng nhập nội dung")
-        return
-      } else {
-        setLoadingComment(true)
-        // CommentServices.insertComment({
-        //   PostID: PostID,
-        //   Content: value,
-        //   ParentID: commentID,
-        // })
-        //   .then(res => {
-        //     if (res.isOk) {
-        //       getComment()
-        //       if (commentID) setReplyComment("")
-        //       else setNewComment("")
-        //     }
-        //   })
-        //   .finally(() => setLoadingComment(false))
-      }
-    } else {
-      message.warn("Vui lòng đăng nhập")
-      setOpenLoginModal(true)
-    }
-  }
-
-  const updateComment = value => {
-    if (value === "") {
-      message.error("Vui lòng nhập nội dung")
-      return
-    } else {
-      setLoadingComment(true)
-      // CommentServices.updateComment({
-      //   Content: value,
-      //   PostCommentID: CommentIDToCorrect,
-      // })
-      //   .then(res => {
-      //     if (res.isOk) {
-      //       setValueToCorrect("")
-      //       setCommentIDToCorrect(undefined)
-      //       getComment()
-      //     }
-      //   })
-      //   .finally(() => setLoadingComment(false))
-    }
-  }
-
-  const handleLikeComment = (liked, commentID) => {
-    setLoadingComment(true)
-    // CommentServices.likeComment({
-    //   Type: liked ? 2 : 1,
-    //   PostCommentID: commentID,
-    // })
-    //   .then(res => {
-    //     if (res.isOk) {
-    //       getComment()
-    //     }
-    //   })
-    //   .finally(() => setLoadingComment(false))
-  }
 
   return (
     <Spin spinning={loading}>
@@ -234,7 +81,7 @@ const Detail = () => {
           >
             {!!detailNews?.ngay_dang && (
               <Col className="new-detail-sub-text d-flex-start">
-                <SvgIcon name="access-time" className="mr-5" />
+                <SvgIcon name="calendar" className="mr-5" />
                 {moment(detailNews?.ngay_dang).format("DD/MM/YYYY ")}
               </Col>
             )}
@@ -250,7 +97,7 @@ const Detail = () => {
                   name="mode-comment"
                   style={{ margin: "0 6px 0 0px" }}
                 />
-                <div className="number-comment">{detailNews?.luot_xem}</div>
+                <div className="number-comment">{detailNews?.luot_bl}</div>
               </div>
             </Col>
             <FacebookShareButton url={articleUrl}>
@@ -342,13 +189,22 @@ const Detail = () => {
               ),
             )}
           <Divider />
-          <Row gutter={16} style={{ marginBottom: "10px" }}>
-            {detailNews?.ListTags?.map((i, idx) => (
-              <Col key={`tag${idx}`}>
-                <div className="news-detail-box-tags">{i.TagsName}</div>
-              </Col>
+          <Space size={8}>
+            <div className="mr-12 fw-600">TAGS:</div>
+            {detailNews?.the_bv?.map((i, idx) => (
+              <Tag
+                key={i?.id_the}
+                className="fw-600 p-5 pl-16 pr-16 pointer"
+                onClick={() => {
+                  navigate(ROUTER.TIN_TUC)
+                  dispatch(setTagID(i.id_the))
+                }}
+              >
+                {i?.ten_the}
+              </Tag>
             ))}
-          </Row>
+          </Space>
+          <Divider />
           <div
             className="button-back"
             onClick={() => {
@@ -359,32 +215,9 @@ const Detail = () => {
             <SvgIcon name="arrow-back-red" style={{ marginRight: "5px" }} />
             Trở về
           </div>
-          {/* {!!detailNews?.IsComment && (
-            <Comments
-              loading={loadingComment}
-              items={items}
-              tabActive={tabActive}
-              setTabActive={setTabActive}
-              CommentIDToCorrect={CommentIDToCorrect}
-              setCommentIDToCorrect={setCommentIDToCorrect}
-              listComment={listComment}
-              newComment={newComment}
-              setNewComment={setNewComment}
-              valueToCorrect={valueToCorrect}
-              setValueToCorrect={setValueToCorrect}
-              expandComment={expandComment}
-              setExpandComment={setExpandComment}
-              replyComment={replyComment}
-              setReplyComment={setReplyComment}
-              openLoginModal={openLoginModal}
-              setOpenLoginModal={setOpenLoginModal}
-              getComment={getComment}
-              handleDeleteComment={handleDeleteComment}
-              insertComment={insertComment}
-              updateComment={updateComment}
-              handleLikeComment={handleLikeComment}
-            />
-          )} */}
+          {detailNews?.binh_luan_bv && (
+            <Comments userInfo={userInfo} PostInfo={PostInfo} />
+          )}
 
           <div className="title-type-1">Bài viết liên quan</div>
           {listPostRelate?.length > 0 &&

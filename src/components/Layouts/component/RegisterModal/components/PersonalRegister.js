@@ -133,7 +133,7 @@ const PersonRegister = ({ form, registerToOther }) => {
             { required: true, message: "Thông tin không được để trống" },
             {
               pattern: getRegexMobile(),
-              message: "Số điện thoại là chuỗi từ 8 đến 15 kí tự chữ số",
+              message: "Số điện thoại sại định dạng",
             },
           ]}
         >

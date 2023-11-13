@@ -344,9 +344,6 @@ const OrderManager = () => {
         />
         <div className="title-type-1 d-flex justify-content-space-between align-items-center pb-8 pt-0 mb-16">
           <div style={{ fontSize: 24 }}>Danh sách đơn hàng</div>
-          <Button btnType="primary" className="btn-hover-shadow">
-            Thêm nhân viên
-          </Button>
         </div>
         <TableCustom
           isPrimary

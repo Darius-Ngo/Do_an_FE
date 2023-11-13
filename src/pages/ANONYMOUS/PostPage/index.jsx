@@ -64,7 +64,7 @@ const PostPage = () => {
       <Spin spinning={loading}>
         <LayoutCommon>
           <div className="d-flex justify-content-space-between title-page mb-24">
-            <div className=" text-uppercase d-flex align-items-flex-end">
+            <div className="text-uppercase d-flex align-items-flex-end">
               Tin tức mới
             </div>
             <Space size={12}>

@@ -121,6 +121,12 @@ export const RateStyled = styled.div`
       bottom: unset;
     }
   }
+
+  .ant-rate-star-full {
+    svg path {
+      fill: #fadb14;
+    }
+  }
 `
 export const StepsStyled = styled.div`
   .ant-steps-item-finish

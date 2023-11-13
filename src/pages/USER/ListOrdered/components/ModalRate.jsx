@@ -87,27 +87,27 @@ const ModalRate = ({ open, listProduct, onCancel, onOk = () => {} }) => {
   const customIcons = {
     1: (
       <Tooltip title="Rất tệ" color="yellow" mouseLeaveDelay={0}>
-        <FrownOutlined />
+        <SvgIcon name="face-sad" />
       </Tooltip>
     ),
     2: (
       <Tooltip title="Tệ" color="yellow" mouseLeaveDelay={0}>
-        <FrownOutlined />
+        <SvgIcon name="face-frown" />
       </Tooltip>
     ),
     3: (
       <Tooltip title="Bình thường" color="yellow" mouseLeaveDelay={0}>
-        <MehOutlined />
+        <SvgIcon name="face-meh" />
       </Tooltip>
     ),
     4: (
       <Tooltip title="Tốt" color="yellow" mouseLeaveDelay={0}>
-        <SmileOutlined />
+        <SvgIcon name="face-smile" />
       </Tooltip>
     ),
     5: (
       <Tooltip title="Tuyệt vời" color="yellow" mouseLeaveDelay={0}>
-        <SmileOutlined />
+        <SvgIcon name="face-grin-hearts" />
       </Tooltip>
     ),
   }
@@ -201,11 +201,7 @@ const ModalRate = ({ open, listProduct, onCancel, onOk = () => {} }) => {
       width={800}
     >
       <SpinCustom spinning={loading}>
-        <Affix offsetTop={0}>
-          <div className="title-type-1 d-flex justify-content-space-between align-items-center pb-8 pt-0 mb-16">
-            <div style={{ fontSize: 24 }}>Đánh giá</div>
-          </div>
-        </Affix>
+        <div className="title-page mb-8">Đánh giá</div>
         {listPro?.map((i, idx) => {
           return (
             <RateStyled key={i.id}>

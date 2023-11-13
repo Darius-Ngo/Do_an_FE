@@ -2,12 +2,6 @@ import styled from "styled-components"
 
 export const PostPageStyle = styled.div`
   padding: 16px 0;
-  .title-page {
-    font-size: 24px;
-    padding-bottom: 8px;
-    color: var(--color-brown);
-    border-bottom: 1px solid var(--color-yellow);
-  }
   .post-content {
   }
 `

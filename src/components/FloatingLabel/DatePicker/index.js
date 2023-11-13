@@ -144,7 +144,7 @@ export default function FlDatePicker(props) {
 
       {!!label?.length && (
         <label
-          style={style}
+          // style={style}
           className={cn("", {
             [styles[classLabel]]: !!classLabel,
             [classHover]: !!classHover,
@@ -173,4 +173,3 @@ export default function FlDatePicker(props) {
     </Styled>
   )
 }
-

@@ -73,3 +73,26 @@ export const ROLE_LIST = [
     label: "Khách hàng",
   },
 ]
+
+export const REQUEST_SUPPORT = [
+  "Không đăng ký được tài khoản!",
+  "Không đăng nhập được tài khoản!",
+  "Không đặt hàng được!",
+  "Đơn hàng chưa được giao!",
+  "Không thanh toán được đơn hàng!",
+]
+
+export const STATUS_REQUEST = [
+  {
+    CodeValue: 1,
+    Description: "Chờ xử lý",
+  },
+  {
+    CodeValue: 2,
+    Description: "Đã hỗ trợ",
+  },
+  {
+    CodeValue: 3,
+    Description: "Từ chối hỗ trợ",
+  },
+]

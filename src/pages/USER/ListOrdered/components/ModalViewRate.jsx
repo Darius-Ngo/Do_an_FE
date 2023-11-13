@@ -1,22 +1,13 @@
-import {
-  Affix,
-  Divider,
-  Image,
-  Input,
-  Rate,
-  Row,
-  Skeleton,
-  Tooltip,
-} from "antd"
+import { FrownOutlined, MehOutlined, SmileOutlined } from "@ant-design/icons"
+import { Divider, Image, Rate, Row, Skeleton, Tooltip } from "antd"
 import { useEffect, useState } from "react"
+import ReactPlayer from "react-player"
+import CustomModal from "src/components/Modal/CustomModal"
 import Button from "src/components/MyButton/Button"
 import SpinCustom from "src/components/Spin"
 import { FAILBACK, SIZE_PRODUCT } from "src/constants/constants"
-import { FrownOutlined, MehOutlined, SmileOutlined } from "@ant-design/icons"
-import CustomModal from "src/components/Modal/CustomModal"
 import RateService from "src/services/RateService"
 import { RateStyled } from "../styled"
-import ReactPlayer from "react-player"
 
 const ModalViewRate = ({ open, onCancel }) => {
   const [loading, setLoading] = useState(false)
@@ -84,11 +75,7 @@ const ModalViewRate = ({ open, onCancel }) => {
       width={800}
     >
       <SpinCustom spinning={loading}>
-        <Affix offsetTop={0}>
-          <div className="title-type-1 d-flex justify-content-space-between align-items-center pb-8 pt-0 mb-16">
-            <div style={{ fontSize: 24 }}>Xem đánh giá</div>
-          </div>
-        </Affix>
+        <div className="title-page mb-8">Xem đánh giá</div>
         {listRate?.map((i, idx) => {
           return (
             <RateStyled key={i.id}>

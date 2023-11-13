@@ -22,9 +22,11 @@ const ROUTER = {
   DANH_SACH_THE: "/danh-sach-the",
   QUAN_LY_DON_HANG: "/quan-ly-don-hang",
   THONG_KE: "/thong-ke",
+  YEU_CAU_HO_TRO: "/yeu-cau-ho-tro",
 
   //USER
   CHI_TIET_GIO_HANG: "/chi-tiet-gio-hang",
   DS_DON_DAT_HANG: "/ds-don-hang",
+  QL_YCHT: "/ds-ycht",
 }
 export default ROUTER

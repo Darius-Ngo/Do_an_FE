@@ -58,7 +58,7 @@ const CategoryItem = ({ category, lastChild }) => {
         <Row gutter={[16, 8]}>
           <Col span={16}>
             <div
-              className="category-title"
+              className="title-page"
               onClick={() =>
                 navigate(ROUTER.DANH_SACH_SAN_PHAM, {
                   state: {

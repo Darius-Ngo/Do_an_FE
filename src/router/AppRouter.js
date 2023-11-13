@@ -16,11 +16,14 @@ const ProductDetail = React.lazy(() =>
 )
 const PostPage = React.lazy(() => import("src/pages/ANONYMOUS/PostPage"))
 const NewsDetail = React.lazy(() => import("src/pages/ANONYMOUS/NewsDetail"))
+const ContactSupport = React.lazy(() => import("src/pages/ANONYMOUS/Contact"))
+const AboutUsPage = React.lazy(() => import("src/pages/ANONYMOUS/AboutUsPage"))
 
 // USER
 const PrivateRoutes = React.lazy(() => import("src/pages/PrivateRoutes"))
 const CartPage = React.lazy(() => import("src/pages/USER/CartPage"))
 const ListOrdered = React.lazy(() => import("src/pages/USER/ListOrdered"))
+const MyRequest = React.lazy(() => import("src/pages/USER/MyRequest"))
 
 // ADMIN
 const AminRoutes = React.lazy(() => import("src/pages/ADMIN/AminRoutes"))
@@ -39,6 +42,10 @@ const CategoryManager = React.lazy(() =>
 const OrderManager = React.lazy(() => import("src/pages/ADMIN/OrderManager"))
 const PostManager = React.lazy(() => import("src/pages/ADMIN/PostManager"))
 const TagsManager = React.lazy(() => import("src/pages/ADMIN/TagsManager"))
+const RequestSupport = React.lazy(() =>
+  import("src/pages/ADMIN/RequestSupport"),
+)
+const Statistic = React.lazy(() => import("src/pages/ADMIN/Statistic"))
 
 function LazyLoadingComponent({ children }) {
   return (
@@ -127,6 +134,22 @@ const routes = [
           </LazyLoadingComponent>
         ),
       },
+      {
+        path: ROUTER.YEU_CAU_HO_TRO,
+        element: (
+          <LazyLoadingComponent>
+            <RequestSupport />
+          </LazyLoadingComponent>
+        ),
+      },
+      {
+        path: ROUTER.THONG_KE,
+        element: (
+          <LazyLoadingComponent>
+            <Statistic />
+          </LazyLoadingComponent>
+        ),
+      },
     ],
   },
 
@@ -155,6 +178,14 @@ const routes = [
         element: (
           <LazyLoadingComponent>
             <ListOrdered />
+          </LazyLoadingComponent>
+        ),
+      },
+      {
+        path: ROUTER.QL_YCHT,
+        element: (
+          <LazyLoadingComponent>
+            <MyRequest />
           </LazyLoadingComponent>
         ),
       },
@@ -230,6 +261,22 @@ const routes = [
         element: (
           <LazyLoadingComponent>
             <NewsDetail />
+          </LazyLoadingComponent>
+        ),
+      },
+      {
+        path: ROUTER.HO_TRO,
+        element: (
+          <LazyLoadingComponent>
+            <ContactSupport />
+          </LazyLoadingComponent>
+        ),
+      },
+      {
+        path: ROUTER.GIOI_THIEU,
+        element: (
+          <LazyLoadingComponent>
+            <AboutUsPage />
           </LazyLoadingComponent>
         ),
       },

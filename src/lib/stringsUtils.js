@@ -104,7 +104,8 @@ export function getRegexPhoneNumber() {
 }
 
 export function getRegexMobile() {
-  const re = /^([0-9]{8,15})\b/g
+  // const re = /^([0-9]{8,15})\b/g
+  const re = /^(\+84|84|0)+(9|3|7|8|5)+([0-9]{8})\b/g
   return re
 }
 

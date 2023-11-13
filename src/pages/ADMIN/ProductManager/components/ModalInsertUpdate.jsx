@@ -38,7 +38,7 @@ const ModalInsertUpdate = ({ onOk, open, onCancel, listCategory }) => {
   const isUpdate = open.isUpdate
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(true)
-
+  const [startDate, setStartDate] = useState(null)
   useEffect(() => {
     if (isUpdate) {
       console.log("open", open)
@@ -312,6 +312,16 @@ const ModalInsertUpdate = ({ onOk, open, onCancel, listCategory }) => {
                     placeholder="Chọn"
                     format="DD/MM/YYYY"
                     allowClear
+                    disabledDate={current =>
+                      current && current < dayjs().startOf("day")
+                    }
+                    onChange={date => {
+                      if (date) setStartDate(date)
+                      else {
+                        form.setFieldsValue({ ngay_kt: null })
+                        setStartDate(null)
+                      }
+                    }}
                   />
                 </Form.Item>
               </Col>
@@ -321,6 +331,10 @@ const ModalInsertUpdate = ({ onOk, open, onCancel, listCategory }) => {
                     placeholder="Chọn"
                     format="DD/MM/YYYY"
                     allowClear
+                    disabledDate={current =>
+                      (current && current < dayjs().startOf("day")) ||
+                      current < startDate
+                    }
                   />
                 </Form.Item>
               </Col>
