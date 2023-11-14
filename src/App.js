@@ -6,7 +6,9 @@ import { setListCart, setUserInfo } from "./redux/appGlobal"
 import AppRouter from "./router/AppRouter"
 import CartService from "./services/CartService"
 import "./App.scss"
+import { Chart, registerables } from "chart.js"
 
+Chart.register(...registerables)
 function App() {
   const isLogin = getStorage(STORAGE.TOKEN)
   const dispatch = useDispatch()

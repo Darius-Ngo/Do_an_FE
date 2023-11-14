@@ -271,7 +271,7 @@ const CustomerManager = () => {
             }
             search
             allowClear
-            label="Nhập tên người dùng"
+            label="Nhập tên, số điện thoại, số CCCD người dùng"
           />
         </Col>
         <Col span={6}>

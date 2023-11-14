@@ -9,6 +9,7 @@ import {
   apiGetListPostHome,
   apiGetDetailPostHome,
   apiGetListPostPopular,
+  apiUpdatePosition,
 } from "./urls"
 
 const getListPost = body => http.post(apiGetListPost, body)
@@ -19,6 +20,7 @@ const deletePost = params => http.delete(apiDeletePost, { params })
 const changeStatus = body => http.post(apiChangeStatus, body)
 const getListPostHome = body => http.post(apiGetListPostHome, body)
 const getDetailPostHome = body => http.post(apiGetDetailPostHome, body)
+const updatePosition = body => http.post(apiUpdatePosition, body)
 const getListPostPopular = params => http.get(apiGetListPostPopular, { params })
 
 const PostService = {
@@ -26,6 +28,7 @@ const PostService = {
   getDetailPost,
   addPost,
   updatePost,
+  updatePosition,
   deletePost,
   changeStatus,
   getListPostHome,

@@ -14,13 +14,14 @@ import { PostManagerStyled } from "./styled"
 import FlSelect from "src/components/FloatingLabel/Select"
 import FlInput from "src/components/FloatingLabel/Input"
 import FlDatePicker from "src/components/FloatingLabel/DatePicker"
+import ViewPost from "./components/ViewPost"
 
 const PostManager = () => {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const [openInsertUpdatePostModal, setOpenInsertUpdatePostModal] =
     useState(false)
-  const [selectedNode, setSelectedNote] = useState()
+  const [openView, setOpenView] = useState(false)
   const [total, setTotal] = useState()
   const [rowSelected, setRowSelected] = useState([])
   const [listPost, setListPost] = useState([])
@@ -109,57 +110,73 @@ const PostManager = () => {
               {status?.label}
             </div>
             <FloatActionWrapper size="small" className="float-action__wrapper">
-              <ButtonCircle
-                title="Sửa"
-                iconName="edit-green"
-                onClick={() => {
-                  setOpenInsertUpdatePostModal({
-                    ...record,
-                    isEdit: true,
-                  })
-                }}
-              />
-              <ButtonCircle
-                title="Xoá"
-                iconName="delete-red-row"
-                onClick={() =>
-                  CB1({
-                    title: ` Bạn có chắc chắn muốn xoá bài viết
-                    <strong> ${record?.tieu_de}</strong> không?`,
-                    icon: "trashRed",
-                    okText: "Đồng ý",
-                    onOk: async close => {
-                      deletePost(record?.id)
-                      close()
-                    },
-                  })
-                }
-              />
-              <ButtonCircle
-                title={record.trang_thai === 1 ? "Khóa tài khoản" : "Mở khóa"}
-                iconName={record.trang_thai === 1 ? "lock" : "unlock"}
-                // style={{ background: "#EDF6FC" }}
-                onClick={() =>
-                  CB1({
-                    title: `Bạn có chắc chắn muốn <strong>${
-                      record.trang_thai === 1 ? "Khóa" : "Mở khóa"
-                    }</strong> bài viết không?`,
-                    icon: record.trang_thai === 1 ? "lock" : "unlock",
-                    okText: "Đồng ý",
-                    onOk: async close => {
-                      changeStatus({
-                        id: record.id,
-                        isLock: record.trang_thai === 1,
-                      })
-                      close()
-                    },
-                  })
-                }
-              />
+              {setBtn(record)?.map(
+                i =>
+                  i.enable && (
+                    <ButtonCircle
+                      title={i?.title}
+                      iconName={i?.icon}
+                      onClick={i.onClick}
+                    />
+                  ),
+              )}
             </FloatActionWrapper>
           </div>
         )
       },
+    },
+  ]
+
+  const setBtn = record => [
+    {
+      enable: true,
+      title: "Sửa",
+      icon: "edit-green",
+      btnType: "primary",
+      onClick: () => {
+        setOpenInsertUpdatePostModal({
+          ...record,
+          isEdit: true,
+        })
+      },
+    },
+    {
+      enable: true,
+      title: "Xoá",
+      icon: "delete-red-row",
+      btnType: "red-style",
+      onClick: () =>
+        CB1({
+          title: ` Bạn có chắc chắn muốn xoá bài viết
+        <strong> ${record?.tieu_de}</strong> không?`,
+          icon: "trashRed",
+          okText: "Đồng ý",
+          onOk: async close => {
+            deletePost(record?.id)
+            close()
+          },
+        }),
+    },
+    {
+      enable: true,
+      title: record.trang_thai === 1 ? "Khóa bài viết" : "Mở khóa",
+      icon: record.trang_thai === 1 ? "lock" : "unlock",
+      btnType: "third",
+      onClick: () =>
+        CB1({
+          title: `Bạn có chắc chắn muốn <strong>${
+            record.trang_thai === 1 ? "Khóa" : "Mở khóa"
+          }</strong> bài viết không?`,
+          icon: record.trang_thai === 1 ? "lock" : "unlock",
+          okText: "Đồng ý",
+          onOk: async close => {
+            changeStatus({
+              id: record.id,
+              isLock: record.trang_thai === 1,
+            })
+            close()
+          },
+        }),
     },
   ]
 
@@ -178,7 +195,7 @@ const PostManager = () => {
       res?.Object?.data?.forEach(item => {
         let key = item?.id
         form.setFieldsValue({
-          [key]: item?.SortOrder,
+          [key]: item?.thu_tu,
         })
       })
     } finally {
@@ -222,37 +239,25 @@ const PostManager = () => {
       let object = []
       Object.keys(values).forEach(key => {
         if (
-          listPost?.find((item, idx) => item?.id === key)?.SortOrder !==
+          listPost?.find((item, idx) => item?.id === key)?.thu_tu !==
           +values[key]
         )
           object.push({
-            id: key,
-            SortOrder: +values[key],
+            id: +key,
+            thu_tu: +values[key],
           })
       })
-
-      const res = await PostService.sortPost(object)
+      const res = await PostService.updatePosition(object)
       if (res.isError) return
       Notice({
         msg: "Cập nhật thành công!",
-        isSuccess: true,
       })
       getListPost()
     } finally {
       setLoading(false)
     }
   }
-  const rowSelection = {
-    preserveSelectedRowKeys: true,
-    selectedRowKeys: rowSelected?.map(i => i?.id),
-    onChange: (selectedRowKeys, selectedRows) => {
-      if (selectedRows?.find(item => item?.id === selectedRowKeys))
-        setRowSelected(
-          selectedRows?.filter(item => item?.id !== selectedRowKeys),
-        )
-      else setRowSelected(selectedRows)
-    },
-  }
+
   const onClickRow = record => {
     if (rowSelected?.find(item => item?.id === record?.id))
       setRowSelected(rowSelected?.filter(item => item?.id !== record?.id))
@@ -267,7 +272,7 @@ const PostManager = () => {
               <FlInput
                 search
                 allowClear
-                label="Nhập tiêu đề bài viết, danh mục"
+                label="Nhập tiêu đề bài viết"
                 onChange={e => setTextSearch(e?.target?.value)}
                 onSearch={() =>
                   setPagination(pre => ({ ...pre, currentPage: 1 }))
@@ -312,7 +317,7 @@ const PostManager = () => {
           </Row>
         </Col>
         <Col span={24}>
-          <div className="title-type-2 d-flex-sb">
+          <div className="title-type-2 d-flex-sb pb-8">
             <div>Danh sách bài viết ({total ? total : 0}) </div>
             <div className="d-flex-end">
               <Button
@@ -342,13 +347,9 @@ const PostManager = () => {
               onRow={(record, rowIndex) => {
                 return {
                   onClick: event => {
-                    onClickRow(record)
+                    setOpenView(record)
                   },
                 }
-              }}
-              rowSelection={{
-                type: "checkbox",
-                ...rowSelection,
               }}
               pagination={{
                 hideOnSinglePage: total <= 10,
@@ -382,8 +383,16 @@ const PostManager = () => {
           onOk={() => {
             getListPost()
           }}
-          selectedNode={selectedNode}
           id={openInsertUpdatePostModal?.id}
+        />
+      )}
+      {!!openView && (
+        <ViewPost
+          open={openView}
+          onCancel={() => {
+            setOpenView(false)
+          }}
+          setBtn={() => setBtn(openView)}
         />
       )}
     </PostManagerStyled>

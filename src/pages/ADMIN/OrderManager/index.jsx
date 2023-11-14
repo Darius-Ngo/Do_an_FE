@@ -1,14 +1,12 @@
-import moment from "moment"
-import React, { useEffect, useState } from "react"
-import ModalOrderDetail from "./components/ModalOrderDetail"
-import { OrderManagerStyle } from "./styled"
+import { Space, Tabs } from "antd"
+import dayjs from "dayjs"
+import { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
+import CB1 from "src/components/Modal/CB1"
+import ButtonCircle from "src/components/MyButton/ButtonCircle"
+import Notice from "src/components/Notice"
 import SpinCustom from "src/components/Spin"
 import TableCustom from "src/components/Table/CustomTable"
-import Button from "src/components/MyButton/Button"
-import OrderService from "src/services/OrderService"
-import { Space, Tabs } from "antd"
-import { useSelector } from "react-redux"
-import { formatMoney } from "src/lib/utils"
 import {
   MainTableData,
   MainTableHeader,
@@ -16,14 +14,16 @@ import {
   SubTableHeader,
 } from "src/components/Table/CustomTable/styled"
 import { COLOR_STATUS_ORDER, PAYMENT_TYPE } from "src/constants/constants"
-import ButtonCircle from "src/components/MyButton/ButtonCircle"
-import CB1 from "src/components/Modal/CB1"
-import Notice from "src/components/Notice"
-import CancelOrder from "./components/CancelOrder"
 import ModalViewRate from "src/pages/USER/ListOrdered/components/ModalViewRate"
+import OrderService from "src/services/OrderService"
 import { formatMoneyVND } from "./../../../lib/utils"
-import dayjs from "dayjs"
+import CancelOrder from "./components/CancelOrder"
+import ModalOrderDetail from "./components/ModalOrderDetail"
 import ModalViewImg from "./components/ModalViewImg"
+import { OrderManagerStyle } from "./styled"
+import ModalPrint from "./components/ModalPrint"
+import FlInput from "src/components/FloatingLabel/Input"
+import FlDatePicker from "src/components/FloatingLabel/DatePicker"
 
 const OrderManager = () => {
   const { userInfo } = useSelector(state => state.appGlobal)
@@ -35,12 +35,15 @@ const OrderManager = () => {
   const [openCancelOrder, setOpenCancelOrder] = useState(false)
   const [openViewRate, setOpenViewRate] = useState(false)
   const [listImg, setListImg] = useState(false)
+  const [print, setPrint] = useState(false)
 
   const [condition, setCondition] = useState({
     pageSize: 20,
     currentPage: 1,
     status: 0,
     textSearch: "",
+    fromDate: null,
+    toDate: null,
   })
 
   const getTotalStatus = async () => {
@@ -78,7 +81,6 @@ const OrderManager = () => {
   const updateStatus = async record => {
     try {
       setLoading(true)
-      console.log("record", record)
       const res = await OrderService.updateStatus({
         id: record.id,
         trang_thai: record.chuyen_tt,
@@ -96,6 +98,15 @@ const OrderManager = () => {
   }
 
   const setBtns = (item, data) => [
+    {
+      enable: true,
+      title: "In phiếu bán hàng",
+      icon: "print",
+      btnType: "primary",
+      onClick: () => {
+        setPrint(data)
+      },
+    },
     {
       enable: item?.giao_hang,
       title: "Đang giao",
@@ -344,6 +355,35 @@ const OrderManager = () => {
         />
         <div className="title-type-1 d-flex justify-content-space-between align-items-center pb-8 pt-0 mb-16">
           <div style={{ fontSize: 24 }}>Danh sách đơn hàng</div>
+          <Space size={12} className="fw-500">
+            <FlInput
+              search
+              style={{ width: 500 }}
+              label="Nhập Mã đơn hàng, Tên, số điện thoại người nhận"
+              onSearch={textSearch =>
+                setCondition(pre => ({ ...pre, textSearch }))
+              }
+            />
+            <FlDatePicker
+              ranger
+              label={["Từ ngày", "Đến ngày"]}
+              value={
+                condition?.fromDate
+                  ? [
+                      condition?.fromDate ? dayjs(condition?.fromDate) : null,
+                      condition?.toDate ? dayjs(condition?.toDate) : null,
+                    ]
+                  : []
+              }
+              onChange={date =>
+                setCondition(pre => ({
+                  ...pre,
+                  fromDate: date ? date[0]?.format() : null,
+                  toDate: date ? date[1]?.format() : null,
+                }))
+              }
+            />
+          </Space>
         </div>
         <TableCustom
           isPrimary
@@ -413,6 +453,7 @@ const OrderManager = () => {
       {listImg && (
         <ModalViewImg open={listImg} onCancel={() => setListImg(false)} />
       )}
+      {print && <ModalPrint open={print} onCancel={() => setPrint(false)} />}
     </OrderManagerStyle>
   )
 }

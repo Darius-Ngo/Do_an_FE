@@ -109,7 +109,7 @@ const ModalInsertUpdate = ({ onOk, open, onCancel }) => {
         <Styled>
           <Form form={form} layout="vertical">
             <Row gutter={[16]}>
-              <Col span={24}>
+              {/* <Col span={24}>
                 <Form.Item
                   label="Ảnh mô tả"
                   name="anh"
@@ -157,7 +157,7 @@ const ModalInsertUpdate = ({ onOk, open, onCancel }) => {
                     </Row>
                   </Upload>
                 </Form.Item>
-              </Col>
+              </Col> */}
               <Col md={24} xs={24}>
                 <Form.Item
                   label="Tên danh mục"

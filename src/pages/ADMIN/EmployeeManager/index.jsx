@@ -279,7 +279,7 @@ const EmployeeManager = () => {
             }
             search
             allowClear
-            label="Nhập tên nhân viên"
+            label="Nhập tên, số điện thoại, số CCCD nhân viên"
           />
         </Col>
         <Col span={6}>
