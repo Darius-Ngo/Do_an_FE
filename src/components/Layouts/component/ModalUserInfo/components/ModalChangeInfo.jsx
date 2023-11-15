@@ -5,22 +5,23 @@ import Button from "src/components/MyButton/Button"
 import Notice from "src/components/Notice"
 import SpinCustom from "src/components/Spin"
 import SvgIcon from "src/components/SvgIcon"
-import { GENDER_LIST, ROLE_LIST, STATUS_ACTIVE } from "src/constants/constants"
+import { GENDER_LIST } from "src/constants/constants"
 import {
   getRegexEmail,
-  getRegexPassword,
   getRegexPhoneNumber,
   getRegexUsername,
   regexIDCard,
 } from "src/lib/stringsUtils"
 import { normFile } from "src/lib/utils"
 import FileService from "src/services/FileService"
-
 import dayjs from "dayjs"
 import SelectAddress from "src/components/SelectAddress"
 import AccountService from "src/services/AccountService"
 import styled from "styled-components"
-import { ButtonUploadStyle } from "../styled"
+import { ButtonUploadStyle } from "src/pages/ADMIN/EmployeeManager/styled"
+import STORAGE, { setStorage } from "src/lib/storage"
+import { setUserInfo } from "src/redux/appGlobal"
+import { useDispatch } from "react-redux"
 const { Option } = Select
 const Styled = styled.div`
   .ant-upload.ant-upload-select-picture-card {
@@ -34,30 +35,23 @@ const Styled = styled.div`
     display: flex;
   }
 `
-const ModalInsertUpdate = ({ onOk, open, onCancel }) => {
-  const isUpdate = open.isUpdate
+const ModalChangeInfo = ({ onOk, open, onCancel }) => {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
-
+  const dispatch = useDispatch()
+  const isCustomer = open?.id_phan_quyen === 3
   useEffect(() => {
-    if (isUpdate) {
-      form.setFieldsValue({
-        ...open,
-        avatar: open.avatar
-          ? [
-              {
-                url: open.avatar,
-              },
-            ]
-          : [],
-        ngay_sinh: !!open.ngay_sinh ? dayjs(open.ngay_sinh) : null,
-      })
-    } else {
-      form.resetFields()
-      form.setFieldsValue({
-        password: process.env.REACT_APP_DEFAULT_PASSWORD,
-      })
-    }
+    form.setFieldsValue({
+      ...open,
+      avatar: open.avatar
+        ? [
+            {
+              url: open.avatar,
+            },
+          ]
+        : [],
+      ngay_sinh: !!open.ngay_sinh ? dayjs(open.ngay_sinh) : null,
+    })
   }, [open])
 
   const handleSave = async () => {
@@ -73,19 +67,22 @@ const ModalInsertUpdate = ({ onOk, open, onCancel }) => {
       } else {
         if (!!values?.avatar) urlAvatar = values?.avatar[0]?.url
       }
-      const res = await AccountService[isUpdate ? "updateUser" : "addUser"]({
+      const body = {
+        ...open,
         ...values,
         avatar: urlAvatar,
         ngay_sinh: values.ngay_sinh
           ? values.ngay_sinh.format("YYYY-MM-DD")
           : null,
         id: open.id,
-      })
+      }
+      const res = await AccountService.updateUser(body)
       if (res?.isError) return
-      onOk && onOk()
       Notice({
-        msg: `${isUpdate ? "Cập nhật" : "Thêm mới"} người dùng thành công!`,
+        msg: `Cập nhật thông tin thành công!`,
       })
+      setStorage(STORAGE.USER_INFO, body)
+      dispatch(setUserInfo(body))
       onCancel()
     } finally {
       setLoading(false)
@@ -94,11 +91,11 @@ const ModalInsertUpdate = ({ onOk, open, onCancel }) => {
 
   const renderFooter = () => (
     <div className="d-flex justify-content-flex-end">
-      <Button btnType="third" onClick={onCancel}>
+      <Button btnType="gray-style" onClick={onCancel}>
         Đóng
       </Button>
       <Button
-        btnType="primary"
+        btnType="orange"
         className="btn-hover-shadow"
         onClick={handleSave}
       >
@@ -108,14 +105,15 @@ const ModalInsertUpdate = ({ onOk, open, onCancel }) => {
   )
   return (
     <CustomModal
-      title={!!isUpdate ? "Cập nhật nhân viên" : "Thêm nhân viên"}
+      title={false}
       footer={renderFooter()}
-      width={1024}
+      width={800}
       open={open}
       onCancel={onCancel}
     >
       <SpinCustom spinning={loading}>
         <Styled>
+          <div className="title-page mb-12">Cập nhật thông tin</div>
           <Form form={form} layout="vertical">
             <Row gutter={[16]}>
               <Col span={24}>
@@ -163,7 +161,7 @@ const ModalInsertUpdate = ({ onOk, open, onCancel }) => {
                   </Upload>
                 </Form.Item>
               </Col>
-              <Col md={open?.UserID ? 6 : 12} xs={24}>
+              <Col md={12} xs={24}>
                 <Form.Item
                   label="Tên tài khoản"
                   required
@@ -180,53 +178,9 @@ const ModalInsertUpdate = ({ onOk, open, onCancel }) => {
                     },
                   ]}
                 >
-                  <Input placeholder="Nhập tên" />
+                  <Input placeholder="Nhập tên" disabled={true} />
                 </Form.Item>
               </Col>
-              {isUpdate ? (
-                <Col md={12} xs={24}>
-                  <Form.Item
-                    label="Trạng thái"
-                    name="trang_thai"
-                    required
-                    rules={[
-                      {
-                        required: true,
-                        message: "Thông tin không được để trống",
-                      },
-                    ]}
-                  >
-                    <Select placeholder="Chọn trạng thái">
-                      {STATUS_ACTIVE.map(i => (
-                        <Select.Option key={+i.value} value={+i.value}>
-                          {i?.label}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </Col>
-              ) : (
-                <Col md={12} xs={24}>
-                  <Form.Item
-                    label="Mật khẩu"
-                    required
-                    name="password"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Mật khẩu không được để trống",
-                      },
-                      {
-                        pattern: getRegexPassword(),
-                        message:
-                          "Mật khẩu có chứa ít nhất 8 ký tự, trong đó có ít nhất một số và bao gồm cả chữ thường và chữ hoa và ký tự đặc biệt, ví dụ @, #, ?, !.",
-                      },
-                    ]}
-                  >
-                    <Input.Password placeholder="Nhập" />
-                  </Form.Item>
-                </Col>
-              )}
               <Col md={12} xs={24}>
                 <Form.Item
                   label="Họ và tên"
@@ -242,7 +196,7 @@ const ModalInsertUpdate = ({ onOk, open, onCancel }) => {
                   <Input placeholder="Nhập tên" />
                 </Form.Item>
               </Col>
-              <Col md={6} xs={24}>
+              <Col md={isCustomer ? 12 : 6} xs={24}>
                 <Form.Item label="Giới tính" name="gioi_tinh">
                   <Select placeholder="Chọn" allowClear>
                     {GENDER_LIST?.map(i => (
@@ -253,7 +207,7 @@ const ModalInsertUpdate = ({ onOk, open, onCancel }) => {
                   </Select>
                 </Form.Item>
               </Col>
-              <Col md={6} xs={24}>
+              <Col md={isCustomer ? 12 : 6} xs={24}>
                 <Form.Item label="Ngày sinh" name="ngay_sinh">
                   <DatePicker
                     placeholder="Chọn"
@@ -265,6 +219,26 @@ const ModalInsertUpdate = ({ onOk, open, onCancel }) => {
                   />
                 </Form.Item>
               </Col>
+              {!isCustomer && (
+                <Col md={12} xs={24}>
+                  <Form.Item
+                    label="Số CMT/CCCD"
+                    name="cccd"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Số CMT/CCCD không được để trống",
+                      },
+                      {
+                        pattern: regexIDCard(),
+                        message: "CMT/CCCD nhập sai định dạng!",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Nhập" />
+                  </Form.Item>
+                </Col>
+              )}
               <Col md={12} xs={24}>
                 <Form.Item
                   label="Số điện thoại"
@@ -297,44 +271,7 @@ const ModalInsertUpdate = ({ onOk, open, onCancel }) => {
                   <Input placeholder="Nhập email" />
                 </Form.Item>
               </Col>
-              <Col md={12} xs={24}>
-                <Form.Item
-                  label="Số CMT/CCCD"
-                  name="cccd"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Số CMT/CCCD không được để trống",
-                    },
-                    {
-                      pattern: regexIDCard(),
-                      message: "CMT/CCCD nhập sai định dạng!",
-                    },
-                  ]}
-                >
-                  <Input placeholder="Nhập" />
-                </Form.Item>
-              </Col>
-              <Col md={12} xs={24}>
-                <Form.Item
-                  label="Phân quyền"
-                  name="id_phan_quyen"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Số điện thoại không được để trống",
-                    },
-                  ]}
-                >
-                  <Select placeholder="Chọn" allowClear>
-                    {ROLE_LIST.filter(i => !(i.value === 3))?.map(i => (
-                      <Option key={+i?.value} value={+i?.value}>
-                        {i?.label}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
+
               <Col span={24}>
                 <SelectAddress
                   floating={false}
@@ -365,4 +302,4 @@ const ModalInsertUpdate = ({ onOk, open, onCancel }) => {
   )
 }
 
-export default ModalInsertUpdate
+export default ModalChangeInfo

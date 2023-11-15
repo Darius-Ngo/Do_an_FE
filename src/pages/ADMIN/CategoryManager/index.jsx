@@ -13,7 +13,7 @@ import ModalInsertUpdate from "./components/ModalInsertUpdate"
 import { CategoryManagerStyle } from "./styled"
 const CategoryManager = () => {
   const [pagination, setPagination] = useState({
-    pageSize: 20,
+    pageSize: 10,
     currentPage: 1,
     status: 1,
     textSearch: "",

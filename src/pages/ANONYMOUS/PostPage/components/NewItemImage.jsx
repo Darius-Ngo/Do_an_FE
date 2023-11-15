@@ -44,21 +44,14 @@ export const NewItemImage = ({
           >
             <SvgIcon name="calendar" className="mr-5" />
             <div className="time mr-8"> {item?.time}</div>
-            {!(item?.TopicID === 13) && (
-              <>
-                <div className="d-flex mr-12">
-                  <SvgIcon
-                    name="mode-comment"
-                    style={{ margin: "0 6px 0 0px" }}
-                  />
-                  <div className="number-comment ">{item?.luot_bl}</div>
-                </div>
-                <div className="d-flex">
-                  <SvgIcon name="view" style={{ margin: "0 6px 0 0" }} />
-                  <div className="number-comment">{item?.luot_xem}</div>
-                </div>
-              </>
-            )}
+            <div className="d-flex mr-12">
+              <SvgIcon name="mode-comment" style={{ margin: "0 6px 0 0px" }} />
+              <div className="number-comment ">{item?.luot_bl}</div>
+            </div>
+            <div className="d-flex">
+              <SvgIcon name="view" style={{ margin: "0 6px 0 0" }} />
+              <div className="number-comment">{item?.luot_xem}</div>
+            </div>
           </div>
           {!!item?.content && (
             <div

@@ -5,7 +5,7 @@ import ROUTER from "src/router"
 import { useNavigate } from "react-router-dom"
 const { Meta } = Card
 
-const ProductCard = ({ hoverable = false, product }) => {
+const ProductCard = ({ hoverable = false, product, isSmall = false }) => {
   const navigate = useNavigate()
 
   return (
@@ -18,7 +18,7 @@ const ProductCard = ({ hoverable = false, product }) => {
         <Card
           hoverable={hoverable}
           style={{
-            width: 240,
+            width: isSmall ? 210 : 240,
           }}
           cover={<img alt="ảnh" src={product.anh} className="product-img" />}
           className="pointer"

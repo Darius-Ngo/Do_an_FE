@@ -7,7 +7,7 @@ export const ModalLoginStyle = styled(Modal)`
   }
 `
 export const StyleLoginModal = styled.div`
-  padding: 30px 30px 20px;
+  padding: 50px 50px;
   height: 100%;
   /* .ant-input {
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1) !important;
@@ -52,5 +52,18 @@ export const StyleLoginModal = styled.div`
   }
   .ant-segmented-thumb {
     background-color: #0b428a;
+  }
+  .box {
+    background: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 6px;
+    display: flex;
+    padding: 6px 14px;
+    font-size: 16px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    width: 100%;
+    height: auto !important;
   }
 `

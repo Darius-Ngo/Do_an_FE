@@ -28,7 +28,7 @@ const ListOrdered = () => {
     id_nguoi_dat: userInfo.id,
     status: 0,
     // currentPage: 1,
-    // pageSize: 20,
+    // pageSize: 10,
   })
 
   const getTotalStatus = async () => {

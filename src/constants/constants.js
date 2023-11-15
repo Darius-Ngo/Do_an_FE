@@ -62,7 +62,7 @@ export const GENDER_LIST = [
 export const ROLE_LIST = [
   {
     value: 1,
-    label: "Quản trị",
+    label: "Quản trị viên",
   },
   {
     value: 2,

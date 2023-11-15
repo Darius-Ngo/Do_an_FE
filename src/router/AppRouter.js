@@ -208,22 +208,22 @@ const routes = [
           </LazyLoadingComponent>
         ),
       },
-      {
-        path: ROUTER.DANG_NHAP,
-        element: (
-          <LazyLoadingComponent>
-            <LoginPage />
-          </LazyLoadingComponent>
-        ),
-      },
-      {
-        path: ROUTER.DANG_KY,
-        element: (
-          <LazyLoadingComponent>
-            <RegisterPage />
-          </LazyLoadingComponent>
-        ),
-      },
+      // {
+      //   path: ROUTER.DANG_NHAP,
+      //   element: (
+      //     <LazyLoadingComponent>
+      //       <LoginPage />
+      //     </LazyLoadingComponent>
+      //   ),
+      // },
+      // {
+      //   path: ROUTER.DANG_KY,
+      //   element: (
+      //     <LazyLoadingComponent>
+      //       <RegisterPage />
+      //     </LazyLoadingComponent>
+      //   ),
+      // },
       {
         path: ROUTER.THUC_DON,
         element: (

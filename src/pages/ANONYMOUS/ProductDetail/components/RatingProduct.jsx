@@ -16,6 +16,8 @@ import SpinCustom from "src/components/Spin"
 import { TabsNewsStyled } from "../../Home/styled"
 import { RatingProductWrapper } from "../styled"
 import RateService from "src/services/RateService"
+import SvgIcon from "src/components/SvgIcon"
+import { UserOutlined } from "@ant-design/icons"
 
 function RatingProduct({ product }) {
   const [loading, setLoading] = useState(false)
@@ -23,7 +25,7 @@ function RatingProduct({ product }) {
   const [listRating, setListRating] = useState([])
   const [pagination, setPagination] = useState({
     starRating: 0,
-    pageSize: 20,
+    pageSize: 10,
     currentPage: 1,
   })
   const rating = [
@@ -145,7 +147,10 @@ function RatingProduct({ product }) {
                       style={{ width: "150px", margin: "0px 0px 0px 8px" }}
                     />
                     <div className="ml-16 fs-13">
-                      {(item / ratingDetail?.tong_danh_gia) * 100 || 0} %
+                      {((item / ratingDetail?.tong_danh_gia) * 100).toFixed(
+                        1,
+                      ) || 0}{" "}
+                      %
                     </div>
                   </div>
                 )
@@ -191,6 +196,7 @@ function RatingProduct({ product }) {
                       <Col span={2}>
                         <Avatar
                           src={item.avatar}
+                          icon={<UserOutlined style={{ fontSize: 24 }} />}
                           alt=""
                           loading="lazy"
                           size={40}

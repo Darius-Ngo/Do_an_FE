@@ -22,6 +22,7 @@ import {
 import AccountService from "src/services/AccountService"
 import ModalInsertUpdate from "./components/ModalInsertUpdate"
 import { CustomerManagerStyle } from "./styled"
+import ModalDetailUser from "./components/ModalDetail"
 const CustomerManager = () => {
   const [pagination, setPagination] = useState({
     pageSize: 10,
@@ -131,76 +132,92 @@ const CustomerManager = () => {
   const renderListButton = record => {
     return (
       <Space>
-        <ButtonCircle
-          title="Cập nhật"
-          iconName="edit-green"
-          // style={{ background: "#DDFEF0" }}
-          onClick={() =>
-            setOpenInsert({
-              ...record,
-              isUpdate: true,
-            })
-          }
-        />
-        <ButtonCircle
-          title="Xóa"
-          iconName="delete-red-row"
-          onClick={() => {
-            CB1({
-              record,
-              title: `Bạn có chắc chắn muốn xoá người dùng
-              "<strong> ${record?.ho_ten}</strong>" có tên tài khoản là "<strong> ${record?.username}</strong>" không?`,
-              icon: "trashRed",
-              okText: "Đồng ý",
-              onOk: async close => {
-                deleteUser(record?.id)
-                close()
-              },
-            })
-          }}
-        />
-        <ButtonCircle
-          title="Reset mật khẩu"
-          iconName="reset-pass"
-          // style={{ background: "#EDF6FC" }}
-          onClick={() =>
-            CB1({
-              title: `Bạn có chắc chắn muốn <strong>Reset mật khẩu</strong> tài khoản "<strong>${record?.username}</strong>" không?`,
-              icon: "reset-pass",
-              okText: "Đồng ý",
-              onOk: async close => {
-                resetPassword(record.id)
-                close()
-              },
-            })
-          }
-        />
-        <ButtonCircle
-          title={record.trang_thai === 1 ? "Khóa tài khoản" : "Mở khóa"}
-          iconName={record.trang_thai === 1 ? "lock" : "unlock"}
-          // style={{ background: "#EDF6FC" }}
-          onClick={() =>
-            CB1({
-              title: `Bạn có chắc chắn muốn <strong>${
-                record.trang_thai === 1 ? "Khóa" : "Mở khóa"
-              }</strong> tài khoản "<strong>${
-                record?.username
-              }</strong>" không?`,
-              icon: record.trang_thai === 1 ? "lock" : "unlock",
-              okText: "Đồng ý",
-              onOk: async close => {
-                changeStatus({
-                  id: record.id,
-                  isLock: record.trang_thai === 1,
-                })
-                close()
-              },
-            })
-          }
-        />
+        {setBtns(record)?.map(
+          i =>
+            i.enable && (
+              <ButtonCircle
+                title={i?.title}
+                iconName={i?.icon}
+                onClick={i?.onClick}
+              />
+            ),
+        )}
       </Space>
     )
   }
+
+  const setBtns = record => [
+    {
+      enable: true,
+      btnType: "primary",
+      title: "Cập nhật",
+      icon: "edit-green",
+      onClick: () => {
+        setOpenInsert({
+          ...record,
+          isUpdate: true,
+        })
+      },
+    },
+    {
+      enable: true,
+      btnType: "red-style",
+      title: "Xóa",
+      icon: "delete-red-row",
+      onClick: () => {
+        CB1({
+          record,
+          title: `Bạn có chắc chắn muốn xoá người dùng
+          "<strong> ${record?.ho_ten}</strong>" có tên tài khoản là "<strong> ${record?.username}</strong>" không?`,
+          icon: "trashRed",
+          okText: "Đồng ý",
+          onOk: async close => {
+            deleteUser(record?.id)
+            close()
+          },
+        })
+      },
+    },
+    {
+      enable: true,
+      btnType: "third",
+      title: "Reset mật khẩu",
+      icon: "reset-pass",
+      onClick: () => {
+        CB1({
+          title: `Bạn có chắc chắn muốn <strong>Reset mật khẩu</strong> tài khoản "<strong>${record?.username}</strong>" không?`,
+          icon: "reset-pass",
+          okText: "Đồng ý",
+          onOk: async close => {
+            resetPassword(record.id)
+            close()
+          },
+        })
+      },
+    },
+    {
+      enable: true,
+      btnType: "third",
+      title: record.trang_thai === 1 ? "Khóa tài khoản" : "Mở khóa",
+      icon: record.trang_thai === 1 ? "lock" : "unlock",
+      onClick: () => {
+        CB1({
+          title: `Bạn có chắc chắn muốn <strong>${
+            record.trang_thai === 1 ? "Khóa" : "Mở khóa"
+          }</strong> tài khoản "<strong>${record?.username}</strong>" không?`,
+          icon: record.trang_thai === 1 ? "lock" : "unlock",
+          okText: "Đồng ý",
+          onOk: async close => {
+            changeStatus({
+              id: record.id,
+              isLock: record.trang_thai === 1,
+            })
+            close()
+          },
+        })
+      },
+    },
+  ]
 
   const deleteUser = async id => {
     try {
@@ -349,6 +366,13 @@ const CustomerManager = () => {
           open={openInsert}
           onCancel={() => setOpenInsert(false)}
           onOk={getList}
+        />
+      )}
+      {openModalDetail && (
+        <ModalDetailUser
+          open={openModalDetail}
+          onCancel={() => setOpenModalDetail(false)}
+          setBtns={() => setBtns(openModalDetail)}
         />
       )}
     </CustomerManagerStyle>

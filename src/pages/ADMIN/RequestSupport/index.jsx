@@ -28,7 +28,7 @@ const RequestSupport = () => {
   const [loading, setLoading] = useState(false)
   const [pagination, setPagination] = useState({
     currentPage: 1,
-    pageSize: 20,
+    pageSize: 10,
     textSearch: "",
     status: 0,
   })

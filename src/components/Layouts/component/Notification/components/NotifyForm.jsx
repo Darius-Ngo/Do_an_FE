@@ -15,10 +15,9 @@ const NotifyForm = ({ listNotify, loading, getList, onClose }) => {
     setLoading(true)
     NotifyApi.MarkAsRead("")
       .then(res => {
-        if (res?.isOk) {
-          getList("")
-          onClose()
-        }
+        if (res.isError) return
+        getList("")
+        onClose()
       })
       .finally(() => setLoading(false))
   }
@@ -33,12 +32,11 @@ const NotifyForm = ({ listNotify, loading, getList, onClose }) => {
         setLoading(true)
         NotifyApi.DeleteNotifyForUser("")
           .then(res => {
-            if (res?.isOk) {
-              getList("")
-              Notice({
-                msg: "Xóa thành công!",
-              })
-            }
+            if (res.isError) return
+            getList("")
+            Notice({
+              msg: "Xóa thành công!",
+            })
           })
           .finally(() => setLoading(false))
       },
@@ -49,9 +47,8 @@ const NotifyForm = ({ listNotify, loading, getList, onClose }) => {
     setLoading(true)
     NotifyApi.MarkAsRead(notify?.NotifyId)
       .then(res => {
-        if (res?.isOk) {
-          getList("")
-        }
+        if (res.isError) return
+        getList("")
       })
       .finally(() => setLoading(false))
     onClose()

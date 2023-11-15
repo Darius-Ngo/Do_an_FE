@@ -33,7 +33,7 @@ const MyRequest = () => {
     id_nguoi_dung: userInfo.id,
     status: 0,
     currentPage: 1,
-    pageSize: 20,
+    pageSize: 10,
     textSearch: "",
   })
 

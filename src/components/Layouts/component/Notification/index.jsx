@@ -22,9 +22,8 @@ const Notification = () => {
     }
     NotifyService.GetListNotify(params)
       .then(res => {
-        if (res.isOk) {
-          setListNotify(res?.Object)
-        }
+        if (res?.isError) return
+        setListNotify(res?.Object)
       })
       .finally(() => setLoading(false))
   }
@@ -102,9 +101,8 @@ const Notification = () => {
             setLoading(true)
             NotifyService.MarkAsSeen("")
               .then(res => {
-                if (res.isOk) {
-                  getListNotify("")
-                }
+                if (res.isError) return
+                getListNotify("")
               })
               .finally(() => setLoading(false))
           }

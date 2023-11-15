@@ -28,7 +28,6 @@ const PostPage = () => {
     pageSize: 10,
     textSearch: "",
   })
-  console.log("tagID", tagID)
   const getListCombobox = async () => {
     try {
       setLoading(true)

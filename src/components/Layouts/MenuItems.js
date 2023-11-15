@@ -2,18 +2,18 @@ import ROUTER from "src/router"
 import SvgIcon from "../SvgIcon"
 const MenuItemBreadcrumb = () => {
   return [
-    {
-      label: "Đăng nhập",
-      key: ROUTER.DANG_NHAP,
-    },
-    {
-      label: "Đăng ký",
-      key: ROUTER.DANG_KY,
-    },
-    {
-      label: "Đổi mật khẩu",
-      key: ROUTER.DOI_MAT_KHAU,
-    },
+    // {
+    //   label: "Đăng nhập",
+    //   key: ROUTER.DANG_NHAP,
+    // },
+    // {
+    //   label: "Đăng ký",
+    //   key: ROUTER.DANG_KY,
+    // },
+    // {
+    //   label: "Đổi mật khẩu",
+    //   key: ROUTER.DOI_MAT_KHAU,
+    // },
     {
       label: "Thực đơn",
       key: ROUTER.THUC_DON,

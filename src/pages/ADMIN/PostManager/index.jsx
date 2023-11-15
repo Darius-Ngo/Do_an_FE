@@ -27,7 +27,7 @@ const PostManager = () => {
   const [listPost, setListPost] = useState([])
   const [pagination, setPagination] = useState({
     currentPage: 1,
-    pageSize: 20,
+    pageSize: 10,
     status: 1,
   })
 

@@ -155,7 +155,7 @@
   }
 }
 .orange-third {
-  @include btnType( #FFF, var(--color-orange), var(--color-orange), #FFF, var(--color-orange), var(--color-orange));
+  @include btnType( #FFF, var(--color-orange), var(--color-orange), rgba(230, 126, 34, 0.1), var(--color-orange), var(--color-orange));
   & {
     border: 2px solid;
   }

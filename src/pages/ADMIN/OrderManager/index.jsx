@@ -38,7 +38,7 @@ const OrderManager = () => {
   const [print, setPrint] = useState(false)
 
   const [condition, setCondition] = useState({
-    pageSize: 20,
+    pageSize: 10,
     currentPage: 1,
     status: 0,
     textSearch: "",

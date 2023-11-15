@@ -168,16 +168,13 @@ const CartPage = () => {
                     cartIds: [record.id],
                   })
                     .then(res => {
-                      if (res?.isOk) {
-                        dispatch(
-                          setListCart(
-                            listCart?.filter(i => i.id !== record.id),
-                          ),
-                        )
-                        setRowSelected(pre =>
-                          pre?.filter(i => i.id !== record.id),
-                        )
-                      }
+                      if (res.isError) return
+                      dispatch(
+                        setListCart(listCart?.filter(i => i.id !== record.id)),
+                      )
+                      setRowSelected(pre =>
+                        pre?.filter(i => i.id !== record.id),
+                      )
                     })
                     .finally(() => setLoading(false))
                 },
@@ -269,19 +266,18 @@ const CartPage = () => {
                             cartIds: rowSelected?.map(i => i?.id),
                           })
                             .then(res => {
-                              if (res?.isOk) {
-                                dispatch(
-                                  setListCart(
-                                    listCart?.filter(
-                                      i =>
-                                        !rowSelected
-                                          ?.map(i => i?.id)
-                                          .includes(i.id),
-                                    ),
+                              if (res.isError) return
+                              dispatch(
+                                setListCart(
+                                  listCart?.filter(
+                                    i =>
+                                      !rowSelected
+                                        ?.map(i => i?.id)
+                                        .includes(i.id),
                                   ),
-                                )
-                                setRowSelected([])
-                              }
+                                ),
+                              )
+                              setRowSelected([])
                             })
                             .finally(() => setLoading(false))
                         },

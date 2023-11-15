@@ -13,7 +13,7 @@ import ModalInsertUpdate from "./components/ModalInsertUpdate"
 import { TagsManagerStyle } from "./styled"
 const TagsManager = () => {
   const [pagination, setPagination] = useState({
-    pageSize: 20,
+    pageSize: 10,
     currentPage: 1,
     textSearch: "",
     status: 1,

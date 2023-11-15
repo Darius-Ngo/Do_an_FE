@@ -25,6 +25,8 @@ import "./styles.scss"
 import BreadcrumbHome from "./BreadcrumbHome/BreadcrumbHome"
 import { ShoppingCartOutlined } from "@ant-design/icons"
 import CartSmall from "./component/CartSmall"
+import ModalUserInfo from "./component/ModalUserInfo"
+import ChangePasswordModal from "./component/ChangePasswordModal"
 
 const { Header, Content } = Layout
 
@@ -46,6 +48,8 @@ const MainLayout = ({ children, isAdmin }) => {
   const [isModelNotification, setIsModelNotification] = isNotificationUpdate
   const [menuAdmin, setMenuAdmin] = useState([])
   const [openRegisterModal, setOpenRegisterModal] = useState(false)
+  const [openInfoModal, setOpenInfoModal] = useState(false)
+  const [openModalChangePass, setOpenModalChangePass] = useState(false)
   const [isTransparent, setIsTransparent] = useState(false)
 
   const onClickMenu = key => {
@@ -95,9 +99,9 @@ const MainLayout = ({ children, isAdmin }) => {
               </>
             )}
             <Menu.Item
-              key="3"
+              key="2"
               onClick={() => {
-                navigate(ROUTER.THONG_TIN_TAI_KHOAN)
+                setOpenInfoModal(true)
               }}
             >
               <div className="btn-function strok-btn-function">
@@ -105,28 +109,32 @@ const MainLayout = ({ children, isAdmin }) => {
                 <span className="fw-400">Thông tin tài khoản</span>
               </div>
             </Menu.Item>
-            <Menu.Item
-              key="4"
-              onClick={() => {
-                navigate(ROUTER.DS_DON_DAT_HANG)
-              }}
-            >
-              <div className="btn-function strok-btn-function">
-                <SvgIcon name="user-info" />
-                <span className="fw-400">Danh sách đơn hàng</span>
-              </div>
-            </Menu.Item>
-            <Menu.Item
-              key="4"
-              onClick={() => {
-                navigate(ROUTER.QL_YCHT)
-              }}
-            >
-              <div className="btn-function strok-btn-function">
-                <SvgIcon name="user-info" />
-                <span className="fw-400">Danh sách yêu cầu</span>
-              </div>
-            </Menu.Item>
+            {!ROLE_ADMIN.includes(userInfo?.id_phan_quyen) && (
+              <>
+                <Menu.Item
+                  key="3"
+                  onClick={() => {
+                    navigate(ROUTER.DS_DON_DAT_HANG)
+                  }}
+                >
+                  <div className="btn-function strok-btn-function">
+                    <SvgIcon name="user-info" />
+                    <span className="fw-400">Danh sách đơn hàng</span>
+                  </div>
+                </Menu.Item>
+                <Menu.Item
+                  key="4"
+                  onClick={() => {
+                    navigate(ROUTER.QL_YCHT)
+                  }}
+                >
+                  <div className="btn-function strok-btn-function">
+                    <SvgIcon name="user-info" />
+                    <span className="fw-400">Danh sách yêu cầu</span>
+                  </div>
+                </Menu.Item>
+              </>
+            )}
             <Menu.Item
               key="5"
               onClick={() => {
@@ -402,6 +410,19 @@ const MainLayout = ({ children, isAdmin }) => {
           open={openRegisterModal}
           handleCancel={() => setOpenRegisterModal(false)}
           handleLogin={() => dispatch(setOpenLoginModal(true))}
+        />
+      )}
+      {!!openInfoModal && (
+        <ModalUserInfo
+          open={openInfoModal}
+          onCancel={() => setOpenInfoModal(false)}
+          handleChangePass={() => setOpenModalChangePass(true)}
+        />
+      )}
+      {!!openModalChangePass && (
+        <ChangePasswordModal
+          open={openModalChangePass}
+          onCancel={() => setOpenModalChangePass(false)}
         />
       )}
     </LayoutStyled>

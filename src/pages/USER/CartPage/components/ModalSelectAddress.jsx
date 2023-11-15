@@ -59,13 +59,12 @@ const ModalSelectAddress = ({
                 idAddress: [record.id],
               })
                 .then(res => {
-                  if (res?.isOk) {
-                    if (record.id === addressSelect.id) {
-                      handleOk()
-                      setAddressSelect({})
-                    }
-                    getListAddress()
+                  if (res.isError) return
+                  if (record.id === addressSelect.id) {
+                    handleOk()
+                    setAddressSelect({})
                   }
+                  getListAddress()
                 })
                 .finally(() => setLoading(false))
             },

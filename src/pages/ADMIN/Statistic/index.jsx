@@ -139,7 +139,7 @@ const Statistic = () => {
         data: dataCategory?.map(item => +item?.tong_tien),
       },
       {
-        label: "loại sản phẩm",
+        label: "Số lượng sản phẩm",
         backgroundColor: "#E86C6C",
         borderColor: "#E86C6C",
         hoverBackgroundColor: "rgba(255,99,132,0.4)",

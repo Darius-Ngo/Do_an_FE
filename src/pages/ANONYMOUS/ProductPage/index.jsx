@@ -8,8 +8,8 @@ import CategoryService from "src/services/CategoryService"
 import ProductService from "src/services/ProductService"
 import { Autoplay } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
-import ProductCard from "./ProductCard"
 import { ProductPageStyle } from "./styled"
+import ProductCard from "../ProductDetail/components/ProductCard"
 
 const ProductPage = () => {
   // SwiperCore.use([Autoplay])
