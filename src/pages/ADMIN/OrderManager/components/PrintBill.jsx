@@ -1,6 +1,6 @@
 // InvoiceComponent.js
 import React from "react"
-import { PAYMENT_TYPE } from "src/constants/constants"
+import { InfoContact, PAYMENT_TYPE } from "src/constants/constants"
 import { formatMoneyVND } from "src/lib/utils"
 import Logo from "src/assets/images/logo/logo-wellcome.png"
 import styled from "styled-components"
@@ -15,8 +15,8 @@ const InvoiceComponent = React.forwardRef(({ data }, ref) => {
       <div className="fs-20 fw-600 text-center mb-8">
         <img src={Logo} alt="" width={40} /> TIỆM CAFE BẤT ỔN
       </div>
-      <div className="mb-8">ĐC: Số 52 Triều Khúc, Thanh Xuân, Hà Nội</div>
-      <div className="mb-8">ĐT: 0358.102.912</div>
+      <div className="mb-8">ĐC: {InfoContact.address}</div>
+      <div className="mb-8">ĐT: {InfoContact.phone}</div>
       <hr style={{ borderTop: "0.1px dashed #777" }} />
       <div className="fs-16 mb-12 mt-8">
         ĐƠN HÀNG: <span>{data?.ma_don_hang}</span>

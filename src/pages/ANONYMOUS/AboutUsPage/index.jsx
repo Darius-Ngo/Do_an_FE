@@ -30,7 +30,7 @@ const AboutPage = () => {
 
       <div className="about-row row-2">
         <div className="img-left h-100">
-          <img src={img_2} alt="" />
+          <img src={img_2} alt="" width={"100%"} />
         </div>
         <div className="content-right">
           <div className="title">DỊCH VỤ KHÁCH HÀNG</div>

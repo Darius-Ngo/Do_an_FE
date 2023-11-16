@@ -1,27 +1,23 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import PostService from "src/services/PostService"
+import ProductService from "src/services/ProductService"
 import Slider from "../Slider"
+import News from "./components/News"
+import OtherInfo from "./components/OtherInfo"
 import ProductPopular from "./components/ProductPopular"
 import { HomeStyled } from "./styled"
-import content from "src/assets/images/home/home.png"
-import ProductService from "src/services/ProductService"
-import { useEffect } from "react"
-import { Col, Row } from "antd"
-import News from "./components/News"
-import PostService from "src/services/PostService"
-import OtherInfo from "./components/OtherInfo"
+import SpinCustom from "src/components/Spin"
 
 function HomePage() {
   const [loading, setLoading] = useState([])
   const [listProduct, setListProduct] = useState([])
   const [listPost, setListPost] = useState([])
-  const getListProduct = async () => {
+  const getListProductTrend = async () => {
     try {
       setLoading(true)
-      const res = await ProductService.getListProduct({
-        id_loai_san_pham: 279,
-      })
+      const res = await ProductService.getListProductTrend()
       if (res.isError) return
-      setListProduct(res.Object?.data)
+      setListProduct(res.Object)
     } finally {
       setLoading(false)
     }
@@ -40,15 +36,17 @@ function HomePage() {
     }
   }
   useEffect(() => {
-    getListProduct()
+    getListProductTrend()
     getListPostHome()
   }, [])
   return (
     <HomeStyled className="d-flex flex-column align-items-center">
       <Slider />
-      <News listPost={listPost} />
-      <ProductPopular listProduct={listProduct} />
-      <OtherInfo />
+      <SpinCustom spinning={loading}>
+        <News listPost={listPost} />
+        <ProductPopular listProduct={listProduct} />
+        <OtherInfo />
+      </SpinCustom>
       {/* <img src={content} alt="" width={"100%"} /> */}
     </HomeStyled>
   )

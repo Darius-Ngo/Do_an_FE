@@ -1,5 +1,6 @@
 import { Form, Row, Spin } from "antd"
 import { useState } from "react"
+import { useSelector } from "react-redux"
 import FlInput from "src/components/FloatingLabel/Input"
 import CustomModal from "src/components/Modal/CustomModal"
 import Button from "src/components/MyButton/Button"
@@ -40,13 +41,15 @@ const StyleChangePassword = styled.div`
 `
 
 const ChangePasswordModal = ({ onCancel, open }) => {
+  const { userInfo } = useSelector(state => state.appGlobal)
   const [loading, setLoading] = useState(false)
   const [form] = Form.useForm()
   const handleSubmit = async () => {
     try {
       setLoading(true)
       const values = await form.validateFields()
-      const res = await AuthService.replacePassword({
+      const res = await AuthService.changePassWord({
+        id: userInfo.id,
         ...values,
       })
       if (res.isError) return
@@ -81,13 +84,13 @@ const ChangePasswordModal = ({ onCancel, open }) => {
                       required: true,
                       message: "Bạn chưa nhập mật khẩu cũ!",
                     },
-                    {
-                      pattern: getRegexPassword(),
-                      message:
-                        "Mật khẩu có chứa ít nhất 8 ký tự, trong đó có ít nhất một số và bao gồm cả chữ thường và chữ hoa và ký tự đặc biệt, ví dụ @, #, ?, !.",
-                    },
+                    // {
+                    //   pattern: getRegexPassword(),
+                    //   message:
+                    //     "Mật khẩu có chứa ít nhất 8 ký tự, trong đó có ít nhất một số và bao gồm cả chữ thường và chữ hoa và ký tự đặc biệt, ví dụ @, #, ?, !.",
+                    // },
                   ]}
-                  name="Password"
+                  name="oldPassword"
                 >
                   <FlInput isPass isRequired label="Mật khẩu hiện tại" />
                 </Form.Item>
@@ -103,7 +106,7 @@ const ChangePasswordModal = ({ onCancel, open }) => {
                         "Mật khẩu có chứa ít nhất 8 ký tự, trong đó có ít nhất một số và bao gồm cả chữ thường và chữ hoa và ký tự đặc biệt, ví dụ @, #, ?, !.",
                     },
                   ]}
-                  name="NewPassword"
+                  name="newPassword"
                 >
                   <FlInput isPass isRequired label="Mật khẩu mới" />
                 </Form.Item>
@@ -115,7 +118,7 @@ const ChangePasswordModal = ({ onCancel, open }) => {
                     },
                     ({ getFieldValue }) => ({
                       validator(_, value) {
-                        if (!value || getFieldValue("NewPassword") === value) {
+                        if (!value || getFieldValue("newPassword") === value) {
                           return Promise.resolve()
                         }
                         return Promise.reject(

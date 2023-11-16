@@ -3,6 +3,7 @@ import Hotline from "src/assets/images/home/Contact/hotline.svg"
 import IconAddress from "src/assets/images/home/Contact/icon-address.svg"
 import SMSonline from "src/assets/images/home/Contact/smsonline.svg"
 import { ContactStyled } from "../styled"
+import { InfoContact } from "src/constants/constants"
 const ContactInfo = () => {
   return (
     <ContactStyled>
@@ -16,9 +17,7 @@ const ContactInfo = () => {
             >
               <Col>
                 <div className="contact-type">Địa chỉ</div>
-                <div className="contact-address">
-                  Tầng 5, 115 Trần Duy Hưng, Trung Hòa, Cầu Giấy, Hà Nội
-                </div>
+                <div className="contact-address">{InfoContact.address}</div>
               </Col>
               <Col>
                 <img src={IconAddress} alt="IconAddress" loading="lazy" />
@@ -35,7 +34,7 @@ const ContactInfo = () => {
             >
               <Col>
                 <div className="contact-type">Đường dây nóng</div>
-                <div className="hotline-text">0869.100.317</div>
+                <div className="hotline-text">{InfoContact.phone}</div>
               </Col>
               <Col>
                 <img src={Hotline} alt="Hotline" loading="lazy" />
@@ -52,7 +51,7 @@ const ContactInfo = () => {
             >
               <Col>
                 <div className="contact-type">Hộp thư điện tử</div>
-                <div className="contact-address">cafebaton@gmail.com</div>
+                <div className="contact-address">{InfoContact.email}</div>
               </Col>
               <Col>
                 <img src={SMSonline} alt="SMSonline" loading="lazy" />

@@ -96,3 +96,9 @@ export const STATUS_REQUEST = [
     Description: "Từ chối hỗ trợ",
   },
 ]
+
+export const InfoContact = {
+  address: "495 Đ. Nguyễn Trãi, Thanh Xuân, Hà Nội.",
+  phone: "0368.102.912",
+  email: "cafebaton@gmail.com",
+}

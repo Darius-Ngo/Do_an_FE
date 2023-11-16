@@ -7,6 +7,7 @@ import {
   apiUpdateProduct,
   apiDeleteProduct,
   apiChangeStatus,
+  apiGetListProductTrend,
 } from "./urls"
 
 const getListProduct = body => http.post(apiGetListProduct, body)
@@ -16,6 +17,8 @@ const getProductByCategoryID = id =>
 const addProduct = body => http.post(apiAddProduct, body)
 const changeStatus = body => http.post(apiChangeStatus, body)
 const updateProduct = body => http.put(apiUpdateProduct, body)
+const getListProductTrend = params =>
+  http.get(apiGetListProductTrend, { params })
 const deleteProduct = id => http.delete(apiDeleteProduct + `/${id}`)
 
 const ProductService = {
@@ -26,5 +29,6 @@ const ProductService = {
   updateProduct,
   deleteProduct,
   changeStatus,
+  getListProductTrend,
 }
 export default ProductService

@@ -129,8 +129,6 @@ export const LayoutStyled = styled.div`
     }
   }
   .body-app {
-    position: relative;
-    top: -53px;
     /* background-color: var(--color-bgr); */
   }
   .fl-input-radius {

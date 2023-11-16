@@ -115,7 +115,7 @@ const OtherInfo = () => {
         style={{ transform: "rotate(180deg)" }}
         className="icon-gray"
       />
-      <div className="pt-50 pb-50">
+      <div className="pt-50 pb-0">
         <LayoutCommon>
           <div className="title-home">Thiết bị hiện đại</div>
           <Row gutter={36}>

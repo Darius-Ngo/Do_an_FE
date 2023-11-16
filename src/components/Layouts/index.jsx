@@ -27,6 +27,8 @@ import { ShoppingCartOutlined } from "@ant-design/icons"
 import CartSmall from "./component/CartSmall"
 import ModalUserInfo from "./component/ModalUserInfo"
 import ChangePasswordModal from "./component/ChangePasswordModal"
+import Footer from "./component/Footer"
+import ForgetPasswordModal from "./component/ForgetPasswordModal"
 
 const { Header, Content } = Layout
 
@@ -48,6 +50,7 @@ const MainLayout = ({ children, isAdmin }) => {
   const [isModelNotification, setIsModelNotification] = isNotificationUpdate
   const [menuAdmin, setMenuAdmin] = useState([])
   const [openRegisterModal, setOpenRegisterModal] = useState(false)
+  const [openForgetPassModal, setOpenForgetPassModal] = useState(false)
   const [openInfoModal, setOpenInfoModal] = useState(false)
   const [openModalChangePass, setOpenModalChangePass] = useState(false)
   const [isTransparent, setIsTransparent] = useState(false)
@@ -138,7 +141,7 @@ const MainLayout = ({ children, isAdmin }) => {
             <Menu.Item
               key="5"
               onClick={() => {
-                navigate(ROUTER.DOI_MAT_KHAU)
+                setOpenModalChangePass(true)
               }}
             >
               <div className="btn-function strok-btn-function">
@@ -354,35 +357,39 @@ const MainLayout = ({ children, isAdmin }) => {
         </div>
       </Header>
       <BreadcrumbHome />
-      <Layout>
-        <Content className="site-layout-background">
-          {isAdmin ? (
-            <>
-              <LayoutAdmin
-                children={children}
-                menuAdmin={menuAdmin}
-                selectedKey={selectedKey}
-              />
-            </>
-          ) : isUser ? (
-            <LayoutUser
-              children={children}
-              selectedKey={selectedKey}
-              userInfo={userInfo}
-            />
-          ) : (
-            <>
-              <div
-                className="w-100 body-app"
-                // body-app
-                style={location.pathname === ROUTER.HOME ? {} : { top: 0 }}
-              >
-                {children}
-              </div>
-            </>
-          )}
-        </Content>
-      </Layout>
+      {/* <Layout>
+        <Content className="site-layout-background"> */}
+      {isAdmin ? (
+        <>
+          <LayoutAdmin
+            children={children}
+            menuAdmin={menuAdmin}
+            selectedKey={selectedKey}
+          />
+        </>
+      ) : isUser ? (
+        <LayoutUser
+          children={children}
+          selectedKey={selectedKey}
+          userInfo={userInfo}
+        />
+      ) : (
+        <>
+          <div
+            className="w-100"
+            style={
+              location.pathname === ROUTER.HOME
+                ? { position: "relative", top: -53 }
+                : { top: 0 }
+            }
+          >
+            {children}
+          </div>
+          <Footer />
+        </>
+      )}
+      {/* </Content>
+      </Layout> */}
       <Drawer
         title=""
         placement="left"
@@ -402,7 +409,7 @@ const MainLayout = ({ children, isAdmin }) => {
           openLoginModal={openLoginModal}
           handleCancel={() => dispatch(setOpenLoginModal(false))}
           handleRegister={() => setOpenRegisterModal(true)}
-          // setOpenForgetPassModal={() => setOpenForgetPassModal(true)}
+          setOpenForgetPassModal={() => setOpenForgetPassModal(true)}
         />
       )}
       {!!openRegisterModal && (
@@ -423,6 +430,12 @@ const MainLayout = ({ children, isAdmin }) => {
         <ChangePasswordModal
           open={openModalChangePass}
           onCancel={() => setOpenModalChangePass(false)}
+        />
+      )}
+      {!!openForgetPassModal && (
+        <ForgetPasswordModal
+          open={openForgetPassModal}
+          onCancel={() => setOpenForgetPassModal(false)}
         />
       )}
     </LayoutStyled>
