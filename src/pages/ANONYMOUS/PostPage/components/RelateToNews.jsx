@@ -81,7 +81,7 @@ const RelateToNews = ({ list }) => {
                   <div
                     className="relate-news-box-care pointer"
                     onClick={() => {
-                      window.scrollTo({ top: 0, left: 0 })
+                      window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
                       navigate(ROUTER.CHI_TIET_TIN_TUC, {
                         state: i,
                       })
@@ -132,10 +132,7 @@ const RelateToNews = ({ list }) => {
                     key={`tag123123${idx}`}
                     onClick={() => {
                       dispatch(setTagID(i.id))
-                      window.scrollTo({
-                        top: 0,
-                        left: 0,
-                      })
+                      window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
                     }}
                   >
                     <div className="relate-news-tag pointer">{i?.ten_the}</div>

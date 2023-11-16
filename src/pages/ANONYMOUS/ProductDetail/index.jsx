@@ -111,11 +111,7 @@ const ProductDetail = () => {
       duration: 1000, // Thời gian cuộn mượt (milliseconds)
       smooth: "easeInOutQuint", // Loại hiệu ứng cuộn
     })
-    window.scrollTo(0, 0)
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth", // Thêm behavior này để tạo hiệu ứng cuộn mượt
-    })
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
     setSizeSelect(1)
     getDetail()
     getListProduct()
@@ -307,7 +303,7 @@ const ProductDetail = () => {
                           width={70}
                           className="pointer"
                           onClick={() => {
-                            window.scrollTo(0, 0)
+                            window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
                             navigate(ROUTER.CHI_TIET_SAN_PHAM, {
                               state: {
                                 product,

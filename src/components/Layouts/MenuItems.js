@@ -35,6 +35,12 @@ const MenuItemBreadcrumb = () => {
     {
       label: "Giới thiệu",
       key: ROUTER.GIOI_THIEU,
+      children: [
+        {
+          label: "Chi tiết giới thiệu",
+          key: ROUTER.GIOI_THIEU_CHI_TIET,
+        },
+      ],
     },
     {
       label: "Danh sách yêu cầu hỗ trợ",

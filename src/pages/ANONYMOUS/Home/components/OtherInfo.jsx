@@ -77,7 +77,7 @@ const OtherInfo = () => {
                     <div
                       className="fs-16 d-flex align-items-center fw-600 pointer"
                       onClick={() => {
-                        window.scrollTo({ top: 0, left: 0 })
+                        window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
                         navigate(ROUTER.TIN_TUC)
                       }}
                     >

@@ -18,6 +18,9 @@ const PostPage = React.lazy(() => import("src/pages/ANONYMOUS/PostPage"))
 const NewsDetail = React.lazy(() => import("src/pages/ANONYMOUS/NewsDetail"))
 const ContactSupport = React.lazy(() => import("src/pages/ANONYMOUS/Contact"))
 const AboutUsPage = React.lazy(() => import("src/pages/ANONYMOUS/AboutUsPage"))
+const AboutUsDetail = React.lazy(() =>
+  import("src/pages/ANONYMOUS/AboutUsPage/components/AboutUsDetail"),
+)
 
 // USER
 const PrivateRoutes = React.lazy(() => import("src/pages/PrivateRoutes"))
@@ -277,6 +280,14 @@ const routes = [
         element: (
           <LazyLoadingComponent>
             <AboutUsPage />
+          </LazyLoadingComponent>
+        ),
+      },
+      {
+        path: ROUTER.GIOI_THIEU_CHI_TIET,
+        element: (
+          <LazyLoadingComponent>
+            <AboutUsDetail />
           </LazyLoadingComponent>
         ),
       },

@@ -40,6 +40,18 @@ const Detail = () => {
 
   const navigate = useNavigate()
   const articleUrl = window.location.href
+  const getListPostHome = async id_the => {
+    try {
+      setLoading(true)
+      const res = await PostService.getListPostHome({
+        id_the: id_the,
+      })
+      if (res?.isError) return
+      setListPostRelate(res?.Object?.data)
+    } finally {
+      setLoading(false)
+    }
+  }
   const getDetailPost = async () => {
     try {
       setLoading(true)
@@ -49,6 +61,7 @@ const Detail = () => {
       })
       if (res?.isError) return
       setDetailNews(res?.Object)
+      getListPostHome(res?.Object?.the_bv[0]?.id_the)
     } finally {
       setLoading(false)
     }
@@ -198,6 +211,7 @@ const Detail = () => {
                 onClick={() => {
                   navigate(ROUTER.TIN_TUC)
                   dispatch(setTagID(i.id_the))
+                  window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
                 }}
               >
                 {i?.ten_the}
@@ -208,7 +222,7 @@ const Detail = () => {
           <div
             className="button-back"
             onClick={() => {
-              window.scrollTo(0, 0)
+              window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
               window.history.back()
             }}
           >
@@ -219,21 +233,24 @@ const Detail = () => {
             <Comments userInfo={userInfo} PostInfo={PostInfo} />
           )}
 
-          <div className="title-type-1">Bài viết liên quan</div>
+          {/* <div className="title-type-1">Bài viết khác</div>
           {listPostRelate?.length > 0 &&
-            listPostRelate?.map(item => (
-              <div
-                style={{ cursor: "pointer" }}
-                key={`news-relate-to${item?.PostID}`}
-                className="primary-color text-ellipsis mb-12 fw-600"
-                onClick={() => {
-                  window.scrollTo({ top: 0, left: 0 })
-                  navigate(`/noi-dung/${item?.PostID}`)
-                }}
-              >
-                {item?.Title}
-              </div>
-            ))}
+            listPostRelate?.map(
+              item =>
+                item?.id !== PostInfo?.id && (
+                  <div
+                    style={{ cursor: "pointer" }}
+                    key={`news-relate-to${item?.id}`}
+                    className="primary-color text-ellipsis mb-12 fw-600"
+                    onClick={() => {
+                      window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+                      navigate(`/noi-dung/${item?.PostID}`)
+                    }}
+                  >
+                    {item?.tieu_de}
+                  </div>
+                ),
+            )} */}
         </NewsDetailStyled>
       )}
     </Spin>

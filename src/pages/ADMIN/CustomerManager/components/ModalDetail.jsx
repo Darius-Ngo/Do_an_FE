@@ -23,7 +23,6 @@ const Styled = styled.div`
   }
 `
 const ModalDetailUser = ({ open, onCancel, setBtns }) => {
-  console.log("open", open)
   const renderFooter = () => (
     <div className="d-flex justify-content-flex-end">
       {setBtns()?.map(

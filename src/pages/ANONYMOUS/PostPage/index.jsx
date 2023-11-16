@@ -56,6 +56,7 @@ const PostPage = () => {
     getList()
   }, [pagination, tagID])
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
     getListCombobox()
   }, [])
   return (
@@ -113,7 +114,11 @@ const PostPage = () => {
                           content: i?.tom_tat,
                         }}
                         onClick={() => {
-                          window.scrollTo({ top: 0, left: 0 })
+                          window.scrollTo({
+                            top: 0,
+                            left: 0,
+                            behavior: "smooth",
+                          })
                           navigate(ROUTER.CHI_TIET_TIN_TUC, {
                             state: i,
                           })

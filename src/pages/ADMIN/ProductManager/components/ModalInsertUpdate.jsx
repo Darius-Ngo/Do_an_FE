@@ -41,7 +41,6 @@ const ModalInsertUpdate = ({ onOk, open, onCancel, listCategory }) => {
   const [startDate, setStartDate] = useState(null)
   useEffect(() => {
     if (isUpdate) {
-      console.log("open", open)
       form.setFieldsValue({
         ...open,
         anh: open.anh

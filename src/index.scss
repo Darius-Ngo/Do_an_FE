@@ -13,12 +13,12 @@ body::-webkit-scrollbar {
   height: 5px;
 }
 #root {
-  overflow-x: hidden;
+  // overflow-x: hidden;
   scroll-behavior: smooth;
   height: 100%;
 }
  html {
-  overflow: hidden;
+  // overflow: hidden;
   scroll-behavior: smooth;
 } 
 .ant-scrolling-effect {
@@ -26,7 +26,7 @@ body::-webkit-scrollbar {
 }
 .ant-modal-body {
   flex: auto;
-  overflow: hidden auto;
+  // overflow: hidden auto;
   padding: 16px 20px 20px 20px;
 }
 .ant-modal-content {
@@ -272,8 +272,8 @@ body::-webkit-scrollbar-thumb {
   }
 }
 #page-scroll {
-  scroll-behavior: smooth;
-  overflow: hidden auto;
+  // scroll-behavior: smooth;
+  // overflow: hidden auto;
 }
 .modal-log-error {
   .ant-modal-header, .ant-modal-title {

@@ -41,7 +41,6 @@ const ModalViewPDF = ({
       })
     }
   }, [open, indexFile])
-  console.log("listFiles", listFiles)
 
   return (
     <ModalViewPDFStyle

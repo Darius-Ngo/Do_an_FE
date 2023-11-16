@@ -63,7 +63,6 @@ const ModalInsertUpdate = ({ onOk, open, onCancel }) => {
     try {
       setLoading(true)
       const values = await form.validateFields()
-      console.log("values", values)
       let urlAvatar = ""
       if (values?.avatar?.length && values?.avatar[0]?.originFileObj) {
         const formData = new FormData()

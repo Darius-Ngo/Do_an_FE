@@ -40,8 +40,6 @@ const InsertUpdatePostModal = ({ open, onCancel, onOk }) => {
   const [form] = Form.useForm()
   const isEdit = open.isEdit
 
-  console.log("listTag", listTag)
-
   const menu = (
     <div
       style={{

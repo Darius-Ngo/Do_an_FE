@@ -56,9 +56,8 @@ export const CommentWrapper = styled.div`
 
   .time-comment {
     font-weight: 400;
-    font-size: 12px;
+    font-size: 10px;
     color: #666666;
-    margin: 4px 0 8px;
   }
 
   .username {

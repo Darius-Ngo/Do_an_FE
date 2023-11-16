@@ -3,7 +3,6 @@ import { useEffect } from "react"
 import LayoutCommon from "src/components/Common/Layout"
 import Detail from "./component/Detail"
 import { NewsDetailStyled } from "./styled"
-import RelateToNews from "../PostPage/components/RelateToNews"
 const NewDetail = () => {
   useEffect(() => {
     window.scroll(0, 0)

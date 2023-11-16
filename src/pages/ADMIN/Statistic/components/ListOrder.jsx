@@ -26,8 +26,6 @@ const ListOrder = ({ date, totalMoneyOrder }) => {
     textSearch: "",
   })
 
-  console.log("totalMoneyOrder", totalMoneyOrder)
-
   const getListOrder = async () => {
     try {
       setLoading(true)

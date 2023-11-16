@@ -219,3 +219,20 @@ export const AboutUsPageStyle = styled.div`
     }
   }
 `
+export const AboutUsDetailStyle = styled.div`
+  .other-item {
+    position: relative;
+    margin-bottom: 24;
+
+    .title {
+      position: absolute;
+      top: 180px;
+      left: 0;
+      right: 0;
+      font-size: 26px;
+      font-weight: bold;
+      color: #fff;
+      text-align: center;
+    }
+  }
+`

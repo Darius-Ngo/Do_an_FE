@@ -25,7 +25,7 @@ const News = ({ listPost }) => {
                     fallback={FAILBACK}
                     className="pointer img-news"
                     onClick={() => {
-                      window.scrollTo({ top: 0, left: 0 })
+                      window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
                       navigate(ROUTER.CHI_TIET_TIN_TUC, {
                         state: i,
                       })
@@ -35,7 +35,7 @@ const News = ({ listPost }) => {
                     className="fs-16 fw-600 max-line1 title-news pointer"
                     title={i?.tieu_de}
                     onClick={() => {
-                      window.scrollTo({ top: 0, left: 0 })
+                      window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
                       navigate(ROUTER.CHI_TIET_TIN_TUC, {
                         state: i,
                       })
@@ -70,7 +70,7 @@ const News = ({ listPost }) => {
                   <div
                     className="see-more d-flex align-items-center"
                     onClick={() => {
-                      window.scrollTo({ top: 0, left: 0 })
+                      window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
                       navigate(ROUTER.CHI_TIET_TIN_TUC, {
                         state: i,
                       })

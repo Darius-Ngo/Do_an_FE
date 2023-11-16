@@ -37,7 +37,6 @@ const LoginModal = ({
         ...i,
         children: i?.children?.filter(x => hasPermission(x?.TabID, listTab)),
       }))
-    console.log("menuAdmin", menuAdmin)
     let startPage = "/"
     if (!!menuAdmin && !!menuAdmin[0]) {
       startPage = menuAdmin[0]?.children?.[0]?.key || menuAdmin[0]?.key

@@ -11,6 +11,7 @@ const ROUTER = {
   TIN_TUC: "/tin-tuc",
   CHI_TIET_TIN_TUC: "/chi-tiet-tin-tuc",
   GIOI_THIEU: "/gioi-thieu",
+  GIOI_THIEU_CHI_TIET: "/gioi-thieu-chi-tiet",
   HO_TRO: "/ho-tro",
 
   // ADMIN

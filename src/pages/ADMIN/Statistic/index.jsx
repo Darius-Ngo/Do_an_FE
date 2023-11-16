@@ -283,7 +283,7 @@ const Statistic = () => {
   }
   const [showMore, setShowMore] = useState(8)
   const handleChangeShowMore = event => {
-    window.scrollTo(0, 0)
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
 
     setShowMore(event)
   }

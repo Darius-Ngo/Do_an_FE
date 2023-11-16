@@ -9,6 +9,7 @@ import CommentService from "src/services/CommentService"
 import ReplyComment from "./ReplyComment"
 import "./comments.scss"
 import { CommentWrapper, PopoverWrapper, TabsNewsStyled } from "./styled"
+import dayjs from "dayjs"
 
 const Comments = ({
   // items,
@@ -35,9 +36,10 @@ const Comments = ({
   const textInput = useRef()
   const editCommentRef = useRef()
   const [loadingComment, setLoadingComment] = useState(false)
-  const [listComment, setListComment] = useState(false)
+  const [listComment, setListComment] = useState([])
+  const [totalComment, setTotalComment] = useState(0)
   const [tabActive, setTabActive] = useState(1)
-  const [newComment, setNewComment] = useState(1)
+  const [newComment, setNewComment] = useState()
   const [commentID, setCommentID] = useState(undefined)
 
   const focusTextInput = () =>
@@ -78,7 +80,8 @@ const Comments = ({
         id_nguoi_dung: userInfo?.id,
       })
       if (res.isError) return
-      setListComment(res?.Object)
+      setListComment(res?.Object?.data)
+      setTotalComment(res?.Object?.total)
       // res?.Object?.data?.length &&
       //   res?.Object?.data?.map(i => {
       //     setExpandComment(pre => [
@@ -111,75 +114,71 @@ const Comments = ({
   const handleDeleteComment = item => {
     CB1({
       title: `Bạn có chắc chắn muốn xóa bình luận này không?`,
-      icon: "warning-usb",
+      icon: "trashRed",
       okText: "Đồng ý",
       onOk: () => {
         setLoadingComment(true)
-        // CommentServices.deleteComment({
-        //   PostCommentID: item.PostCommentID,
-        //   PostID: PostID,
-        // })
-        //   .then(res => {
-        //     if (res.isOk) {
-        //       Notice({
-        //         msg: "Xóa thành công",
-        //         isSuccess: true,
-        //       })
-        //       getComment()
-        //     }
-        //   })
-        //   .finally(() => {
-        //     setLoadingComment(false)
-        //   })
+        CommentService.deleteComment({
+          id_bl: item.id,
+        })
+          .then(res => {
+            if (res.isError) return
+            getComment()
+          })
+          .finally(() => {
+            setLoadingComment(false)
+          })
       },
     })
   }
 
-  const insertComment = (value, commentID = undefined) => {
+  const insertComment = async (value, parentID) => {
     if (!!isLogin) {
       if (value === "") {
         message.error("Vui lòng nhập nội dung")
         return
       } else {
         setLoadingComment(true)
-        // CommentServices.insertComment({
-        //   PostID: PostID,
-        //   Content: value,
-        //   ParentID: commentID,
-        // })
-        //   .then(res => {
-        //     if (res.isOk) {
-        //       getComment()
-        //       if (commentID) setReplyComment("")
-        //       else setNewComment("")
-        //     }
-        //   })
-        //   .finally(() => setLoadingComment(false))
+        try {
+          const res = await CommentService.addComment({
+            id_bai_viet: PostInfo?.id,
+            id_nguoi_dung: userInfo?.id,
+            noi_dung: value,
+            id_bl_cha: parentID,
+          })
+          if (res.isError) return
+          getComment()
+          setNewComment("")
+        } finally {
+          setLoadingComment(false)
+        }
       }
     } else {
-      message.warn("Vui lòng đăng nhập")
+      message.warning("Vui lòng đăng nhập")
       dispatch(setOpenLoginModal(true))
     }
   }
 
-  const updateComment = value => {
+  const updateComment = async (value, item) => {
     if (value === "") {
       message.error("Vui lòng nhập nội dung")
       return
     } else {
       setLoadingComment(true)
-      // CommentServices.updateComment({
-      //   Content: value,
-      //   PostCommentID: CommentIDToCorrect,
-      // })
-      //   .then(res => {
-      //     if (res.isOk) {
-      //       setValueToCorrect("")
-      //       setCommentIDToCorrect(undefined)
-      //       getComment()
-      //     }
-      //   })
-      //   .finally(() => setLoadingComment(false))
+      try {
+        const res = await CommentService.updateComment({
+          id: item.id,
+          noi_dung: value,
+        })
+        if (res.isError) return
+        // changeValueTable({
+        //   ...item,
+        //   isEdit: false,
+        // })
+        getComment()
+      } finally {
+        setLoadingComment(false)
+      }
     }
   }
 
@@ -197,11 +196,20 @@ const Comments = ({
     //   .finally(() => setLoadingComment(false))
   }
 
+  const changeValueTable = object => {
+    console.log("object", object)
+    setListComment(pre =>
+      pre?.map((i, index) => {
+        if (+i.id !== +object.id) return i
+        return { ...i, ...object }
+      }),
+    )
+  }
+
   return (
     <CommentWrapper>
       <Spin spinning={loadingComment}>
-        <div className="comment-header">Bình luận ({listComment?.total})</div>
-
+        <div className="comment-header">Bình luận ({totalComment})</div>
         <div className="my-comment">
           <Avatar
             src={userInfo?.avatar}
@@ -219,99 +227,38 @@ const Comments = ({
             }}
           />
         </div>
-        {!!items && (
-          <TabsNewsStyled>
-            <Tabs
-              items={items}
-              activeKey={tabActive}
-              onChange={tab => setTabActive(tab)}
-            />
-          </TabsNewsStyled>
-        )}
-        {/* {listComment?.data?.map(i => {
+        {listComment?.map((i, idx) => {
           return (
             <>
-              <Row gutter={16} key={i?.PostCommentID}>
+              <Row
+                gutter={16}
+                key={i?.PostCommentID}
+                className="mb-16 pb-8"
+                style={{ borderBottom: "1px dashed #f0f0f0" }}
+              >
                 <Col flex="40px">
                   <Avatar src={i?.avatar} alt="" loading="lazy" width={40} />
                 </Col>
                 <Col flex="auto">
-                  <div>
-                    {CommentIDToCorrect === i?.PostCommentID ? (
-                      <Input
-                        ref={editCommentRef}
-                        value={valueToCorrect}
-                        onChange={e => setValueToCorrect(e.target.value)}
-                        onPressEnter={e => updateComment(e.target.value)}
-                        onBlur={() => setCommentIDToCorrect(undefined)}
-                      />
-                    ) : (
-                      <div
-                        className={`content-comment `}
-                        style={{ textAlign: "justify" }}
-                      >
-                        <span
-                          className={
-                            !!expandComment?.find(
-                              item => item?.PostCommentID === i?.PostCommentID,
-                            )?.expandContent
-                              ? ""
-                              : "max-line4 expand-div-comment"
-                          }
-                        >
-                          <b>{i?.FullName}: </b> {i?.Content}
-                        </span>
-                        {!!expandComment?.find(
-                          item => item?.PostCommentID === i?.PostCommentID,
-                        )?.expand && (
-                          <span>
-                            {!expandComment?.find(
-                              item => item?.PostCommentID === i?.PostCommentID,
-                            )?.expandContent ? (
-                              <span
-                                style={{ color: "#008dd6" }}
-                                className="pointer expand-hover"
-                                onClick={() => {
-                                  setExpandComment(prev => [
-                                    ...prev?.filter(
-                                      item =>
-                                        item?.PostCommentID !==
-                                        i?.PostCommentID,
-                                    ),
-                                    {
-                                      PostCommentID: i?.PostCommentID,
-                                      expandContent: true,
-                                      expand: true,
-                                    },
-                                  ])
-                                }}
-                              >{`Xem thêm >>`}</span>
-                            ) : (
-                              <span
-                                style={{ color: "#008dd6" }}
-                                className="pointer expand-hover"
-                                onClick={() => {
-                                  setExpandComment(prev => [
-                                    ...prev?.filter(
-                                      item =>
-                                        item?.PostCommentID !==
-                                        i?.PostCommentID,
-                                    ),
-                                    {
-                                      PostCommentID: i?.PostCommentID,
-                                      expandContent: false,
-                                      expand: true,
-                                    },
-                                  ])
-                                }}
-                              >{` << Thu gọn`}</span>
-                            )}
-                          </span>
-                        )}
-                      </div>
-                    )}
+                  <div className="d-flex align-items-center">
+                    <div className="fw-600 mr-12">{i?.ho_ten}</div>
+                    <div className="time-comment">
+                      {dayjs(i?.thoi_gian_bl)?.format("HH:MM DD/MM/YYYY")}
+                    </div>
                   </div>
-                  <div className="social-option">
+                  {i?.isEdit ? (
+                    <Input
+                      defaultValue={i?.noi_dung}
+                      className="mt-4"
+                      placeholder="Sửa bình luận"
+                      onPressEnter={e => {
+                        updateComment(e.target.value, i)
+                      }}
+                    />
+                  ) : (
+                    <div className="mt-12">{i?.noi_dung}</div>
+                  )}
+                  {/* <div className="social-option">
                     <div className="d-flex">
                       <SvgIcon
                         name={`${i?.IsLike ? "liked" : "react-like-fb"}`}
@@ -339,88 +286,32 @@ const Comments = ({
                     >
                       {i?.TimeExistence}
                     </div>
-                  </div>
-                  <div
-                    className={`${
-                      commentID === i?.PostCommentID && "see-more"
-                    }`}
-                  >
-                    {commentID === i?.PostCommentID
-                      ? i?.lstReplyComments?.map(item => {
-                          return (
-                            <ReplyComment
-                              item={item}
-                              likeComment={handleLikeComment}
-                              expandComment={expandComment}
-                              setExpandComment={setExpandComment}
-                              replyComment={item => {
-                                setReplyComment(`@${item.FullName} `)
-                                focusTextInput()
-                              }}
-                            />
-                          )
-                        })
-                      : i?.lstReplyComments?.length > 0 && (
-                          <div
-                            className="d-flex border-bottom-1"
-                            onClick={e => {
-                              e.stopPropagation()
-                              setCommentID(i?.PostCommentID)
-                            }}
-                          >
-                            <SvgIcon
-                              name="arrow-bend-down"
-                              style={{ marginRight: "5px" }}
-                            />
-                            {i?.lstReplyComments?.length} trả lời
-                          </div>
-                        )}
-                    {commentID === i?.PostCommentID ? (
-                      <div className="reply-comment">
-                        <Avatar
-                          src={userInfo?.avatar}
-                          alt=""
-                          loading="lazy"
-                          width={40}
-                        />
-                        <Input
-                          ref={textInput}
-                          value={replyComment}
-                          placeholder="Nhập"
-                          onChange={e => setReplyComment(e.target.value)}
-                          onPressEnter={e => {
-                            insertComment(e.target.value, i?.PostCommentID)
-                          }}
-                        />
-                      </div>
-                    ) : null}
-                  </div>
+                  </div> */}
                 </Col>
-                {!!isLogin && (i?.IsDelete || i?.IsUpdate) && (
+                {!!isLogin && i?.isOwner && (
                   <Col flex="40px" className="popup-comment">
                     <Popover
                       content={
                         <PopoverWrapper>
-                          {i?.IsDelete && (
-                            <div
-                              className="popover-option"
-                              onClick={() => handleDeleteComment(i)}
-                            >
-                              Xóa
-                            </div>
-                          )}
-                          {i?.IsUpdate && (
-                            <div
-                              className="popover-option"
-                              onClick={e => {
-                                e.stopPropagation()
-                                // setCommentIDToCorrect(i?.PostCommentID)
-                                // setValueToCorrect(i?.Content)
-                              }}
-                            >
-                              Chỉnh sửa
-                            </div>
-                          )}
+                          <div
+                            className="popover-option"
+                            onClick={e => {
+                              e.stopPropagation()
+                              changeValueTable({
+                                ...i,
+                                isEdit: true,
+                              })
+                            }}
+                          >
+                            Chỉnh sửa
+                          </div>
+                          <div
+                            className="popover-option"
+                            style={{ color: "var(--color-red-500)" }}
+                            onClick={() => handleDeleteComment(i)}
+                          >
+                            Xóa
+                          </div>
                         </PopoverWrapper>
                       }
                       title={null}
@@ -440,7 +331,7 @@ const Comments = ({
               </Row>
             </>
           )
-        })} */}
+        })}
       </Spin>
     </CommentWrapper>
   )
