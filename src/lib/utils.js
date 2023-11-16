@@ -51,7 +51,7 @@ export const updateTreeData = (list, key, children) => {
 export const hasPermission = (TabID, listTab) => {
   if (!TabID || TabID.length === 0) return true
   const IsVisitTab = listTab.some(item =>
-    TabID.some(tab => tab === item.CategoryID && item.IsVistTab === true),
+    TabID.some(tab => +tab === +item.CategoryID && item.IsVistTab === true),
   )
   return IsVisitTab
 }

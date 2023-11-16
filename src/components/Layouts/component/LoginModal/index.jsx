@@ -6,12 +6,15 @@ import FlInput from "src/components/FloatingLabel/Input"
 import Button from "src/components/MyButton/Button"
 import STORAGE, { getStorage, setStorage } from "src/lib/storage"
 import { StoreContext } from "src/lib/store"
-import { setListCart, setUserInfo } from "src/redux/appGlobal"
+import { setListCart, setListTabs, setUserInfo } from "src/redux/appGlobal"
 import AuthService from "src/services/AuthService"
 import CartService from "src/services/CartService"
 import bgr_login from "src/assets/images/login/login-1.jpg"
 import { ModalLoginStyle, StyleLoginModal } from "./styled"
 import SvgIcon from "src/components/SvgIcon"
+import { MenuItemAdmin } from "../../MenuItems"
+import { hasPermission } from "src/lib/utils"
+import { ROLE_ADMIN } from "src/constants/constants"
 
 const LoginModal = ({
   openLoginModal,
@@ -27,26 +30,22 @@ const LoginModal = ({
   const { routerStore } = useContext(StoreContext)
   const [routerBeforeLogin, setRouterBeforeLogin] = routerStore
 
-  // const comeStartPage = async () => {
-  //   const resp = await RoleService.getListTab()
-  //   if (resp.isError) return
-  //   dispatch(setListTabs(resp.Object))
-  //   const menuAdmin = MenuItemAdmin()
-  //     ?.filter(x => hasPermission(x?.TabID, [...resp.Object]))
-  //     .map(i => ({
-  //       ...i,
-  //       children: i?.children?.filter(x =>
-  //         hasPermission(x?.TabID, [...resp.Object]),
-  //       ),
-  //     }))
-  //   let startPage = "/"
-  //   if (!!menuAdmin && !!menuAdmin[0]) {
-  //     startPage = menuAdmin[0]?.children?.[0]?.key || menuAdmin[0]?.key
-  //   } else if (!!(menuAdmin[0]?.key?.charAt(0) === "/")) {
-  //     startPage = menuAdmin[0]?.key
-  //   }
-  //   navigate(startPage)
-  // }
+  const comeStartPage = async listTab => {
+    const menuAdmin = MenuItemAdmin()
+      ?.filter(x => hasPermission(x?.TabID, listTab))
+      .map(i => ({
+        ...i,
+        children: i?.children?.filter(x => hasPermission(x?.TabID, listTab)),
+      }))
+    console.log("menuAdmin", menuAdmin)
+    let startPage = "/"
+    if (!!menuAdmin && !!menuAdmin[0]) {
+      startPage = menuAdmin[0]?.children?.[0]?.key || menuAdmin[0]?.key
+    } else if (!!(menuAdmin[0]?.key?.charAt(0) === "/")) {
+      startPage = menuAdmin[0]?.key
+    }
+    navigate(startPage)
+  }
   const getListCart = async id_nguoi_dung => {
     try {
       setLoading(true)
@@ -63,35 +62,25 @@ const LoginModal = ({
       const values = await form.validateFields()
       const res = await AuthService.login({ ...values })
       if (res?.isError) return
-      setStorage(STORAGE.TOKEN, res?.Object?.token)
-      setStorage(STORAGE.USER_INFO, res?.Object)
-      dispatch(setUserInfo(res?.Object))
-      getListCart(res?.Object.id)
+      const body = {
+        ...res?.Object,
+        danh_sach_quyen: res?.Object?.danh_sach_quyen?.split(",")?.map(i => ({
+          CategoryID: i,
+          IsVistTab: true,
+        })),
+      }
+      setStorage(STORAGE.TOKEN, body?.token)
+      setStorage(STORAGE.USER_INFO, body)
+      dispatch(setUserInfo(body))
+      getListCart(body.id)
       setRouterBeforeLogin(undefined)
+      dispatch(setListTabs(body?.danh_sach_quyen))
       handleCancel()
       if (stopNavigate) return
       else {
-        // navigate(
-        //   routerBeforeLogin
-        //     ? routerBeforeLogin
-        //     : ACCOUNT_TYPE_ADMIN?.includes(res?.Object?.id_phan_quyen)
-        //     ? comeStartPage()
-        //     : ROUTER.TO_KHAI_MOI,
-        // )
-        if (routerBeforeLogin) navigate(routerBeforeLogin)
-        // if (ACCOUNT_TYPE_KH?.includes(res?.Object?.id_phan_quyen)) {
-        //   dispatch(setIsUser(true))
-        // }
-        // if (ACCOUNT_TYPE_DAI_DIEN?.includes(res?.Object?.id_phan_quyen)) {
-        //   dispatch(setIsRepresentative(true))
-        // }
-        // if (ACCOUNT_TYPE_ADMIN?.includes(res?.Object?.id_phan_quyen)) {
-        //   // comeStartPage()
-        //   navigate(ROUTER.HO_SO_TRUC_TUYEN)
-        //   dispatch(setIsAdmin(true))
-        // } else {
-        //   navigate(ROUTER.HO_SO_CHO_XU_LY)
-        // }
+        if (routerBeforeLogin) return navigate(routerBeforeLogin)
+        if (ROLE_ADMIN?.includes(body?.id_phan_quyen))
+          return comeStartPage(body?.danh_sach_quyen)
       }
     } finally {
       setLoading(false)

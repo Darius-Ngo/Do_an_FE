@@ -1,7 +1,6 @@
 import { Form, Modal, Row, Spin } from "antd"
 import { useState } from "react"
 import FlInput from "src/components/FloatingLabel/Input"
-import CustomModal from "src/components/Modal/CustomModal"
 import Button from "src/components/MyButton/Button"
 import Notice from "src/components/Notice"
 import { getRegexEmail } from "src/lib/stringsUtils"

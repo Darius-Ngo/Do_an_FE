@@ -2,18 +2,6 @@ import ROUTER from "src/router"
 import SvgIcon from "../SvgIcon"
 const MenuItemBreadcrumb = () => {
   return [
-    // {
-    //   label: "Đăng nhập",
-    //   key: ROUTER.DANG_NHAP,
-    // },
-    // {
-    //   label: "Đăng ký",
-    //   key: ROUTER.DANG_KY,
-    // },
-    // {
-    //   label: "Đổi mật khẩu",
-    //   key: ROUTER.DOI_MAT_KHAU,
-    // },
     {
       label: "Thực đơn",
       key: ROUTER.THUC_DON,
@@ -60,12 +48,6 @@ export default MenuItemBreadcrumb
 export const MenuItemAdmin = () => {
   return [
     {
-      key: ROUTER.HOME,
-      label: "Trang chủ",
-      icon: <SvgIcon name="home" />,
-      TabID: [],
-    },
-    {
       label: "Thống kê",
       key: ROUTER.THONG_KE,
       icon: <SvgIcon name="chart-line" />,
@@ -75,23 +57,23 @@ export const MenuItemAdmin = () => {
       label: "Quản lý đơn hàng",
       key: ROUTER.QUAN_LY_DON_HANG,
       icon: <SvgIcon name="report" />,
-      TabID: [1],
+      TabID: [2],
     },
     {
       label: "Quản lý tài khoản",
       key: "subkey1",
       icon: <SvgIcon name="people" />,
-      TabID: [],
+      TabID: [3, 4],
       children: [
         {
           key: ROUTER.QUAN_LY_NHAN_VIEN,
           label: "Tài khoản nhân viên",
-          TabID: [],
+          TabID: [3],
         },
         {
           key: ROUTER.QUAN_LY_KHACH_HANG,
           label: "Tài khoản khách hàng",
-          TabID: [],
+          TabID: [4],
         },
       ],
     },
@@ -99,17 +81,17 @@ export const MenuItemAdmin = () => {
       label: "Quản lý sản phẩm",
       key: "subkey2",
       icon: <SvgIcon name="dashboard" />,
-      TabID: [],
+      TabID: [5, 6],
       children: [
         {
           label: "Danh sách danh mục",
           key: ROUTER.QUAN_LY_DANH_MUC,
-          TabID: [],
+          TabID: [5],
         },
         {
           label: "Danh sách sản phẩm",
           key: ROUTER.QUAN_LY_SAN_PHAM,
-          TabID: [],
+          TabID: [6],
         },
       ],
     },
@@ -117,17 +99,17 @@ export const MenuItemAdmin = () => {
       label: "Quản lý tin tức",
       key: "subkey3",
       icon: <SvgIcon name="post-card" />,
-      TabID: [],
+      TabID: [7, 8],
       children: [
         {
           key: ROUTER.QUAN_LY_BAI_VIET,
           label: "Danh sách bài viết",
-          TabID: [],
+          TabID: [7],
         },
         {
           key: ROUTER.DANH_SACH_THE,
           label: "Danh sách thẻ",
-          TabID: [],
+          TabID: [8],
         },
       ],
     },
@@ -135,32 +117,8 @@ export const MenuItemAdmin = () => {
       label: "Xử lý yêu cầu hỗ trợ",
       key: ROUTER.YEU_CAU_HO_TRO,
       icon: <SvgIcon name="headphone" />,
-      TabID: [],
+      TabID: [9],
     },
-    // {
-    //   label: "Quản lý nhân viên",
-    //   key: ROUTER.QUAN_LY_NHAN_VIEN,
-    //   icon: <SvgIcon name="user-representative" />,
-    //   TabID: [],
-    // },
-    // {
-    //   label: "Quản lý người dùng",
-    //   key: ROUTER.QUAN_LY_KHACH_HANG,
-    //   icon: <SvgIcon name="user-single" />,
-    //   TabID: [1],
-    // },
-    // {
-    //   label: "Quản lý danh mục",
-    //   key: ROUTER.QUAN_LY_DANH_MUC,
-    //   icon: <SvgIcon name="report" />,
-    //   TabID: [],
-    // },
-    // {
-    //   label: "Quản lý sản phẩm",
-    //   key: ROUTER.QUAN_LY_SAN_PHAM,
-    //   icon: <SvgIcon name="report" />,
-    //   TabID: [1],
-    // },
   ]
 }
 

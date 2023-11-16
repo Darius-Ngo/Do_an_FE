@@ -5,6 +5,8 @@ import { UserMenuStyled } from "../LayoutUser/styled"
 import { useState } from "react"
 import { DoubleLeftOutlined } from "@ant-design/icons"
 import { useEffect } from "react"
+import ROUTER from "src/router"
+import SvgIcon from "src/components/SvgIcon"
 
 const LayoutAdmin = ({ children, selectedKey, menuAdmin }) => {
   const navigate = useNavigate()
@@ -38,7 +40,15 @@ const LayoutAdmin = ({ children, selectedKey, menuAdmin }) => {
               selectedKeys={selectedKey}
               mode="inline"
               defaultOpenKeys={["subkey1", "subkey2", "subkey3"]}
-              items={menuAdmin}
+              items={[
+                {
+                  key: ROUTER.HOME,
+                  label: "Trang chủ",
+                  icon: <SvgIcon name="home" />,
+                  TabID: [],
+                },
+                ...menuAdmin,
+              ]}
               // className="menu-antd-admin"
               className="menu-antd-user pt-5"
               theme={themeDark ? "dark" : "light"}

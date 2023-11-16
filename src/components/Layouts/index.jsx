@@ -1,34 +1,34 @@
+import { ShoppingCartOutlined } from "@ant-design/icons"
 import { Avatar, Badge, Col, Drawer, Dropdown, Layout, Menu, Row } from "antd"
 import React, { useContext, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useLocation, useNavigate } from "react-router-dom"
-import { ROLE_ADMIN, ROLE_ID } from "src/constants/constants"
+import Logo from "src/assets/images/logo/logo-wellcome.png"
+import { ROLE_ADMIN } from "src/constants/constants"
 import STORAGE, { clearStorage, getStorage, setStorage } from "src/lib/storage"
 import { StoreContext } from "src/lib/store"
 import UseWindowSize from "src/lib/useWindowSize"
 import { hasPermission } from "src/lib/utils"
-import { resetState, setUserInfo } from "src/redux/appGlobal"
+import { resetState } from "src/redux/appGlobal"
 import { setOpenLoginModal } from "src/redux/loginModal"
 import ROUTER from "src/router"
 import AuthService from "src/services/AuthService"
 import LayoutCommon from "../Common/Layout"
 import LayoutAdminCommon from "../Common/LayoutAdmin"
 import SvgIcon from "../SvgIcon"
-import MenuItemBreadcrumb, { MenuHeader, MenuItemAdmin } from "./MenuItems"
-import LayoutAdmin from "./component/LayoutAdmin"
-import LayoutUser from "./component/LayoutUser"
-import LoginModal from "./component/LoginModal"
-import Logo from "src/assets/images/logo/logo-wellcome.png"
-import RegisterModal from "./component/RegisterModal"
-import { CustomMenuStyled, LayoutStyled, StyleMenuAccount } from "./styled"
-import "./styles.scss"
 import BreadcrumbHome from "./BreadcrumbHome/BreadcrumbHome"
-import { ShoppingCartOutlined } from "@ant-design/icons"
+import MenuItemBreadcrumb, { MenuHeader, MenuItemAdmin } from "./MenuItems"
 import CartSmall from "./component/CartSmall"
-import ModalUserInfo from "./component/ModalUserInfo"
 import ChangePasswordModal from "./component/ChangePasswordModal"
 import Footer from "./component/Footer"
 import ForgetPasswordModal from "./component/ForgetPasswordModal"
+import LayoutAdmin from "./component/LayoutAdmin"
+import LayoutUser from "./component/LayoutUser"
+import LoginModal from "./component/LoginModal"
+import ModalUserInfo from "./component/ModalUserInfo"
+import RegisterModal from "./component/RegisterModal"
+import { CustomMenuStyled, LayoutStyled, StyleMenuAccount } from "./styled"
+import "./styles.scss"
 
 const { Header, Content } = Layout
 
@@ -95,7 +95,7 @@ const MainLayout = ({ children, isAdmin }) => {
                   }}
                 >
                   <div className="btn-function strok-btn-function">
-                    <SvgIcon name="user-info" />
+                    <SvgIcon name="icon-system" />
                     <span className="fw-400">Quản trị hệ thống</span>
                   </div>
                 </Menu.Item>
@@ -121,7 +121,7 @@ const MainLayout = ({ children, isAdmin }) => {
                   }}
                 >
                   <div className="btn-function strok-btn-function">
-                    <SvgIcon name="user-info" />
+                    <SvgIcon name="document" />
                     <span className="fw-400">Danh sách đơn hàng</span>
                   </div>
                 </Menu.Item>
@@ -132,8 +132,8 @@ const MainLayout = ({ children, isAdmin }) => {
                   }}
                 >
                   <div className="btn-function strok-btn-function">
-                    <SvgIcon name="user-info" />
-                    <span className="fw-400">Danh sách yêu cầu</span>
+                    <SvgIcon name="headphone" />
+                    <span className="fw-400">Yêu cầu hỗ trợ</span>
                   </div>
                 </Menu.Item>
               </>
@@ -168,17 +168,7 @@ const MainLayout = ({ children, isAdmin }) => {
   const setShowListMenu = list =>
     !!list?.length
       ? list
-          ?.filter(x =>
-            hasPermission(
-              x?.TabID,
-              [...listTabs].concat([
-                {
-                  CategoryID: 1,
-                  IsVistTab: true,
-                },
-              ]),
-            ),
-          )
+          ?.filter(x => hasPermission(x?.TabID, [...listTabs]))
           .map(i => ({
             ...i,
             children: setShowListMenu(i?.children),
