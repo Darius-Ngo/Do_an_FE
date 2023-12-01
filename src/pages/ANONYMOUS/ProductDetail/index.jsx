@@ -107,10 +107,6 @@ const ProductDetail = () => {
   }
 
   useEffect(() => {
-    scroll.scrollToTop({
-      duration: 1000, // Thời gian cuộn mượt (milliseconds)
-      smooth: "easeInOutQuint", // Loại hiệu ứng cuộn
-    })
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
     setSizeSelect(1)
     getDetail()
@@ -145,7 +141,7 @@ const ProductDetail = () => {
       children: (
         <div
           className="product-description"
-          style={{ width: "70%" }}
+          style={{ width: "90%" }}
           dangerouslySetInnerHTML={{
             __html: productDetail.mo_ta,
           }}

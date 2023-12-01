@@ -4,11 +4,14 @@ import { data } from "./data"
 import LayoutCommon from "src/components/Common/Layout"
 import { Col, Row } from "antd"
 import ROUTER from "src/router"
+import { useEffect } from "react"
 const AboutUsDetail = () => {
   const id = useLocation().state.id
   const dataDetail = data.find(i => i.id === id)
   const navigate = useNavigate()
-
+  useEffect(() => {
+    window.scroll(0, 0)
+  }, [id])
   return (
     <AboutUsDetailStyle>
       <img

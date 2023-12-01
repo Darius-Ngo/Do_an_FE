@@ -4,9 +4,13 @@ import img_3 from "src/assets/images/about-us/img_3.jpg"
 import { AboutUsPageStyle } from "./styled.js"
 import { useNavigate } from "react-router-dom"
 import ROUTER from "src/router/index.js"
+import { useEffect } from "react"
 
 const AboutPage = () => {
   const navigate = useNavigate()
+  useEffect(() => {
+    window.scroll(0, 0)
+  }, [])
   return (
     <AboutUsPageStyle>
       <div className="about-row row-1">

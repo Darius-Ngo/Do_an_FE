@@ -23,7 +23,6 @@ import ChangePasswordModal from "./component/ChangePasswordModal"
 import Footer from "./component/Footer"
 import ForgetPasswordModal from "./component/ForgetPasswordModal"
 import LayoutAdmin from "./component/LayoutAdmin"
-import LayoutUser from "./component/LayoutUser"
 import LoginModal from "./component/LoginModal"
 import ModalUserInfo from "./component/ModalUserInfo"
 import RegisterModal from "./component/RegisterModal"
@@ -41,7 +40,6 @@ const MainLayout = ({ children, isAdmin }) => {
     state => state?.appGlobal,
   )
   const isLogin = getStorage(STORAGE.TOKEN)
-  let isUser = location.pathname.includes(ROUTER.DICH_VU)
   const [open, setOpen] = useState(false)
   const [selectedKey, setSelectedKey] = useState(
     getStorage(STORAGE.KEY_MENU_ACTIVE) || ["/"],
@@ -175,18 +173,18 @@ const MainLayout = ({ children, isAdmin }) => {
           }))
       : undefined
 
-  const handleScroll = event => {
-    if (event.target.scrollTop >= 40) {
+  const handleScroll = () => {
+    let scrollPosition = window.scrollY || window.pageYOffset
+    if (scrollPosition >= 40) {
       setIsTransparent(false)
     } else {
       setIsTransparent(true)
     }
   }
   useEffect(() => {
-    const element = document.getElementById("root")
-    element.addEventListener("scroll", handleScroll)
+    window.addEventListener("scroll", handleScroll)
     return () => {
-      element.removeEventListener("scroll", handleScroll)
+      window.removeEventListener("scroll", handleScroll)
     }
   }, [])
 
@@ -347,39 +345,33 @@ const MainLayout = ({ children, isAdmin }) => {
         </div>
       </Header>
       <BreadcrumbHome />
-      {/* <Layout>
-        <Content className="site-layout-background"> */}
-      {isAdmin ? (
-        <>
-          <LayoutAdmin
-            children={children}
-            menuAdmin={menuAdmin}
-            selectedKey={selectedKey}
-          />
-        </>
-      ) : isUser ? (
-        <LayoutUser
-          children={children}
-          selectedKey={selectedKey}
-          userInfo={userInfo}
-        />
-      ) : (
-        <>
-          <div
-            className="w-100"
-            style={
-              location.pathname === ROUTER.HOME
-                ? { position: "relative", top: -53 }
-                : { top: 0 }
-            }
-          >
-            {children}
-          </div>
-          <Footer />
-        </>
-      )}
-      {/* </Content>
-      </Layout> */}
+      <Layout>
+        <Content className="site-layout-background">
+          {isAdmin ? (
+            <>
+              <LayoutAdmin
+                children={children}
+                menuAdmin={menuAdmin}
+                selectedKey={selectedKey}
+              />
+            </>
+          ) : (
+            <>
+              <div
+                className="w-100"
+                style={
+                  location.pathname === ROUTER.HOME
+                    ? { position: "relative", top: -53 }
+                    : { top: 0 }
+                }
+              >
+                {children}
+              </div>
+              <Footer />
+            </>
+          )}
+        </Content>
+      </Layout>
       <Drawer
         title=""
         placement="left"

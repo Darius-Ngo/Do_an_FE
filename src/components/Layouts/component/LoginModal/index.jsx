@@ -98,7 +98,7 @@ const LoginModal = ({
   const loginFB = async () => {
     try {
       setLoading(true)
-      const res = await AuthService.loginFB()
+      const res = await AuthService.loginFacebook()
       if (res?.isError) return
       window.location.replace(res?.Object)
     } finally {

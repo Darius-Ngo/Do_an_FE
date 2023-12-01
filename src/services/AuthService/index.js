@@ -6,6 +6,7 @@ import {
   apiChangePassWord,
   apiForgetPassWord,
   apiConfirmOTP,
+  apiLoginFacebook,
 } from "./urls"
 
 const login = body => http.post(apiLogin, body)
@@ -14,6 +15,7 @@ const changePassWord = body => http.post(apiChangePassWord, body)
 const forgetPassWord = body => http.post(apiForgetPassWord, body)
 const confirmOTP = body => http.post(apiConfirmOTP, body)
 const logout = () => http.post(apiLogout)
+const loginFacebook = () => http.get(apiLoginFacebook)
 
 const AuthService = {
   login,
@@ -22,5 +24,6 @@ const AuthService = {
   changePassWord,
   forgetPassWord,
   confirmOTP,
+  loginFacebook,
 }
 export default AuthService

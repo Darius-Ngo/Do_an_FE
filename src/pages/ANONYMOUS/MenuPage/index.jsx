@@ -30,8 +30,10 @@ const MenuPage = () => {
     }
   }
   useEffect(() => {
+    window.scroll(0, 0)
     getList()
   }, [])
+
   return (
     <MenuPageStyle>
       <Spin spinning={loading}>

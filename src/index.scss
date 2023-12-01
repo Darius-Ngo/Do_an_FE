@@ -13,9 +13,10 @@ body::-webkit-scrollbar {
   height: 5px;
 }
 #root {
-  // overflow-x: hidden;
-  scroll-behavior: smooth;
-  height: 100%;
+  overflow-x: hidden auto;
+  // overflow: auto;
+  // scroll-behavior: smooth;
+  // height: 100%;
 }
  html {
   // overflow: hidden;
@@ -272,8 +273,8 @@ body::-webkit-scrollbar-thumb {
   }
 }
 #page-scroll {
-  // scroll-behavior: smooth;
-  // overflow: hidden auto;
+  scroll-behavior: smooth;
+  overflow: hidden auto;
 }
 .modal-log-error {
   .ant-modal-header, .ant-modal-title {

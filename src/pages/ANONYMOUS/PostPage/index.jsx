@@ -56,7 +56,7 @@ const PostPage = () => {
     getList()
   }, [pagination, tagID])
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+    window.scroll(0, 0)
     getListCombobox()
   }, [])
   return (
