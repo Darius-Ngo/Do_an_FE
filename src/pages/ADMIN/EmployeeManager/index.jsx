@@ -19,6 +19,7 @@ import AccountService from "src/services/AccountService"
 import ModalInsertUpdate from "./components/ModalInsertUpdate"
 import { EmployeeManagerStyle } from "./styled"
 import ModalDetailUser from "./components/ModalDetail"
+import { saveAs } from "file-saver"
 const EmployeeManager = () => {
   const [pagination, setPagination] = useState({
     pageSize: 10,
@@ -266,6 +267,16 @@ const EmployeeManager = () => {
       setLoading(false)
     }
   }
+  const exportExcel = async () => {
+    try {
+      setLoading(true)
+      const res = await AccountService.exportExcel(pagination)
+      if (res.isError) return
+      saveAs(res, "Danh sách nhân viên.xlsx")
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const getList = async () => {
     try {
@@ -324,13 +335,18 @@ const EmployeeManager = () => {
       </Row>
       <div className="title-type-1 d-flex justify-content-space-between align-items-center pb-8 pt-0 mb-16">
         <div style={{ fontSize: 24 }}>Danh sách nhân viên ({total})</div>
-        <Button
-          btnType="primary"
-          className="btn-hover-shadow"
-          onClick={() => setOpenInsert(true)}
-        >
-          Thêm nhân viên
-        </Button>
+        <Space size={12}>
+          <Button
+            btnType="primary"
+            className="btn-hover-shadow"
+            onClick={() => setOpenInsert(true)}
+          >
+            Thêm nhân viên
+          </Button>
+          <Button btnType="third" onClick={() => exportExcel()}>
+            Export Excel
+          </Button>
+        </Space>
       </div>
       <TableCustom
         isPrimary

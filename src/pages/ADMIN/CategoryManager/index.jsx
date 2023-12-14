@@ -11,6 +11,7 @@ import { COLOR_STATUS, FAILBACK, STATUS_ACTIVE } from "src/constants/constants"
 import CategoryService from "src/services/CategoryService"
 import ModalInsertUpdate from "./components/ModalInsertUpdate"
 import { CategoryManagerStyle } from "./styled"
+import { saveAs } from "file-saver"
 const CategoryManager = () => {
   const [pagination, setPagination] = useState({
     pageSize: 10,
@@ -195,6 +196,16 @@ const CategoryManager = () => {
       setLoading(false)
     }
   }
+  const exportExcel = async () => {
+    try {
+      setLoading(true)
+      const res = await CategoryService.exportExcel(pagination)
+      if (res.isError) return
+      saveAs(res, "Danh sách loại sản phẩm.xlsx")
+    } finally {
+      setLoading(false)
+    }
+  }
   useEffect(() => {
     getList()
   }, [pagination])
@@ -241,13 +252,18 @@ const CategoryManager = () => {
       </Row>
       <div className="title-type-1 d-flex justify-content-space-between align-items-center pb-8 pt-0 mb-16">
         <div style={{ fontSize: 24 }}>Danh sách danh mục ({total})</div>
-        <Button
-          btnType="primary"
-          className="btn-hover-shadow"
-          onClick={() => setOpenInsert(true)}
-        >
-          Thêm danh mục
-        </Button>
+        <Space size={12}>
+          <Button
+            btnType="primary"
+            className="btn-hover-shadow"
+            onClick={() => setOpenInsert(true)}
+          >
+            Thêm danh mục
+          </Button>
+          <Button btnType="third" onClick={() => exportExcel()}>
+            Export Excel
+          </Button>
+        </Space>
       </div>
       <TableCustom
         isPrimary

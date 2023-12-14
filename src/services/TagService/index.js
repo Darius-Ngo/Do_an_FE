@@ -5,6 +5,7 @@ import {
   apiUpdateTags,
   apiDeleteTags,
   apiChangeStatus,
+  apiExportExcel,
 } from "./urls"
 import http from "../index"
 
@@ -14,7 +15,10 @@ const addTags = body => http.post(apiAddTags, body)
 const updateTags = body => http.put(apiUpdateTags, body)
 const deleteTags = params => http.delete(apiDeleteTags, { params })
 const changeStatus = body => http.post(apiChangeStatus, body)
-
+const exportExcel = body =>
+  http.post(apiExportExcel, body, {
+    responseType: "blob",
+  })
 const TagService = {
   getListTags,
   getListCombobox,
@@ -22,5 +26,6 @@ const TagService = {
   updateTags,
   deleteTags,
   changeStatus,
+  exportExcel,
 }
 export default TagService

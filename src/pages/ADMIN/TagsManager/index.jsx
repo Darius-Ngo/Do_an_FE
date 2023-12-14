@@ -11,6 +11,7 @@ import { COLOR_STATUS, STATUS_ACTIVE } from "src/constants/constants"
 import TagService from "src/services/TagService"
 import ModalInsertUpdate from "./components/ModalInsertUpdate"
 import { TagsManagerStyle } from "./styled"
+import { saveAs } from "file-saver"
 const TagsManager = () => {
   const [pagination, setPagination] = useState({
     pageSize: 10,
@@ -171,6 +172,16 @@ const TagsManager = () => {
       setLoading(false)
     }
   }
+  const exportExcel = async () => {
+    try {
+      setLoading(true)
+      const res = await TagService.exportExcel(pagination)
+      if (res.isError) return
+      saveAs(res, "Danh sách thẻ bài viết.xlsx")
+    } finally {
+      setLoading(false)
+    }
+  }
   useEffect(() => {
     getList()
   }, [pagination])
@@ -217,13 +228,18 @@ const TagsManager = () => {
       </Row>
       <div className="title-type-1 d-flex justify-content-space-between align-items-center pb-8 pt-0 mb-16">
         <div style={{ fontSize: 24 }}>Danh sách thẻ ({total})</div>
-        <Button
-          btnType="primary"
-          className="btn-hover-shadow"
-          onClick={() => setOpenInsert(true)}
-        >
-          Thêm thẻ
-        </Button>
+        <Space size={12}>
+          <Button
+            btnType="primary"
+            className="btn-hover-shadow"
+            onClick={() => setOpenInsert(true)}
+          >
+            Thêm thẻ
+          </Button>
+          <Button btnType="third" onClick={() => exportExcel()}>
+            Export Excel
+          </Button>
+        </Space>
       </div>
       <TableCustom
         isPrimary

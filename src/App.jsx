@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import STORAGE, { getStorage } from "src/lib/storage"
 import SpinCustom from "./components/Spin"
-import { setListCart, setUserInfo } from "./redux/appGlobal"
+import { setListCart, setListTabs, setUserInfo } from "./redux/appGlobal"
 import AppRouter from "./router/AppRouter"
 import CartService from "./services/CartService"
 import "./App.scss"
@@ -28,6 +28,7 @@ function App() {
     if (!!isLogin) {
       const user = getStorage(STORAGE.USER_INFO)
       dispatch(setUserInfo(user))
+      dispatch(setListTabs(user?.danh_sach_quyen))
       getListCart(user.id)
     }
   }, [isLogin])

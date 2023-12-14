@@ -8,6 +8,7 @@ import {
   apiDeleteProduct,
   apiChangeStatus,
   apiGetListProductTrend,
+  apiExportExcel,
 } from "./urls"
 
 const getListProduct = body => http.post(apiGetListProduct, body)
@@ -20,7 +21,10 @@ const updateProduct = body => http.put(apiUpdateProduct, body)
 const getListProductTrend = params =>
   http.get(apiGetListProductTrend, { params })
 const deleteProduct = id => http.delete(apiDeleteProduct + `/${id}`)
-
+const exportExcel = body =>
+  http.post(apiExportExcel, body, {
+    responseType: "blob",
+  })
 const ProductService = {
   getListProduct,
   getDetailProduct,
@@ -30,5 +34,6 @@ const ProductService = {
   deleteProduct,
   changeStatus,
   getListProductTrend,
+  exportExcel,
 }
 export default ProductService

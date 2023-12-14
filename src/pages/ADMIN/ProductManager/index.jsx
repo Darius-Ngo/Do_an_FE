@@ -14,6 +14,7 @@ import { ProductManagerStyle } from "./styled"
 import ListCategory from "./components/ListCategory"
 import { formatMoney } from "src/lib/utils"
 import CategoryService from "src/services/CategoryService"
+import { saveAs } from "file-saver"
 const ProductManager = () => {
   const [pagination, setPagination] = useState({
     pageSize: 10,
@@ -262,6 +263,19 @@ const ProductManager = () => {
       setLoading(false)
     }
   }
+  const exportExcel = async () => {
+    try {
+      setLoading(true)
+      const res = await ProductService.exportExcel({
+        ...pagination,
+        id_loai_san_pham: categorySelected.id,
+      })
+      if (res.isError) return
+      saveAs(res, "Danh sách sản phẩm.xlsx")
+    } finally {
+      setLoading(false)
+    }
+  }
   useEffect(() => {
     getListCategory()
   }, [])
@@ -327,17 +341,22 @@ const ProductManager = () => {
         <Col style={{ width: 0 }} flex={"auto"}>
           <div className="title-type-1 d-flex justify-content-space-between align-items-center pb-8 pt-0 mb-16">
             <div style={{ fontSize: 24 }}>Danh sách sản phẩm ({total})</div>
-            <Button
-              btnType="primary"
-              className="btn-hover-shadow"
-              onClick={() =>
-                setOpenInsert({
-                  id_loai_san_pham: categorySelected.id,
-                })
-              }
-            >
-              Thêm sản phẩm
-            </Button>
+            <Space size={12}>
+              <Button
+                btnType="primary"
+                className="btn-hover-shadow"
+                onClick={() =>
+                  setOpenInsert({
+                    id_loai_san_pham: categorySelected.id,
+                  })
+                }
+              >
+                Thêm sản phẩm
+              </Button>
+              <Button btnType="third" onClick={() => exportExcel()}>
+                Export Excel
+              </Button>
+            </Space>
           </div>
           <TableCustom
             isPrimary
