@@ -49,6 +49,7 @@ const RequestSupport = React.lazy(() =>
   import("src/pages/ADMIN/RequestSupport"),
 )
 const Statistic = React.lazy(() => import("src/pages/ADMIN/Statistic"))
+const ConfirmOrder = React.lazy(() => import("src/pages/ADMIN/ConfirmOrder"))
 
 function LazyLoadingComponent({ children }) {
   return (
@@ -189,6 +190,14 @@ const routes = [
         element: (
           <LazyLoadingComponent>
             <MyRequest />
+          </LazyLoadingComponent>
+        ),
+      },
+      {
+        path: ROUTER.XAC_NHAN_DON_HANG,
+        element: (
+          <LazyLoadingComponent>
+            <ConfirmOrder />
           </LazyLoadingComponent>
         ),
       },

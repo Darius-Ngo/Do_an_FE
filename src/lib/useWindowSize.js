@@ -23,5 +23,6 @@ const isDesktop = () => UseWindowSize(1200)
 const isTablet = () => UseWindowSize(991, true)
 
 const isMobile = () => UseWindowSize(768, true)
+const windowSize = { isLaptop, isDesktop, isMobile, isTablet }
 
-export default { isLaptop, isDesktop, isMobile, isTablet }
+export default windowSize

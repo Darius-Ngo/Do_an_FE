@@ -89,7 +89,11 @@ const MainLayout = ({ children, isAdmin }) => {
                 <Menu.Item
                   key="1"
                   onClick={() => {
-                    navigate(ROUTER.QUAN_LY_NHAN_VIEN)
+                    if (userInfo?.id_phan_quyen === 1) {
+                      navigate(ROUTER.THONG_KE)
+                    } else {
+                      navigate(ROUTER.QUAN_LY_DON_HANG)
+                    }
                   }}
                 >
                   <div className="btn-function strok-btn-function">
@@ -99,8 +103,23 @@ const MainLayout = ({ children, isAdmin }) => {
                 </Menu.Item>
               </>
             )}
+            {ROLE_ADMIN.includes(userInfo?.id_phan_quyen) && (
+              <>
+                <Menu.Item
+                  key="2"
+                  onClick={() => {
+                    navigate(ROUTER.XAC_NHAN_DON_HANG)
+                  }}
+                >
+                  <div className="btn-function strok-btn-function">
+                    <SvgIcon name="handout-2" />
+                    <span className="fw-400">Xác nhận đơn hàng</span>
+                  </div>
+                </Menu.Item>
+              </>
+            )}
             <Menu.Item
-              key="2"
+              key="3"
               onClick={() => {
                 setOpenInfoModal(true)
               }}
@@ -113,7 +132,7 @@ const MainLayout = ({ children, isAdmin }) => {
             {!ROLE_ADMIN.includes(userInfo?.id_phan_quyen) && (
               <>
                 <Menu.Item
-                  key="3"
+                  key="4"
                   onClick={() => {
                     navigate(ROUTER.DS_DON_DAT_HANG)
                   }}
@@ -124,7 +143,7 @@ const MainLayout = ({ children, isAdmin }) => {
                   </div>
                 </Menu.Item>
                 <Menu.Item
-                  key="4"
+                  key="5"
                   onClick={() => {
                     navigate(ROUTER.QL_YCHT)
                   }}
@@ -137,7 +156,7 @@ const MainLayout = ({ children, isAdmin }) => {
               </>
             )}
             <Menu.Item
-              key="5"
+              key="6"
               onClick={() => {
                 setOpenModalChangePass(true)
               }}
@@ -148,7 +167,7 @@ const MainLayout = ({ children, isAdmin }) => {
               </div>
             </Menu.Item>
             <Menu.Item
-              key="6"
+              key="7"
               style={{ color: "#ED1117" }}
               onClick={handleLogout}
             >

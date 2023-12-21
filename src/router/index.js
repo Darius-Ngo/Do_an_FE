@@ -24,6 +24,7 @@ const ROUTER = {
   QUAN_LY_DON_HANG: "/quan-ly-don-hang",
   THONG_KE: "/thong-ke",
   YEU_CAU_HO_TRO: "/yeu-cau-ho-tro",
+  XAC_NHAN_DON_HANG: "/xac-nhan-don",
 
   //USER
   CHI_TIET_GIO_HANG: "/chi-tiet-gio-hang",

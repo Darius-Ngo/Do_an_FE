@@ -20,7 +20,8 @@ const addCategory = body => http.post(apiAddCategory, body)
 const changeStatus = body => http.post(apiChangeStatus, body)
 const updateCategory = body => http.put(apiUpdateCategory, body)
 const deleteCategory = id => http.delete(apiDeleteCategory + `/${id}`)
-const getListCategoryInHome = () => http.get(apiGetListCategoryInHome)
+const getListCategoryInHome = params =>
+  http.get(apiGetListCategoryInHome, { params })
 
 const CategoryService = {
   getListCategory,

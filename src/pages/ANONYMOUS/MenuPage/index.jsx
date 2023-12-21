@@ -1,4 +1,4 @@
-import { Col, Divider, Row, Spin } from "antd"
+import { Col, Divider, Empty, Row, Spin } from "antd"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import LayoutCommon from "src/components/Common/Layout/index.js"
@@ -9,6 +9,7 @@ import { MenuPageStyle } from "./styled.js"
 // import SwiperCore, { Autoplay, Navigation } from "swiper"
 import { Autoplay, Navigation } from "swiper/modules"
 
+import FlInput from "src/components/FloatingLabel/Input/index.js"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
 import { Swiper, SwiperSlide } from "swiper/react"
@@ -19,10 +20,10 @@ const MenuPage = () => {
 
   const [loading, setLoading] = useState(false)
   const [listCategory, setListCategory] = useState([])
-  const getList = async () => {
+  const getList = async textSearch => {
     try {
       setLoading(true)
-      const res = await CategoryService.getListCategoryInHome()
+      const res = await CategoryService.getListCategoryInHome({ textSearch })
       if (res.isError) return
       setListCategory(res.Object)
     } finally {
@@ -31,12 +32,23 @@ const MenuPage = () => {
   }
   useEffect(() => {
     window.scroll(0, 0)
-    getList()
+    getList("")
   }, [])
 
   return (
     <MenuPageStyle>
       <Spin spinning={loading}>
+        <LayoutCommon>
+          <div className="search-box">
+            <FlInput
+              search
+              allowClear
+              label="Tìm theo tên sản phẩm"
+              style={{ width: 350 }}
+              onSearch={textSearch => getList(textSearch)}
+            />
+          </div>
+        </LayoutCommon>
         {listCategory?.map((category, i) => (
           <CategoryItem
             key={i}
@@ -80,20 +92,24 @@ const CategoryItem = ({ category, lastChild }) => {
           </Col>
           <Col span={20}>
             <div className="product-list">
-              <Swiper
-                grabCursor={true}
-                spaceBetween={30}
-                slidesPerView={4}
-                autoplay={{ delay: 2000 }}
-                // navigation={true}
-                modules={[Navigation, Autoplay]}
-              >
-                {category?.ds_san_pham?.map((product, i) => (
-                  <SwiperSlide key={i}>
-                    <ProductCard product={product} />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+              {!!category?.ds_san_pham?.length ? (
+                <Swiper
+                  grabCursor={true}
+                  spaceBetween={30}
+                  slidesPerView={4}
+                  autoplay={{ delay: 2000 }}
+                  // navigation={true}
+                  modules={[Navigation, Autoplay]}
+                >
+                  {category?.ds_san_pham?.map((product, i) => (
+                    <SwiperSlide key={i}>
+                      <ProductCard product={product} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              ) : (
+                <Empty description="Không có sản phẩm tương ứng!" />
+              )}
             </div>
             {!lastChild && <Divider />}
           </Col>
