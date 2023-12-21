@@ -192,7 +192,8 @@ const ProductDetail = () => {
                           className="fs-14 ml-20 mt-6"
                           style={{ color: "#999" }}
                         >
-                          {+productDetail?.tong_danh_gia} đánh giá
+                          {+productDetail?.tong_danh_gia} đánh giá /{" "}
+                          {+productDetail?.tong_sp_db} đã bán
                         </div>
                       </div>
                       <div className="product-description">
