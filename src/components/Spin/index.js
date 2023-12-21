@@ -6,10 +6,7 @@ export default function SpinCustom(props) {
   const { className } = props
 
   const spinIcon = (
-    <div>
-      <img src={Logo} className="logo" alt="logo" />
       <LoadingOverlay isLoadingTable sizeSmall />
-    </div>
   )
 
   return <Spin {...props} className={className} indicator={spinIcon} />
